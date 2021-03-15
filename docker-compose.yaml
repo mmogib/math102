@@ -1,12 +1,12 @@
 version: "3.8"
 services: 
-  myjulia2:
+  app:
     container_name: myjulia
     build: 
       context: .
       args: 
         - JULIA_VERSION=1.5.3
     ports: 
-      - "1237:1234"
+      - "1234:1234"
     volumes: 
       - .:/home/julia/project
