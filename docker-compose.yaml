@@ -1,9 +1,12 @@
 version: "3.8"
 services: 
-  julia153:
-    container_name: julia-1-5-3
-    build: .
+  myjulia2:
+    container_name: myjulia
+    build: 
+      context: .
+      args: 
+        - JULIA_VERSION=1.5.3
     ports: 
-      - "1234:1234"
+      - "1237:1234"
     volumes: 
-      - "/c/Users/mmogi/Projects/julia-1.5.3:/home/julia/project"
+      - .:/home/julia/project

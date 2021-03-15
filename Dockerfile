@@ -1,4 +1,5 @@
-FROM julia:1.5.3
+ARG JULIA_VERSION=1.5.2
+FROM julia:${JULIA_VERSION}
 
 ########################################################
 # Essential packages for remote debugging and login in
@@ -32,8 +33,13 @@ RUN echo 'debugger:debugger_pwd' | chpasswd
 ########################################################
 # Add custom packages and development environment here
 ########################################################
+RUN apt-get update && \
+    apt install zsh -y && \
+    apt install git -y && \
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 ########################################################
+COPY .zshrc /root/.zshrc
 
 CMD ["/usr/sbin/sshd", "-D"]
 
