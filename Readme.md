@@ -6,3 +6,4 @@
 
 * To build an image ```bash  docker build -t mmogib/myjulia:latest --build-arg JULIA_VERSION=1.5.3 . ```
 
+* Run ```docker exec -it [name] /bin/zsh```
