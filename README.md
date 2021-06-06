@@ -102,12 +102,5 @@ Classwork:
 * [Khan Academy](https://www.khanacademy.org/)<!--target="_blank"-->
  !?[khan Academy](https://youtu.be/QGagl0qW8MA)
 
-## Lessons
-- [Chapter 5](#Chapter-5)
-- [Chapter 6](#Chapter-6)
-- [Chapter 7](#Chapter-7)
-- [Chapter 8](#Chapter-8)
-- [Chapter 11](#Chapter-11)
 
-
-## Chapter 5
+## [Slides and material discussed in class](https://t203math102.mshahrani.website/)<!--target="_blank"-->
