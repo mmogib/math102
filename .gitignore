@@ -23,5 +23,5 @@ docs/site/
 # environment.
 Manifest.toml
 
-old_ps/
-cas/
+problem_sets/old_ps/
+problem_sets/cas/
