@@ -47,8 +47,8 @@ Watch this please
 
 
 --------------
-
-* **Office Hours** You can book an appointment through [Calendly](https://calendly.com/mshahrani/office-hour)<!--
+* [Slides in class](https://t203math102.mshahrani.website/)
+* [Office Hours](https://calendly.com/mshahrani/office-hour)<!--
 target="_blank"
 -->.
 * **Communication** __Please do not send me emails__<!-- style="color:red;"-->. All communications will through <span style="color: purple;">slack.com</span>. You should have received an invitation email from slack.
@@ -85,7 +85,7 @@ Upon completion of this course, students should be able to
 ## Syllabus
 The official Syllabus is [here](https://www.dropbox.com/s/1gcbwj3bkevxuin/Math102_term203-Syllabus.pdf?dl=0)<!--target="_blank"-->
 
-## Grading Policy (Revised)
+## Grading Policy
 
 | | Percentage | Points |
 |Midterm (In-Person)| 30% | 90  points|
@@ -103,4 +103,4 @@ Classwork:
  !?[khan Academy](https://youtu.be/QGagl0qW8MA)
 
 
-## [Slides and material discussed in class](https://t203math102.mshahrani.website/)<!--target="_blank"-->
+## [Slides in class](https://t203math102.mshahrani.website/)
