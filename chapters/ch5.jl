@@ -489,6 +489,12 @@ $\lim_{n\to \infty}\sum_{i=1}^n\frac{1}{n}\cos\left(1+\frac{i}{n}\right)^2=$
 
 """
 
+# ╔═╡ 13625b14-ac53-4995-bbcb-205cdf672c2a
+md"""
+### [Problem Set 5.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.2.pdf)
+
+"""
+
 # ╔═╡ 4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
 md""" 
 $hline
@@ -699,6 +705,7 @@ end
 # ╟─be9f84d5-3c65-4ceb-8767-3fdc41429e12
 # ╟─cf3bce53-0260-403c-8910-b04b05b558fe
 # ╟─e3d540a3-7da5-4ef6-aa31-e629e752484e
+# ╟─13625b14-ac53-4995-bbcb-205cdf672c2a
 # ╟─4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
 # ╟─3b115e62-8040-4a2c-8d6e-3d03669e7cd8
 # ╟─3c16772c-394d-4472-8749-f5990bb69013

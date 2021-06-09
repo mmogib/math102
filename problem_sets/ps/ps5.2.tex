@@ -1,0 +1,154 @@
+\documentclass[
+  % all of the below options are optional and can be left out
+  % course name (default: 2IL50 Data Structures)
+  course = {{MATH102 Calculus II}},
+  % quartile (default: 3)
+  quartile = {{2}},
+  % assignment number/name (default: 1)
+  assignment = {{Section: 5.2}},
+  % student name (default: Some One)
+  %name = {{Some One ; Other Person}},
+  % student number, NOT S-number (default: 0123456)
+  %studentnumber = {{0123456 ; 0314159}},
+  % student email (default: s.one@student.tue.nl)
+  %email = {{s.one@student.tue.nl ; o.person@student.tue.nl}},
+  % first exercise number (default: 1)
+  firstexercise = 1,
+  term = 203
+]{aga-homework}
+\usepackage{graphicx}
+\usepackage{advdate}
+\usepackage{amsmath}
+\usepackage[shortlabels]{enumitem}
+
+
+\begin{document}
+%\noindent {\hfill \vspace{-2\baselineskip} {\footnotesize\bf  Due \AdvanceDate[14]\today  \; midnight} \vspace{3mm}}
+%
+%\begin{center}
+%  {\large
+%  \begin{tabular}{|l|l|}
+%    \hline
+%    % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+%    Group Number: & \hspace{3in} \\
+%     &  \\ \hline
+%    Members: &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\ \cline{2-2}
+%        &  \\
+%        &  \\
+%    \hline
+%  \end{tabular}
+%  }
+%\end{center}
+%
+%
+%\newpage
+
+\problem  If $R_n$ is the Riemann sum for $f(x)= 4 + \frac{x^2}{8}, 0 \leq x \leq 4$
+with $n$ subintervals and taking sample points to be the right end points, then $R_n =$
+
+
+\newpage
+
+\problem $\lim_{n\to \infty}\sum_{i=1}^n\frac{1}{n}\cos\left(1+\frac{i}{n}\right)^2=$
+
+\begin{enumerate}[(A)]
+  \item $\int_{1}^{2}\cos(1+x^2)dx$.
+  \item $\int_{1}^{2}\cos(x^2)dx$.
+  \item $\int_{1}^{2}\cos^2(x)dx$.
+  \item $\int_{0}^{1}\cos(x^2)dx$.
+  \item $\int_{0}^{1}\cos(1+x^2)dx$.
+\end{enumerate}
+
+\newpage
+
+
+\problem
+\begin{minipage}[t]{0.6\textwidth}
+\vspace{0pt}
+  In the figure shown, regions $A$ and $B$ are bounded by the graph of a function $f$ and the $x$-axis. If the area of region $A$ is $\frac{1}{6}$ and the area of the region $B$ is $\frac{3}{8}$, then
+  \[
+  \int_0^4f(x) dx + \int_{0}^{4}|f(x)| dx =
+  \]
+\end{minipage}
+\begin{minipage}[r]{0.4\textwidth}
+	\includegraphics[width=\textwidth]{figures/ps2fig1.png}
+\end{minipage}
+
+\newpage
+
+
+\problem If $\int_{-5}^7f(x)dx=-17, \int_{-5}^{11}f(x)dx=32$, and $\int_{8}^7f(x)dx=5$, then $\int_{11}^8f(x)dx=$.
+
+\newpage
+
+\problem If ${\displaystyle f(x) = \left\{\begin{array}{ll}
+         -x; & -4\leq x <0 \\
+         \\
+         \sqrt{4-x^2}; & 0\leq x \leq 2 \\
+       \end{array}\right.}$, then the value of the integral
+       $ \displaystyle
+       \int_{-4}^{2} f(x) dx
+       $
+       by interpreting in terms of area(s) is.
+
+
+\newpage
+\problem Write the limit as an integral (do not evaluate) \[\displaystyle \lim_{n\to \infty} \sum_{i=1}^{n}\left[1+\sin\left(1+\frac{i}{n}\right)\right]\frac{2}{n}=
+\]
+
+\newpage
+
+\problem $\displaystyle \lim_{n\to\infty} \frac{2}{n^4}(1+8+27+\cdots+n^3)=$
+\newpage
+
+
+
+
+\problem If $f$ is continuous function and
+ \[ 2\leq f(x) \leq 5 \quad \text{for} \quad 3\leq x \leq 9,\]
+then ONE of the following statements is **FALSE**
+
+\begin{enumerate}[(A)]
+    \item $\int_{3}^{9}\left|f(x)\right|dx\geq 12$
+
+    \item $\int_{3}^{9}\left(3-f(x)\right)dx\geq -12$
+
+    \item $\int_{3}^{9}\left(1-\left|f(x)\right|\right)dx\geq -10$
+
+    \item $\int_{3}^{9}-2f(x)dx\leq -24$
+
+    \item $\int_{3}^{9}\left(f(x)\right)^2dx\geq 24$
+\end{enumerate}
+
+
+
+\end{document} 
