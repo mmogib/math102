@@ -146,7 +146,7 @@
 \pagestyle{fancy}
 
 % ensure that the title is inserted in the document
-\title{\vspace{-2\baselineskip}  \agahomework@assignment \\ \agahomework@topic \vspace{-2\baselineskip}}
+\title{\vspace{-2\baselineskip} Problem Set \\ \agahomework@assignment\\ \hrulefill \\ \agahomework@topic \vspace{-2\baselineskip}}
 %\author{\aga@authorsProcessed}
 \date{}
 \AtBeginDocument{\maketitle}
