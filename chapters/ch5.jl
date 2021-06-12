@@ -15,22 +15,22 @@ end
 
 # ╔═╡ e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 begin
-	import Pkg
-	Pkg.activate(mktempdir())
-	Pkg.add([
-		Pkg.PackageSpec(name="ImageIO", version="0.5"),
-		Pkg.PackageSpec(name="ImageShow", version="0.3"),
-		Pkg.PackageSpec(name="FileIO", version="1.9"),
-		Pkg.PackageSpec(name="CommonMark", version="0.8"),
-		Pkg.PackageSpec(name="Plots", version="1.16"),
-		Pkg.PackageSpec(name="PlotThemes", version="2.0"),
-		Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
-		Pkg.PackageSpec(name="PlutoUI", version="0.7"),
-		Pkg.PackageSpec(name="Pluto", version="0.14"),
-		Pkg.PackageSpec(name="SymPy", version="1.0"),
-	  	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
-		Pkg.PackageSpec(name="ImageTransformations", version="0.8")
-	])
+	# import Pkg
+	# Pkg.activate(mktempdir())
+	# Pkg.add([
+	# 	Pkg.PackageSpec(name="ImageIO", version="0.5"),
+	# 	Pkg.PackageSpec(name="ImageShow", version="0.3"),
+	# 	Pkg.PackageSpec(name="FileIO", version="1.9"),
+	# 	Pkg.PackageSpec(name="CommonMark", version="0.8"),
+	# 	Pkg.PackageSpec(name="Plots", version="1.16"),
+	# 	Pkg.PackageSpec(name="PlotThemes", version="2.0"),
+	# 	Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
+	# 	Pkg.PackageSpec(name="PlutoUI", version="0.7"),
+	# 	Pkg.PackageSpec(name="Pluto", version="0.14"),
+	# 	Pkg.PackageSpec(name="SymPy", version="1.0"),
+	#   	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
+	# 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
+	# ])
 
 	using CommonMark, ImageIO, FileIO, ImageShow
 	using PlutoUI
@@ -870,6 +870,11 @@ begin
 end
 
 
+# ╔═╡ 597cd6c2-1ea4-4c33-a3a7-f6418a8fb186
+md"""
+### [Problem Set 5.4](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.4/ps5.4.pdf)
+"""
+
 # ╔═╡ 08e5381c-4cf1-4c70-ba74-26a05b8046fa
 md"""
 ## Section 5.5:
@@ -882,6 +887,95 @@ md"""
 ||solve|||
 |$$\int 2x \sqrt{1+x^2} \;\; dx$$|  | $$\int \sqrt{u} \;\; du$$|
 
+"""
+
+# ╔═╡ 805cf044-8187-410e-833d-f4323ce07380
+begin
+	f155(x) = x/sqrt(1-4*x^2)
+	# ex1_55=plot(-0.49:0.01:0.49,f155.(-0.49:0.01:0.49), framestyle=:origin)
+	md"""
+	### The Substitution Rule
+	if ``u=g(x)`` is a differentiable function whose range is an interval ``I`` and ``f`` is continuous on ``I``, then 
+	```math
+	\int f(g(x))g'(x)dx = \int f(u) du
+	```
+	**Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
+
+	**Example**
+	Find 
+	```math
+	\begin{array}{ll}
+	(i) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
+	(ii) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
+	(iii) & \int \tan x dx \\ \\
+	\end{array}
+	```
+	
+	
+	"""
+end
+
+# ╔═╡ 497ff4cd-2705-49b3-bde6-671352e9b5a0
+begin
+	ex2fun(x)=log(x)/x
+	ex2x1 = 1:0.1:exp(1)
+	ex2x2 = 0.1:0.1:4
+	
+	ex2y1 =ex2fun.(ex2x1) 
+	ex2y2 =ex2fun.(ex2x2) 
+	theme(:wong)
+	ex2plt = plot(ex2x1,ex2y1, framestyle=:origin, xlims=(0,exp(1)),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red)
+	plot!(ex2plt,ex2x2,ex2y2,c=:red)
+	xlims!(-1,4)
+	# ylims!()
+ 	# plot!(ex2plt,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
+	# xlims!(ex2plt,-1,2)
+	# plot!(ex2plt, fill=(0, 0.5, :red), xlims=(1,2))
+	md""" 
+	### Substitution: Definite Integrals
+	**Example:**
+		Evaluate
+	
+	```math
+	\begin{array}{ll}
+	(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} dx \\ \\
+	(ii) & \int_1^e \frac{\ln x}{x} dx \\ \\ 
+	\end{array}
+	```
+		
+	
+	
+	"""
+end
+
+# ╔═╡ 297d7fdb-0117-4bd1-adee-8ad640dbf025
+md"""
+### Symmetry
+**Integrals of Symmetric Functions**
+
+Suppose ``f`` is continuous on **``[-a,a]``**.
+
+* If ``f`` is **even** ``\left[f(-x)=f(x)\right]``, then 
+```math
+\int_{-a}^a f(x) dx = 2\int_0^a f(x) dx
+```
+
+* If ``f`` is **odd** ``\left[f(-x)=-f(x)\right]``, then 
+```math
+\int_{-a}^a f(x) dx = 0
+```
+
+**Example**
+Find 
+```math
+\int_{-1}^1 \frac{\tan x}{1+x^2+x^4} dx 
+```
+
+"""
+
+# ╔═╡ f1936990-709d-45a2-a349-b4f3e1eada69
+md"""
+### [Problem Set 5.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.5/ps5.5.pdf)
 """
 
 # ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
@@ -1056,7 +1150,7 @@ end
 # ╟─4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
 # ╟─3b115e62-8040-4a2c-8d6e-3d03669e7cd8
 # ╟─3c16772c-394d-4472-8749-f5990bb69013
-# ╠═3644e2e8-9b59-433e-9761-58566f0e1329
+# ╟─3644e2e8-9b59-433e-9761-58566f0e1329
 # ╟─b9d687cc-9c13-4285-85ac-90ef955f94f3
 # ╟─02ff212e-937d-4e8e-96d2-5f982618b92d
 # ╟─4ce8772c-4c83-4d98-83e8-f18ebf156447
@@ -1077,9 +1171,14 @@ end
 # ╟─7d30f1de-0225-4a1e-a76e-3c305615cbe2
 # ╟─78d284e8-bd29-4ec3-9470-2141574787eb
 # ╟─9b822e05-ad44-4238-9bfe-4b54d6e42628
+# ╟─597cd6c2-1ea4-4c33-a3a7-f6418a8fb186
 # ╟─08e5381c-4cf1-4c70-ba74-26a05b8046fa
+# ╟─805cf044-8187-410e-833d-f4323ce07380
+# ╟─497ff4cd-2705-49b3-bde6-671352e9b5a0
+# ╟─297d7fdb-0117-4bd1-adee-8ad640dbf025
+# ╟─f1936990-709d-45a2-a349-b4f3e1eada69
 # ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
 # ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
 # ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
 # ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
-# ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
