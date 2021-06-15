@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2021.1.11)  12 JUN 2021 13:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2021.1.11)  15 JUN 2021 06:52
 entering extended mode
-**./ps5-5.tex
-(ps5-5.tex
+**./ps6.5.tex
+(ps6.5.tex
 LaTeX2e <2020-02-02> patch level 5
 L3 programming layer <2020-08-07> (../class/aga-homework.cls
 
@@ -309,31 +309,36 @@ Package: enumitem 2019/06/20 v3.9 Customized lists
 \enit@inbox=\box57
 \enit@count@id=\count277
 \enitdp@description=\count278
+) (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/tools\afterpage.sty
+Package: afterpage 2014/10/28 v1.08 After-Page Package (DPC)
+\AP@output=\toks30
+\AP@partial=\box58
+\AP@footins=\box59
 )
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
 mode.def
 File: l3backend-pdfmode.def 2020-08-07 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count279
-\l__pdf_internal_box=\box58
-) (ps5-5.aux)
-\openout1 = `ps5-5.aux'.
+\l__pdf_internal_box=\box60
+) (ps6.5.aux)
+\openout1 = `ps6.5.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
-LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
 LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 2
-5.
+6.
 
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
@@ -378,81 +383,58 @@ ii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count280
 \scratchdimen=\dimen176
-\scratchbox=\box59
+\scratchbox=\box61
 \nofMPsegments=\count281
 \nofMParguments=\count282
-\everyMPshowfont=\toks30
+\everyMPshowfont=\toks31
 \MPscratchCnt=\count283
 \MPscratchDim=\dimen177
 \MPnumerator=\count284
 \makeMPintoPDFobject=\count285
-\everyMPtoPDFconversion=\toks31
+\everyMPtoPDFconversion=\toks32
 )
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
 ase.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
-
-(C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
-ty
-Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
-) (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/grfext\grfext.sty
-Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
-
-(C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
-keys.sty
-Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-))
-(C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
-.sty
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
-)
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-)
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
-Package grfext Info: Graphics extension search list:
-(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 504.
 )
 LaTeX Font Info:    Trying to load font information for OML+zplm on input line 
-25.
+26.
 
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 
-25.
+26.
 
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 
-25.
+26.
 
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 
-25.
+26.
 
 (C:\Users\mmogi\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 12.50409pt on input line 25.
+(Font)              scaled to size 12.50409pt on input line 26.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 25.
+(Font)              scaled to size 9.37807pt on input line 26.
 LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 25.
+(Font)              scaled to size 7.29405pt on input line 26.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 12.50409pt on input line 25.
+(Font)              scaled to size 12.50409pt on input line 26.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 25.
+(Font)              scaled to size 9.37807pt on input line 26.
 LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 25.
+(Font)              scaled to size 7.29405pt on input line 26.
 
 
 LaTeX Warning: No \author given.
@@ -472,29 +454,33 @@ LaTeX Font Info:    Font shape `U/msb/m/n' will be
 [1{C:/Users/mmogi/AppData/Local/MiKTeX/pdftex/config/pdftex.map}
 
 ] [2] [3]
-[4] [5] (ps5-5.aux) ) 
+[4] [5
+
+] [6] [7] (ps6.5.aux) ) 
 Here is how much of TeX's memory you used:
- 5889 strings out of 481212
- 85093 string characters out of 2905973
- 347081 words of memory out of 3000000
- 21351 multiletter control sequences out of 15000+200000
- 560687 words of font info for 101 fonts, out of 3000000 for 9000
+ 5808 strings out of 481212
+ 83111 string characters out of 2905973
+ 345329 words of memory out of 3000000
+ 21290 multiletter control sequences out of 15000+200000
+ 557442 words of font info for 94 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  44i,11n,49p,377b,348s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/enc/dv
-ips/base/8r.enc}<C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmex10.pfb><C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/ty
-pe1/public/amsfonts/cm/cmr10.pfb><C:/Users/mmogi/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/mmogi/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/mmogi/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/mmogi/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri.pfb><C:/Users/m
-mogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/User
-s/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/U
-sers/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on ps5-5.pdf (5 pages, 89358 bytes).
+{C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/enc/
+dvips/base/8r.enc}<C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/pub
+lic/amsfonts/cm/cmex10.pfb><C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/mmogi/AppData/Local/Programs/MiKT
+eX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/mmogi/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/mmogi/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/mmogi
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Us
+ers/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri.pfb>
+<C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.p
+fb><C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8
+a.pfb><C:/Users/mmogi/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/up
+lri8a.pfb>
+Output written on ps6.5.pdf (7 pages, 101941 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
+ 67 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

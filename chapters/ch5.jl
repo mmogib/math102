@@ -666,7 +666,7 @@ Solution: In class.
 md"""
 💣 BE CAREFUL:
 
-Evaluate ``\large \int_3^6 \frac{1}{x}dx``
+Evaluate ``\large \int_{-3}^6 \frac{1}{x}dx``
 """
 
 # ╔═╡ 4d4b41dc-f02f-4404-96c1-bb78376f010b
@@ -680,14 +680,21 @@ Solution: In class
 """
 
 # ╔═╡ 018998d3-5c21-468c-b3e8-f413a485eedd
-# begin 
-# 	pltExmpl = plot(x->2*x-x^2, framestyle=:origin, xlims=(0,2), ylims=(-1,2),fill=(0,0.5,:green), label=nothing)
-# 	plot!(pltExmpl,x->2*x-x^2, framestyle=:origin, xlims=(-1,3), ylims=(-1,2),label=nothing)
-# end
+begin 
+	pltExmpl = plot(x->2*x-x^2, framestyle=:origin, xlims=(0,2), ylims=(-1,2),fill=(0,0.5,:green), label=nothing)
+	plot!(pltExmpl,x->2*x-x^2, framestyle=:origin, xlims=(-1,3), ylims=(-1,2),label=nothing)
+end
+
+# ╔═╡ e69020cd-147f-4c08-8466-34dec3cebe07
+
+
+# ╔═╡ 638eef4b-d46c-453b-ac40-179ce70cc330
+ff(x)=2*x-x^2;integrate(ff(xx),(xx,0,2))
 
 # ╔═╡ 6233eebb-9318-4794-bbdf-23a0b2ddfbd9
 md"""
-### [Problem Set 5.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.3/ps5.3.pdf)
+### [Problem Set 5.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.3/ps5.3.pdf) 
+([Solution Part 1](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps2-solution.pdf), [Solution Part 2](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps2-2-solution.pdf))
 """
 
 # ╔═╡ 8bd4ea7f-95b3-46fc-9278-1f25487f7560
@@ -728,9 +735,9 @@ md"""
 |--------------|--------------|------- |
 | $$\int c f(x) dx =c\int  f(x) dx$$ |    | $\int [f(x)+g(x)] dx =\int  f(x) dx+\int g(x) dx$|
 | | | |
-|$$\int k dx = kx + C$$ | | $$\int x^n dx = \frac{x^{n+1}}{n+1} + C$$ 
+|$$\int k dx = kx + C$$ | | $$\int x^n dx = \frac{x^{n+1}}{n+1} + C, n\not=-1$$ 
 | | | |
-|$$\int \frac{1}{x} dx = \ln x + C$$  || $$\int e^x dx = e^x + C$$ 
+|$$\int \frac{1}{x} dx = \ln \|x\| + C$$  || $$\int e^x dx = e^x + C$$ 
 | | | |
 |$$\int a^x dx = \frac{a^x}{\ln a}+ C$$  || $$\int \sin x dx = -\cos x + C$$ 
 | | | |
@@ -740,8 +747,11 @@ md"""
 | | | |
 |$$\int \frac{1}{x^2+1} dx = \tan^{-1} x + C$$ || $$\int \frac{1}{\sqrt{1-x^2}} dx = \sin^{-1} x + C$$
 | | | |
-|$$\int \sinh x dx = \cosh x + C$$ || $$\int \sinh x dx = \cosh x + C$$
+|$$\int \sinh x dx = \cosh x + C$$ || $$\int \cosh x dx = \sinh x + C$$
 | | | |
+|$$\int \csc x\cot x dx = -\csc x + C$$ ||
+| | | |
+	
 
 
 """
@@ -767,7 +777,7 @@ md"""
 ### Applications
 **Question:** If $y=F(x)$, then what does $F'(x)$ represents?
 ### Net Change Theorem 
-The integral of a rate of change is the net change:
+The integral of a rate of change is the **net change**:
 ```math
 \int_a^b F'(x) dx = F(b) - F(a)
 ```
@@ -783,7 +793,7 @@ If an object moves along a straight line with position function ``s(t)``, then i
 \begin{array}{rcl}
 \text{displacement} &=& \int_{t_1}^{t_2}v(t) dt\\
 \\
-\text{total distance travlled} &=& \int_{t_1}^{t_2}|v(t)| dt \\ \\
+\text{total distance traveled} &=& \int_{t_1}^{t_2}|v(t)| dt \\ \\
 \end{array}
 ```
 - The acceleration of the object is ``a(t)=v'(t)``, so
@@ -873,6 +883,7 @@ end
 # ╔═╡ 597cd6c2-1ea4-4c33-a3a7-f6418a8fb186
 md"""
 ### [Problem Set 5.4](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.4/ps5.4.pdf)
+[Solution](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps4-1-solution.pdf)
 """
 
 # ╔═╡ 08e5381c-4cf1-4c70-ba74-26a05b8046fa
@@ -938,7 +949,7 @@ begin
 	
 	```math
 	\begin{array}{ll}
-	(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} dx \\ \\
+	(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} \\ \\
 	(ii) & \int_1^e \frac{\ln x}{x} dx \\ \\ 
 	\end{array}
 	```
@@ -976,7 +987,22 @@ Find
 # ╔═╡ f1936990-709d-45a2-a349-b4f3e1eada69
 md"""
 ### [Problem Set 5.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.5/ps5.5.pdf)
+[Solution](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps5-1-solution.pdf)
 """
+
+# ╔═╡ 2460d407-0fff-44c4-90ec-639f32414f49
+embedYouTube(id;title) = """
+<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+
+<h5>$title </h5>
+
+<div  notthestyle="position: relative; right: 0; top: 0; z-index: 300;">
+	<iframe width="400" height="250" src="https://www.youtube.com/embed/$id" 	title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>"""
+
+# ╔═╡ cf5a3df0-5bd2-40a9-8c41-010153a3e418
+HTML(embedYouTube("lUml-Rb1Dp8"; title="Solution (Part 1)"), embedYouTube("2COqHTAxS_o"; title="Solution (Part 2)"))
 
 # ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
 rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
@@ -1147,6 +1173,7 @@ end
 # ╠═cf3bce53-0260-403c-8910-b04b05b558fe
 # ╟─e3d540a3-7da5-4ef6-aa31-e629e752484e
 # ╟─13625b14-ac53-4995-bbcb-205cdf672c2a
+# ╟─cf5a3df0-5bd2-40a9-8c41-010153a3e418
 # ╟─4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
 # ╟─3b115e62-8040-4a2c-8d6e-3d03669e7cd8
 # ╟─3c16772c-394d-4472-8749-f5990bb69013
@@ -1158,7 +1185,9 @@ end
 # ╟─22f2a1f7-41aa-4cd6-9db9-076a6d5ed628
 # ╟─c8d0298f-2336-41b8-a4f4-a5be5db751f3
 # ╟─4d4b41dc-f02f-4404-96c1-bb78376f010b
-# ╟─018998d3-5c21-468c-b3e8-f413a485eedd
+# ╠═018998d3-5c21-468c-b3e8-f413a485eedd
+# ╠═e69020cd-147f-4c08-8466-34dec3cebe07
+# ╠═638eef4b-d46c-453b-ac40-179ce70cc330
 # ╟─6233eebb-9318-4794-bbdf-23a0b2ddfbd9
 # ╟─8bd4ea7f-95b3-46fc-9278-1f25487f7560
 # ╟─b2afdafa-7179-44d9-bf0b-1ed53fc0ae63
@@ -1177,8 +1206,9 @@ end
 # ╟─497ff4cd-2705-49b3-bde6-671352e9b5a0
 # ╟─297d7fdb-0117-4bd1-adee-8ad640dbf025
 # ╟─f1936990-709d-45a2-a349-b4f3e1eada69
+# ╟─2460d407-0fff-44c4-90ec-639f32414f49
 # ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
 # ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
 # ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
 # ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
-# ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
