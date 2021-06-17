@@ -32,6 +32,7 @@ begin
 	# 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
 	# ])
 
+	
 	using CommonMark, ImageIO, FileIO, ImageShow
 	using PlutoUI
 	using Plots, PlotThemes, LaTeXStrings, Random
@@ -78,6 +79,62 @@ begin
 	"""
 end
 
+# ╔═╡ e427ab16-9d5a-4200-8d96-8e49ec0da312
+begin
+	f1(x) = sin(x)+3+cnstslider
+	f2(x) = cos(2x)+1+cnstslider
+	f3(x) = cos(2x)+4+cnstslider
+	poi1=solve(f1(x)-f3(x),x) .|> p -> p.n()
+	theme(:wong)
+	a1,b1 = 1, 5
+	Δx1 = (b1-a1)/n1slider
+	x1Rect =a1:Δx1:b1
+	x1 = a1:0.1:b1
+	y1 = f1.(x1)
+	y2 = f2.(x1)
+	y3 = f3.(x1)
+	
+	p1=plot(x1,y1, fill=(y2,0.25,:green), label=nothing,c=:red)
+	p2=plot(x1,y1, fill=(y3,0.25,:green), label=nothing,c=:red)
+	
+	plot!(p1,x1,y2,label=nothing)
+	plot!(p2,x1,y3,label=nothing)
+	annotate!(p1,[
+				(3.5,3.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(3.2,1+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	annotate!(p2,[
+				(1.2,4.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(4,5+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	
+	plot!(p1; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	recs =[
+			Shape([(xi,f2(xi)),(xi+Δx1,f2(xi)),(xi+Δx1,f1(xi+Δx1)),(xi,f1(xi+Δx1))]) 			 for xi in x1Rect[1:end-1]
+		  ]
+	n1slider>2 && plot!(p1,recs, label=nothing,c=:green)
+	plot!(p2; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	scatter!(p2,(poi1[1],f3(poi1[1])), label="Point of instersection",legend=:bottomright)
+	# save("./imgs/6.1/sec6.1p2.png",p2)
+	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
+	
+	md""" **How can we find the area between the two curves?**
+	
+$p1
+	
+```math
+Area = \int_a^b \left[{\color{red}f(x)} - {\color{blue}g(x)}\right] dx
+```
+"""
+
+end
+
 # ╔═╡ 2ddde4c4-8217-41e3-9235-a6370b11ae5c
 md"""
 
@@ -112,6 +169,18 @@ begin
 	"""
 end
 
+# ╔═╡ d7928de3-89a4-4475-ba5b-2e707084685b
+md"""
+In geberal,
+
+$p2
+	
+```math
+Area = \int_a^b \left|f(x) - g(x)\right| dx
+```
+
+"""
+
 # ╔═╡ 784142ee-1416-4ccb-a341-0497422009b6
 html"<hr>"
 
@@ -126,6 +195,40 @@ Find the area of the region enclosed by the parabolas $y=x^2$ and $y=2x-x^2$.
 ---
 """
 
+
+# ╔═╡ 6a4dd437-8be1-4e17-b484-65707ec28215
+begin
+	ex2f1(x)=x^2
+	ex2f2(x)=2x-x^2
+	ex2poi=solve(ex2f1(x)-ex2f2(x)) .|> p->convert(Int,p.n())
+	ex2x=0:0.01:1
+	ex2widex=-1:0.01:2
+	ex2y1=ex2f1.(ex2x)
+	ex2y1wide=ex2f1.(ex2widex)
+	ex2y2=ex2f2.(ex2x)
+	ex2y2wide=ex2f2.(ex2widex)
+	ex2plt=plot(ex2x,ex2y2,label=nothing,fill=(0,0.5,:green))
+	plot!(ex2plt,ex2x,ex2y1,fill=(0,0,:white),label=nothing)
+	plot!(ex2widex,ex2y1wide, c=:red,label=nothing)
+	plot!(ex2widex,ex2y2wide, c=:blue,label=nothing)
+	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,2),label=nothing,xticks=[0,0,1])
+	ex2Rect = Shape([ (0.5,ex2f2(0.55))
+					, (0.55,ex2f2(0.55))
+					, (0.55,ex2f1(0.55))
+					, (0.5,ex2f1(0.55))
+					])
+	plot!(ex2Rect,label=nothing)
+	scatter!(ex2poi,ex2f1.(ex2poi),label=nothing)
+	annotate!([	(0.77,0.4,L"y=x^2")
+			  ,	(0.7,1.1,L"y=2x-x^2")
+			  , (0.54,0.24,text(L"\Delta x",10))
+			  ])
+	md"""
+	**Solution**
+	
+	$ex2plt
+	"""
+end
 
 # ╔═╡ 4337bc1f-933f-4e8d-abae-46b8ad99409e
 md"""
@@ -191,6 +294,7 @@ begin
 	scatter!([ex4poi1,ex4poi2],xlims=(-3.5,7),label=nothing,legend=:topleft)
 	md"""
 	**Solution:**
+	$ex4p
 	"""
 end
 
@@ -207,6 +311,18 @@ Find the area of the region enclosed by the curves ``y= {1\over x}``, ``y=x``, a
 
 
 """
+
+# ╔═╡ 0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
+begin
+	x5=0.1:0.1:10
+	x51=0:0.1:1
+	p5 = plot(x->x/4, xlims=(-1,10), framestyle=:origin, aspectratio=1,label=nothing)
+	plot!(x->x,c=:red,label=nothing)
+	# plot!(x51,1 ./ x51,fill=(x51/4,0.5,:blue),c=:white)
+	plot!(x5,1 ./ x5,c=:green,label=nothing)
+	xlims!(-0.1,3)
+	ylims!(-0.1,2)
+end
 
 # ╔═╡ 13625b14-ac53-4995-bbcb-205cdf672c2a
 md"""
@@ -267,15 +383,26 @@ Find the volume of the solid obtained by rotating about the ``x``-axis the regio
 begin
 	struct PlotData
 		x::StepRangeLen
-		y
-		p::Plots.Plot
-		f::Function
+		fun::Function
+		lb::Union{Integer,Vector{Float64}}
 	end
-	p = plot()
-	s62ex1 = PlotData(0:0.1:1,3,p,x->x)
-	fff(t)=t
-	typeof(fff)
+	PlotData(x,f)=PlotData(x,f,0)
+	fun(x)=x^2
+	s6e1 = PlotData(0:0.01:2, fun)
 	
+	@recipe function f(t::PlotData; customcolor = :green, fillit=true)
+		x, fun, lb = t.x, t.fun, t.lb
+		xrotation --> 45
+		zrotation --> 6, :quiet
+		aspectratio --> 1
+		framestyle --> :origin
+		label-->nothing
+		fill --> (fillit ? (lb,0.5,customcolor) : nothing)
+		x, fun.(x)
+	end
+	
+	plot(s6e1; customcolor = :black, fillit=false, )
+	typeof(s6e1.fun)
 # 	md"""
 # 	**Solution**
 
@@ -283,111 +410,6 @@ begin
 
 # 	"""
 end
-
-# ╔═╡ e427ab16-9d5a-4200-8d96-8e49ec0da312
-begin
-	f1(x) = sin(x)+3+cnstslider
-	f2(x) = cos(2x)+1+cnstslider
-	f3(x) = cos(2x)+4+cnstslider
-	poi1=solve(f1(x)-f3(x),x) .|> p -> p.n()
-	theme(:wong)
-	a1,b1 = 1, 5
-	Δx1 = (b1-a1)/n1slider
-	x1Rect =a1:Δx1:b1
-	x1 = a1:0.1:b1
-	y1 = f1.(x1)
-	y2 = f2.(x1)
-	y3 = f3.(x1)
-	
-	p1=plot(x1,y1, fill=(y2,0.25,:green), label=nothing,c=:red)
-	p2=plot(x1,y1, fill=(y3,0.25,:green), label=nothing,c=:red)
-	
-	plot!(p1,x1,y2,label=nothing)
-	plot!(p2,x1,y3,label=nothing)
-	annotate!(p1,[
-				(3.5,3.5+cnstslider,L"y=f(x)",:red),
-				(5.9,0,L"x"),
-				(0.2,6,L"y"),
-				(3.2,1+cnstslider,L"y=g(x)",:blue)
-				]
-			)
-	annotate!(p2,[
-				(1.2,4.5+cnstslider,L"y=f(x)",:red),
-				(5.9,0,L"x"),
-				(0.2,6,L"y"),
-				(4,5+cnstslider,L"y=g(x)",:blue)
-				]
-			)
-	
-	plot!(p1; p1Opt...,ylims=(-3,6),xlims=(-1,6))
-	recs =[
-			Shape([(xi,f2(xi)),(xi+Δx1,f2(xi)),(xi+Δx1,f1(xi+Δx1)),(xi,f1(xi+Δx1))]) 			 for xi in x1Rect[1:end-1]
-		  ]
-	n1slider>2 && plot!(p1,recs, label=nothing,c=:green)
-	plot!(p2; p1Opt...,ylims=(-3,6),xlims=(-1,6))
-	scatter!(p2,(poi1[1],f3(poi1[1])), label="Point of instersection",legend=:bottomright)
-	# save("./imgs/6.1/sec6.1p2.png",p2)
-	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
-	
-	md""" **How can we find the area between the two curves?**
-	
-$p1
-	
-```math
-Area = \int_a^b \left[{\color{red}f(x)} - {\color{blue}g(x)}\right] dx
-```
-"""
-
-end
-
-# ╔═╡ d7928de3-89a4-4475-ba5b-2e707084685b
-md"""
-In geberal,
-
-$p2
-	
-```math
-Area = \int_a^b \left|f(x) - g(x)\right| dx
-```
-
-"""
-
-# ╔═╡ 6a4dd437-8be1-4e17-b484-65707ec28215
-begin
-	ex2f1(x)=x^2
-	ex2f2(x)=2x-x^2
-	ex2poi=solve(ex2f1(x)-ex2f2(x)) .|> p->convert(Int,p.n())
-	ex2x=0:0.01:1
-	ex2widex=-1:0.01:2
-	ex2y1=ex2f1.(ex2x)
-	ex2y1wide=ex2f1.(ex2widex)
-	ex2y2=ex2f2.(ex2x)
-	ex2y2wide=ex2f2.(ex2widex)
-	ex2plt=plot(ex2x,ex2y2,label=nothing,fill=(0,0.5,:green))
-	plot!(ex2plt,ex2x,ex2y1,fill=(0,0,:white),label=nothing)
-	plot!(ex2widex,ex2y1wide, c=:red,label=nothing)
-	plot!(ex2widex,ex2y2wide, c=:blue,label=nothing)
-	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,2),label=nothing,xticks=[0,0,1])
-	ex2Rect = Shape([ (0.5,ex2f2(0.55))
-					, (0.55,ex2f2(0.55))
-					, (0.55,ex2f1(0.55))
-					, (0.5,ex2f1(0.55))
-					])
-	plot!(ex2Rect,label=nothing)
-	scatter!(ex2poi,ex2f1.(ex2poi),label=nothing)
-	annotate!([	(0.77,0.4,L"y=x^2")
-			  ,	(0.7,1.1,L"y=2x-x^2")
-			  , (0.54,0.24,text(L"\Delta x",10))
-			  ])
-	md"""
-	**Solution**
-	
-	$ex2plt
-	"""
-end
-
-# ╔═╡ fe112195-8159-4ed2-a12b-7dc16bd82f53
-
 
 # ╔═╡ 835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
 md"""
@@ -426,6 +448,12 @@ WE USE CROSS-SECTION METHOD
 md"""
 **Example 6** Figure below shows a solid with a circular base of radius ``1``. Parallel cross-sections perpendicular to the base are equilateral triangles. Find the volume of the solid.
 $(load(download("https://www.dropbox.com/s/bbxedang718jvvp/img4.png?dl=0")))
+"""
+
+# ╔═╡ 5e9b4aad-328e-443b-8f9e-d643e93414e1
+md"""
+### [Problem Set 6.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.pdf)
+
 """
 
 # ╔═╡ ca2016b0-83dd-445f-99a0-b685d6151eb3
@@ -519,18 +547,19 @@ StartPause() = @htl("""
 # ╟─61b6234e-5cb2-4337-ae29-14106ac6bd59
 # ╠═e370f794-41b6-4acf-9ef6-453fba223dea
 # ╟─629f1cf7-ffa9-496b-9a3f-405089b43a8e
+# ╟─0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
 # ╟─13625b14-ac53-4995-bbcb-205cdf672c2a
 # ╟─598b7b2e-01dd-41aa-966a-a361921a5c60
 # ╟─5c1989f5-bd7b-4c82-a9e3-54f47539fe2d
 # ╟─078023da-23bc-4401-a1dc-fe869400f9b0
-# ╠═440eec5a-5a9b-4783-9dd2-3427fe340bc6
-# ╠═fe112195-8159-4ed2-a12b-7dc16bd82f53
+# ╟─440eec5a-5a9b-4783-9dd2-3427fe340bc6
 # ╟─835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
 # ╟─635e4f34-9401-4234-936b-8b1029c6a7db
 # ╟─c9b6ee5f-be74-4067-8bff-8e408ddd0196
 # ╟─48dcb862-d764-4421-851a-213c9d733b02
 # ╟─383f7db2-80f5-4a68-a2d1-e34bdc804bff
 # ╟─8d1a94f7-f6e6-4b95-a45e-03550125801e
+# ╟─5e9b4aad-328e-443b-8f9e-d643e93414e1
 # ╟─ca2016b0-83dd-445f-99a0-b685d6151eb3
 # ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
 # ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
