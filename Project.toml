@@ -1,5 +1,6 @@
 [deps]
 CommonMark = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
+Contour = "d38c429a-6771-53c6-b99e-75d170b6e991"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 HypertextLiteral = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
