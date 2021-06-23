@@ -397,6 +397,7 @@ end
 md"""
 ### [Problem Set 6.1](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.1/ps6.1.pdf)
 
+([Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.1/ps6.1-solution.pdf))
 """
 
 # ╔═╡ 598b7b2e-01dd-41aa-966a-a361921a5c60
@@ -513,8 +514,10 @@ $(load(download("https://www.dropbox.com/s/bbxedang718jvvp/img4.png?dl=0")))
 
 # ╔═╡ 5e9b4aad-328e-443b-8f9e-d643e93414e1
 md"""
-### [Problem Set 6.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.pdf)
+### [Problem Set 6.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.and.revision.pdf)
 
+
+([Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.and.revision-solution.pdf))
 """
 
 # ╔═╡ 3d267c3e-4509-48d6-a094-39e15940fd6c
@@ -644,6 +647,7 @@ Find the volume of the solid obtained by rotating the region bounded by ``y=x-x^
 md"""
 ### [Problem Set 6.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.3/ps6.3.pdf)
 
+[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.3/ps6.3-solution.pdf)
 """
 
 # ╔═╡ 28e60db5-e3d7-49d5-b530-97fc52a8fe5b
@@ -707,6 +711,7 @@ becomes 4 on the interval ``[0,c]``.
 md"""
 ### [Problem Set 6.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.5/ps6.5.pdf)
 
+[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.5/ps6.5-solution.pdf)
 """
 
 # ╔═╡ ca2016b0-83dd-445f-99a0-b685d6151eb3
