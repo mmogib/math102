@@ -322,7 +322,7 @@ md"""
 # ╔═╡ 6f66f032-fcfa-43ac-978e-3598aebaa6e8
 begin
 
-	release72 = Date(2021,6,26) < now()
+	release72 = Date(2021,6,25) < now()
 	solution72 = release72 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.2/ps7.2-solution.pdf)" : md"Solution will be released soon"
 	md"""
 	### [Problem Set 7.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.2/ps7.2.pdf)
@@ -376,7 +376,7 @@ md"""
 
 # ╔═╡ 0b7c21ca-a24b-4d62-8b40-beb1d7dc3281
 begin
-	release73 = Date(2021,6,26) < now()
+	release73 = Date(2021,6,25) < now()
 	solution73 = release73 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.3/ps7.3-solution.pdf)" : md"Solution will be released soon"
 	md"""
 	### [Problem Set 7.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.3/ps7.3.pdf)
@@ -534,7 +534,7 @@ dx=\frac{2}{1+t^2}dt, & \cos{x}=\frac{1-t^2}{1+t^2}, &  \sin{x}=\frac{2t}{1+t^2}
 
 # ╔═╡ f8de5f89-881e-43e7-b478-9cadc4ab6950
 begin
-	release74 = Date(2021,6,30) < now()
+	release74 = Date(2021,6,25) < now()
 	solution74 = release74 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.4/ps7.4-solution.pdf)" : md"Solution will be released soon"
 	md"""
 	### [Problem Set 7.4](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.4/ps7.4.pdf)
@@ -544,7 +544,7 @@ end
 
 # ╔═╡ 8a10bc2c-72d9-47aa-a46b-79c6cdce2d23
 begin
-	release75 = Date(2021,6,30) < now()
+	release75 = Date(2021,6,25) < now()
 	solution75 = release75 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.5/ps7.5-solution.pdf)" : md"Solution will be released soon"
 md"""
 ## Section 7.5
@@ -734,7 +734,7 @@ md"""
 
 # ╔═╡ d50e295d-c390-449c-975b-70ab5296ab97
 begin
-	release78 = Date(2021,6,30) < now()
+	release78 = Date(2021,6,25) < now()
 	solution78 = release78 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.8/ps7.8-solution.pdf)" : md"Solution will be released soon"
 md"""
 ### [Problem Set 7.8](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.8/ps7.8.pdf)
@@ -753,14 +753,14 @@ end
 # ╟─1c821257-3b61-4187-a556-0e5736af27b2
 # ╟─1a6fc415-eb31-4df1-a314-40aff9e0fa96
 # ╟─030a2871-1b68-48c6-9f51-d4bcd0e86bb6
-# ╠═84ad187d-e4a7-48c6-8a5c-e9e518788689
+# ╟─84ad187d-e4a7-48c6-8a5c-e9e518788689
 # ╟─58719d77-9812-4002-b83f-2be9050ccf8a
 # ╟─5bbb85cb-a5be-4010-bd41-caa339ef92dd
 # ╟─9cc8c631-741d-4020-a74c-4fb4541fce70
 # ╟─c67e0db7-f34a-4e4d-852b-23d3ab18be26
 # ╟─46b710e8-2903-47de-a26b-62537d8fd2e1
 # ╟─48a57bf3-0c09-4f43-bd1f-0e31c4acb288
-# ╠═6f66f032-fcfa-43ac-978e-3598aebaa6e8
+# ╟─6f66f032-fcfa-43ac-978e-3598aebaa6e8
 # ╟─1e0a2bb0-62bc-4c42-8269-7dd3943bcce1
 # ╟─dfa3ca61-61db-4b15-b9ba-555a0637e31c
 # ╟─0b7c21ca-a24b-4d62-8b40-beb1d7dc3281
