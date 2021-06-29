@@ -515,7 +515,7 @@ Find
 
 # ╔═╡ 1e271f61-1835-49f3-9a4b-fdf7c7883c8a
 md"""
-### (Exercise 59)
+### (Exercise (59 ed. 8) 63 ed. 9 )
 
 Special Substitution (``t = \tan \left(\frac{x}{2}\right), \quad -\pi < x < \pi``)
 **(for rational functions of ``\sin x`` and ``\cos x``)**
