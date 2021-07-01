@@ -646,7 +646,7 @@ end
 # ╔═╡ 037d45ef-5173-43f6-b9cf-d4e4232406c8
 begin
 	ttSlider = @bind ttslider Slider(1:10000,show_value=true)
-	pSlider = @bind pslider Slider(-10:10,show_value=true)
+	pSlider = @bind pslider NumberField(-10:0.1:10,default=1)
 	md"""
 	
 	-------------
@@ -654,7 +654,7 @@ begin
 	|||
 	|---|---|
 	|||
-	|t = $ttSlider | p = $pSlider|
+	|p = $pSlider | t = $ttSlider|
 	|||
 	
 	"""
@@ -663,9 +663,10 @@ end
 # ╔═╡ 03e7485c-9c82-4d6d-ada8-1cf4e8df9b3b
 begin
 	tt,pp=ttslider, pslider
+	ptxt = pslider==1 ? "x" : "x^{$pslider}"
 	fn3(p) = p>0 ? 1/x^p : p==0 ? x : x^abs(p) 
 	int3(p,t) = (t<1000) ? (p==0 ? ttslider-1 : round(integrate(fn3(p),(x,1,ttslider)).n(),digits=3)) : integrate(fn3(p),(x,1,oo))
-	pt3(t)= t<1000 ? L"\int_1^{%$ttslider} \frac{1}{x^{%$pslider}}dx = %$(int3(pslider,ttslider))" : L"\int_1^{\infty} \frac{1}{x^{%$pslider}}dx = %$(int3(pslider,ttslider))"
+	pt3(t)= t<1000 ? L"\int_1^{%$ttslider} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))" : L"\int_1^{\infty} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))"
 	p3=plot(1:5;annotations=[(3,4,pt3(tt),14)], showaxis=:hide,ticks=[],label=:none,
 		c=:white,ylims=(0,5))
 	md"""
@@ -728,7 +729,7 @@ md"""
 """
 
 # ╔═╡ d8c87a34-318b-45d4-bdb6-3629470889b7
-# integrate(1/(sqrt(x-2)),(x,2,5))
+integrate(1/(sqrt(x-2)),(x,2,5))
 # integrate(1/(x-1),(x,0,3))
 # integrate(log(x),(x,0,1))
 
