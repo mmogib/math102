@@ -39,11 +39,10 @@ begin
 	using SymPy
 	using HypertextLiteral
 	using ImageTransformations
-	using PrettyTables
 end
 
 # ╔═╡ ad045108-9dca-4a61-ac88-80a3417c95f2
-TableOfContents(title="MATH102 - TERM 221")
+TableOfContents(title="MATH102 - TERM 203")
 
 # ╔═╡ 1e9f4829-1f50-47ae-8745-0daa90e7aa42
 md""" # Chapter 5 
@@ -71,14 +70,14 @@ $(load(download("https://www.dropbox.com/s/ik2szmkiwcz389m/ex1-0.png?raw=1")))
 
 
 # ╔═╡ 8ad65bee-9135-11eb-166a-837031c4bc45
-f(x)=x^2
+f(x)=sin(x)
 
 # ╔═╡ e7a87684-49b0-428c-9fef-248cf868cf33
 begin 
-	ns = @bind n  Slider(2:4000,show_value=true, default=4)
+	ns = @bind n  Slider(2:2000,show_value=true, default=4)
 	as = @bind a  NumberField(0:1)
 	bs = @bind b  NumberField(a+1:10)
-	lrs = @bind lr Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint","rnd"=>"Random"])
+	lrs = @bind lr Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint"])
 	md"""
 	n = $ns  a = $as  b = $bs method = $lrs
 	
@@ -113,9 +112,8 @@ end
 # ╔═╡ 55084c2d-6f81-4e55-946c-703245a6bb86
 md"""
 **Remark**
-- ``A`` is the unique number that is smaller than all the upper sums and bigger than all the lower sums.
 
-* In general, we form lower (and upper) sums by choosing the sample points $x^*_i$ so that $f(x^*_i)$ is the minimum (and maximum) value of $f$ on the $i$ th subinterval. 
+In general, we form lower (and upper) sums by choosing the sample points $x^*_i$ so that $f(x^*_i)$ is the minimum (and maximum) value of $f$ on the $i$ th subinterval. 
 
 $(load(download("https://www.dropbox.com/s/y8l8zfqy3ct52b5/upper_lower.png?raw=1")))
 """
@@ -167,7 +165,7 @@ g(x)=-(x-2)^3+1
 # ╔═╡ bceda6d4-b93f-4282-8f03-fc44132ea1bb
 begin 
 	ns2 = @bind n2  Slider(2:2000,show_value=true, default=4)
-	as2 = @bind a2  NumberField(-10:10, default=0)
+	as2 = @bind a2  NumberField(0:1)
 	bs2 = @bind b2  NumberField(a+2*pi:10)
 	lrs2 = @bind lr2 Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint", "rnd"=>"Random"])
 	md"""
@@ -688,6 +686,9 @@ begin
 	plot!(pltExmpl,x->2*x-x^2, framestyle=:origin, xlims=(-1,3), ylims=(-1,2),label=nothing)
 end
 
+# ╔═╡ e69020cd-147f-4c08-8466-34dec3cebe07
+
+
 # ╔═╡ 638eef4b-d46c-453b-ac40-179ce70cc330
 ff(x)=2*x-x^2;integrate(ff(xx),(xx,0,2))
 
@@ -1009,11 +1010,12 @@ rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
 #Shape(x .+ [0,Δx,Δx,0], [0,0,f(xs),f(xs)])
 
 # ╔═╡ a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-function reimannSum(f,n,a,b;method="l",color=:green, plot_it=false)
+function reimannSum(f,n,a,b;method="l",color=:green)
 	Δx =(b-a)/n
 	x =a:0.1:b
 	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
 	
+	p=plot(x,f.(x);legend=nothing)
 	(partition,recs) = if method=="r"
 		 parts = (a+Δx):Δx:b
 		 rcs = [rect(p-Δx,Δx,p,f) for p in parts]
@@ -1032,20 +1034,18 @@ function reimannSum(f,n,a,b;method="l",color=:green, plot_it=false)
 		(parts,rcs)
 	end
 	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
-	p=plot(x,f.(x);legend=nothing)
 	plot!(p,recs,framestyle=:origin,opacity=.4, color=color)
 	s = round(sum(f.(partition)*Δx),sigdigits=6)
-	return plot_it ? (p,s) : s
+	return (p,s)
 end
 
 # ╔═╡ d34b4862-9135-11eb-120f-6f82295f0759
 begin
 	theme(:wong)
-	anchor1 = 0.5 
-	(p,s)=reimannSum(f,n,a,b;method=lr,plot_it=true)
+	
+	(p,s)=reimannSum(f,n,a,b;method=lr)
 	
 	annotate!(p,[(0.3,0.75,L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12)])
-	annotate!(p,[(anchor1,f(anchor1+0.1),L"$y=%$f(x)$",12)])
 	
 	md""" 	
 	
@@ -1058,7 +1058,7 @@ end
 begin
 	theme(:wong)
 	
-	(p2,s2)=reimannSum(g,n2,a2,b2;method=lr2,color=:blue,plot_it=true)
+	(p2,s2)=reimannSum(g,n2,a2,b2;method=lr2,color=:blue)
 	
 	annotate!(p2,[(2,4.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
 	
@@ -1139,7 +1139,6 @@ LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 PlotThemes = "ccf2f8ad-2431-5c83-bf29-c5338b663b6a"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-PrettyTables = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 
@@ -1154,7 +1153,6 @@ LaTeXStrings = "~1.3.0"
 PlotThemes = "~3.0.0"
 Plots = "~1.31.7"
 PlutoUI = "~0.7.39"
-PrettyTables = "~1.3.1"
 SymPy = "~1.1.7"
 """
 
@@ -1164,7 +1162,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "71e19308914bd4f3996312f49fff8d8f0463036b"
+project_hash = "a231b2382a1f51b662c6a2f7b82700bccc3c795a"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -1939,12 +1937,6 @@ git-tree-sha1 = "47e5f437cc0e7ef2ce8406ce1e7e24d44915f88d"
 uuid = "21216c6a-2e73-6563-6e65-726566657250"
 version = "1.3.0"
 
-[[deps.PrettyTables]]
-deps = ["Crayons", "Formatting", "Markdown", "Reexport", "Tables"]
-git-tree-sha1 = "dfb54c4e414caa595a1f2ed759b160f5a3ddcba5"
-uuid = "08abe8d2-0d0c-5749-adfa-8a2ac140af0d"
-version = "1.3.1"
-
 [[deps.Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
@@ -2446,7 +2438,7 @@ version = "1.4.1+0"
 # ╟─41603f71-3724-4fcc-8421-1a64f34ff80f
 # ╠═8ad65bee-9135-11eb-166a-837031c4bc45
 # ╟─e7a87684-49b0-428c-9fef-248cf868cf33
-# ╟─d34b4862-9135-11eb-120f-6f82295f0759
+# ╠═d34b4862-9135-11eb-120f-6f82295f0759
 # ╟─2da325ba-48cc-44b3-be34-e0cb46e33068
 # ╟─8436d1b3-c03e-42e6-bbff-e785738e0f89
 # ╟─1081bd99-7658-4c32-812c-14235bd82596
@@ -2454,13 +2446,13 @@ version = "1.4.1+0"
 # ╟─ba3e664e-8952-4159-bfb7-b24d9e9fb1d2
 # ╟─8e5fcb62-afeb-410d-8cc2-e0b27e052a25
 # ╟─30b561dd-6e6b-4719-abc0-9938099d5487
-# ╠═d854d0ea-c5dd-4efa-9f46-83807339e163
+# ╟─d854d0ea-c5dd-4efa-9f46-83807339e163
 # ╟─bceda6d4-b93f-4282-8f03-fc44132ea1bb
 # ╟─cbf534bd-a329-4bc2-9940-f53a22e6d17e
 # ╟─94b4f73a-ee55-405a-be50-bb92048f4eb2
 # ╟─0a344b61-a226-49ee-ba19-f618390db269
 # ╟─4d72f4f3-1dbc-49b9-894f-a521a24e2531
-# ╟─e427ab16-9d5a-4200-8d96-8e49ec0da312
+# ╠═e427ab16-9d5a-4200-8d96-8e49ec0da312
 # ╟─4e0ef31d-05e7-4974-9282-fa4579e16328
 # ╟─2bef2339-7afe-427d-bdc5-19b9e9b43878
 # ╟─0f3814d4-6ee7-4242-88ea-5ecc7bf752bf
@@ -2499,8 +2491,9 @@ version = "1.4.1+0"
 # ╟─22f2a1f7-41aa-4cd6-9db9-076a6d5ed628
 # ╟─c8d0298f-2336-41b8-a4f4-a5be5db751f3
 # ╟─4d4b41dc-f02f-4404-96c1-bb78376f010b
-# ╟─018998d3-5c21-468c-b3e8-f413a485eedd
-# ╟─638eef4b-d46c-453b-ac40-179ce70cc330
+# ╠═018998d3-5c21-468c-b3e8-f413a485eedd
+# ╠═e69020cd-147f-4c08-8466-34dec3cebe07
+# ╠═638eef4b-d46c-453b-ac40-179ce70cc330
 # ╟─6233eebb-9318-4794-bbdf-23a0b2ddfbd9
 # ╟─8bd4ea7f-95b3-46fc-9278-1f25487f7560
 # ╟─b2afdafa-7179-44d9-bf0b-1ed53fc0ae63
@@ -2524,6 +2517,6 @@ version = "1.4.1+0"
 # ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
 # ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
 # ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
-# ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

@@ -1,12 +1,12 @@
 version: "3.8"
-services: 
+services:
   app:
-    container_name: t203math102
-    build: 
+    container_name: t221math102
+    build:
       context: .
-      args: 
-        - JULIA_VERSION=1.6.1
-    ports: 
-      - "1234:1234"
-    volumes: 
+      args:
+        - JULIA_VERSION=1.8
+    ports:
+      - "1234:1221"
+    volumes:
       - .:/home/julia/project
