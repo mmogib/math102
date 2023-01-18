@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.11
+# v0.19.19
 
 using Markdown
 using InteractiveUtils
@@ -48,7 +48,7 @@ TableOfContents(title="MATH102 - TERM 221")
 # ╔═╡ 1e9f4829-1f50-47ae-8745-0daa90e7aa42
 md""" # Chapter 5 
 
-## Section 5.1
+## Section 5.2
 
 """
 
@@ -71,7 +71,7 @@ $(load(download("https://www.dropbox.com/s/ik2szmkiwcz389m/ex1-0.png?raw=1")))
 
 
 # ╔═╡ 8ad65bee-9135-11eb-166a-837031c4bc45
-f(x)=x^2
+f(x)=5-x^2
 
 # ╔═╡ e7a87684-49b0-428c-9fef-248cf868cf33
 begin 
@@ -84,6 +84,23 @@ begin
 	
 	
 	"""
+end
+
+# ╔═╡ c894d994-a7fc-4e07-8941-e9f9aa89fef0
+begin 
+	Δx =(b-a)/n
+	xx1 =a:0.1:b
+	
+	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
+	
+	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
+	# pp1=plot(xx1,f.(xx1);legend=nothing)
+	pp1 = plot(xx1, f.(xx1), fillrange = zero, fillalpha = 0.35, c = :green, framestyle=:origin, label=nothing)
+	anck1 = (b-a)/2
+	anck2 = f(anck1)/2
+	annotate!(pp1,[(anck1,anck2,L"$S$",12)])
+	annotate!(pp1,[(anck1,f(anck1),L"$y=%$f(x)$",12)])
+	""
 end
 
 # ╔═╡ 2da325ba-48cc-44b3-be34-e0cb46e33068
@@ -156,7 +173,7 @@ begin
 end
 
 # ╔═╡ 30b561dd-6e6b-4719-abc0-9938099d5487
-md""" ## Section 5.2 
+md""" ## Section 5.3 
 **(The Definite Intergal)**
 
 """
@@ -1044,7 +1061,7 @@ begin
 	anchor1 = 0.5 
 	(p,s)=reimannSum(f,n,a,b;method=lr,plot_it=true)
 	
-	annotate!(p,[(0.3,0.75,L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12)])
+	annotate!(p,[(anchor1,f(anchor1)-2,L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12)])
 	annotate!(p,[(anchor1,f(anchor1+0.1),L"$y=%$f(x)$",12)])
 	
 	md""" 	
@@ -1162,7 +1179,7 @@ SymPy = "~1.1.7"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.0"
+julia_version = "1.8.3"
 manifest_format = "2.0"
 project_hash = "71e19308914bd4f3996312f49fff8d8f0463036b"
 
@@ -1212,7 +1229,7 @@ uuid = "fa961155-64e5-5f13-b03f-caf6b980ea82"
 version = "0.4.2"
 
 [[deps.Cairo_jll]]
-deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
+deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
 git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.16.1+1"
@@ -1383,10 +1400,10 @@ uuid = "c87230d0-a227-11e9-1b43-d7ebe4e7570a"
 version = "0.4.1"
 
 [[deps.FFMPEG_jll]]
-deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers", "LAME_jll", "Libdl", "Ogg_jll", "OpenSSL_jll", "Opus_jll", "Pkg", "Zlib_jll", "libaom_jll", "libass_jll", "libfdk_aac_jll", "libvorbis_jll", "x264_jll", "x265_jll"]
-git-tree-sha1 = "ccd479984c7838684b3ac204b716c89955c76623"
+deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers", "LAME_jll", "Libdl", "Ogg_jll", "OpenSSL_jll", "Opus_jll", "PCRE2_jll", "Pkg", "Zlib_jll", "libaom_jll", "libass_jll", "libfdk_aac_jll", "libvorbis_jll", "x264_jll", "x265_jll"]
+git-tree-sha1 = "74faea50c1d007c85837327f6775bea60b5492dd"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
-version = "4.4.2+0"
+version = "4.4.2+2"
 
 [[deps.FileIO]]
 deps = ["Pkg", "Requires", "UUIDs"]
@@ -1704,9 +1721,9 @@ version = "1.42.0+0"
 
 [[deps.Libiconv_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "42b62845d70a619f063a7da093d995ec8e15e778"
+git-tree-sha1 = "c7cb1f5d892775ba13767a87c7ada0b980ea0a71"
 uuid = "94ce4f54-9a6c-5748-9c1c-f9c7231a4531"
-version = "1.16.1+1"
+version = "1.16.1+2"
 
 [[deps.Libmount_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1868,6 +1885,11 @@ git-tree-sha1 = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
 version = "1.4.1"
 
+[[deps.PCRE2_jll]]
+deps = ["Artifacts", "Libdl"]
+uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
+version = "10.40.0+0"
+
 [[deps.PCRE_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "b2a7af664e098055a7529ad1a900ded962bca488"
@@ -1969,9 +1991,9 @@ version = "1.0.0"
 
 [[deps.Qt5Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "xkbcommon_jll"]
-git-tree-sha1 = "c6c0f690d0cc7caddb74cef7aa847b824a16b256"
+git-tree-sha1 = "0c03844e2231e12fda4d0086fd7cbe4098ee8dc5"
 uuid = "ea2cea3b-5b76-57ae-a6ef-0a8af62496e1"
-version = "5.15.3+1"
+version = "5.15.3+2"
 
 [[deps.Quaternions]]
 deps = ["DualNumbers", "LinearAlgebra", "Random"]
@@ -2145,7 +2167,7 @@ version = "1.7.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.0"
+version = "1.10.1"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
@@ -2446,7 +2468,8 @@ version = "1.4.1+0"
 # ╟─41603f71-3724-4fcc-8421-1a64f34ff80f
 # ╠═8ad65bee-9135-11eb-166a-837031c4bc45
 # ╟─e7a87684-49b0-428c-9fef-248cf868cf33
-# ╟─d34b4862-9135-11eb-120f-6f82295f0759
+# ╟─c894d994-a7fc-4e07-8941-e9f9aa89fef0
+# ╠═d34b4862-9135-11eb-120f-6f82295f0759
 # ╟─2da325ba-48cc-44b3-be34-e0cb46e33068
 # ╟─8436d1b3-c03e-42e6-bbff-e785738e0f89
 # ╟─1081bd99-7658-4c32-812c-14235bd82596
@@ -2521,7 +2544,7 @@ version = "1.4.1+0"
 # ╟─f1936990-709d-45a2-a349-b4f3e1eada69
 # ╟─2460d407-0fff-44c4-90ec-639f32414f49
 # ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-# ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
+# ╠═ad3dd437-7cfc-4cdc-a951-15949d39cf15
 # ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
 # ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
 # ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
