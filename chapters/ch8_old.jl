@@ -4,804 +4,191 @@
 using Markdown
 using InteractiveUtils
 
-# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
-macro bind(def, element)
-    quote
-        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
-        local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
-        el
-    end
-end
-
-# ╔═╡ e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╔═╡ 01820aa0-d887-11eb-0307-758b12f13e10
 begin
-	# import Pkg
-	# Pkg.add("Contour")
-	# Pkg.activate(mktempdir())
-	# Pkg.add([
-	# 	Pkg.PackageSpec(name="ImageIO", version="0.5"),
-	# 	Pkg.PackageSpec(name="ImageShow", version="0.3"),
-	# 	Pkg.PackageSpec(name="FileIO", version="1.9"),
-	# 	Pkg.PackageSpec(name="CommonMark", version="0.8"),
-	# 	Pkg.PackageSpec(name="Plots", version="1.16"),
-	# 	Pkg.PackageSpec(name="PlotThemes", version="2.0"),
-	# 	Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
-	# 	Pkg.PackageSpec(name="PlutoUI", version="0.7"),
-	# 	Pkg.PackageSpec(name="Pluto", version="0.14"),
-	# 	Pkg.PackageSpec(name="SymPy", version="1.0"),
-	#   	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
-	# 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
-	# ])
-
-	
-	using CommonMark, ImageIO, FileIO, ImageShow
 	using PlutoUI
-	using Plots, PlotThemes, LaTeXStrings, Random
+	using Plots, PlotThemes, LaTeXStrings
+	plotly()
 	using SymPy
+	using Dates
+	using ImageShow, ImageIO, ImageTransformations
+	using FileIO
 	using HypertextLiteral
-	using ImageTransformations
-	using Contour
 end
 
-# ╔═╡ ad045108-9dca-4a61-ac88-80a3417c95f2
-TableOfContents(title="MATH102 - TERM 221")
+# ╔═╡ a267a6be-6141-4472-bc34-156ba6bf8f56
+TableOfContents(title="MATH 102")
 
-# ╔═╡ 1e9f4829-1f50-47ae-8745-0daa90e7aa42
-md""" # Chapter 6
+# ╔═╡ e1426763-9558-4e05-a10f-3713badece23
+x = symbols("x", real=true);html""
 
-## Section 6.1
+# ╔═╡ 9444b967-d4d9-441a-b295-0cc29c7fb578
+begin
+	p1 = plot(x->exp(-x)*cos(x), showaxis=false, ticks=[],label=nothing)
+	md"""
+	# Chapter 8: Further Applications of Integration
 
-"""
+	## Section 8.1
+	**Arc Length**
 
-# ╔═╡ 90f42d35-f81e-4c38-8a73-77b37755f671
+	**_QUESTION_**
+
+	What is the length of the curve?
+
+	
+	$p1
+	"""
+end
+
+# ╔═╡ a8d3d297-bd27-408b-857f-95ae790530a3
 begin 
-	struct PlotData
-		x::StepRangeLen
-		fun::Function
-		lb::Union{Integer,Vector{Float64}}
-	end
-	PlotData(x,f)=PlotData(x,f,0)	
-	@recipe function f(t::PlotData; customcolor = :green, fillit=true)
-		x, fun, lb = t.x, t.fun, t.lb
-		xrotation --> 45
-		zrotation --> 6, :quiet
-		aspect_ratio --> 1
-		framestyle --> :origin
-		label-->nothing
-		fill --> (fillit ? (lb,0.5,customcolor) : nothing)
-		x, fun.(x)
-	end
-	x, y = symbols("x,y", real=true)
-	p1Opt = (framestyle=:origin, aspectration=1)
-	function plot_implicit(F, c=0;
-			xrng=(-5,5), yrng=xrng, zrng=xrng,
-			nlevels=6,         # number of levels in a direction
-			slices=Dict(:x => :blue,
-				:y => :red,
-				:z => :green), # which directions and color
-			kwargs...          # passed to initial `plot` call
-		)
-
-		_linspace(rng, n=150) = range(rng[1], stop=rng[2], length=n)
-
-		X1, Y1, Z1 = _linspace(xrng), _linspace(yrng), _linspace(zrng)
-
-		p = Plots.plot(;legend=false,kwargs...)
-
-		if :x ∈ keys(slices)
-			for x in _linspace(xrng, nlevels)
-				local X1 = [F(x,y,z) for y in Y1, z in Z1]
-				cnt = contours(Y1,Z1,X1, [c])
-				for line in lines(levels(cnt)[1])
-					ys, zs = coordinates(line) # coordinates of this line segment
-					plot!(p, x .+ 0 * ys, ys, zs, color=slices[:x])
-				end
-			end
-		end
-
-		if :y ∈ keys(slices)
-			for y in _linspace(yrng, nlevels)
-				local Y1 = [F(x,y,z) for x in X1, z in Z1]
-				cnt = contours(Z1,X1,Y1, [c])
-				for line in lines(levels(cnt)[1])
-					xs, zs = coordinates(line) # coordinates of this line segment
-					plot!(p, xs, y .+ 0 * xs, zs, color=slices[:y])
-				end
-			end
-		end
-
-		if :z ∈ keys(slices)
-			for z in _linspace(zrng, nlevels)
-				local Z1 = [F(x, y, z) for x in X1, y in Y1]
-				cnt = contours(X1, Y1, Z1, [c])
-				for line in lines(levels(cnt)[1])
-					xs, ys = coordinates(line) # coordinates of this line segment
-					plot!(p, xs, ys, z .+ 0 * xs, color=slices[:z])
-				end
-			end
-		end
-
-
-		p
-	end
-	html"......"
+	img1 = load("./imgs/8.1/img1.png")
+	imresize(img1,(400,900))
 end
 
-# ╔═╡ b048a772-05c3-4cd0-97ae-5cf825127584
-md""" 
-### Areas Between Curves
-
-
-
-
-"""
-
-# ╔═╡ aac97852-3abc-4455-80fe-a61aec320d24
-begin
-	cnstSlider = @bind cnstslider Slider(-2:1:2, default=0)
-	n1Slider = @bind n1slider Slider(1:200, default=1,show_value=true)
-	md"""
-	| | |
-	|---|---|
-	|move $cnstSlider| ``n`` = $n1Slider|
-	|||
-	"""
-end
-
-# ╔═╡ e427ab16-9d5a-4200-8d96-8e49ec0da312
-begin
-	f1(x) = sin(x)+3+cnstslider
-	f2(x) = cos(2x)+1+cnstslider
-	f3(x) = cos(2x)+4+cnstslider
-	poi1=solve(f1(x)-f3(x),x) .|> p -> p.n()
-	theme(:wong)
-	a1,b1 = 1, 5
-	Δx1 = (b1-a1)/n1slider
-	x1Rect =a1:Δx1:b1
-	x1 = a1:0.1:b1
-	y1 = f1.(x1)
-	y2 = f2.(x1)
-	y3 = f3.(x1)
-	
-	p1=plot(x1,y1, fill=(y2,0.25,:green), label=nothing,c=:red)
-	p2=plot(x1,y1, fill=(y3,0.25,:green), label=nothing,c=:red)
-	
-	plot!(p1,x1,y2,label=nothing)
-	plot!(p2,x1,y3,label=nothing)
-	annotate!(p1,[
-				(3.5,3.5+cnstslider,L"y=f(x)",:red),
-				(5.9,0,L"x"),
-				(0.2,6,L"y"),
-				(3.2,1+cnstslider,L"y=g(x)",:blue)
-				]
-			)
-	annotate!(p2,[
-				(1.2,4.5+cnstslider,L"y=f(x)",:red),
-				(5.9,0,L"x"),
-				(0.2,6,L"y"),
-				(4,5+cnstslider,L"y=g(x)",:blue)
-				]
-			)
-	
-	plot!(p1; p1Opt...,ylims=(-3,6),xlims=(-1,6))
-	recs =[
-			Shape([(xi,f2(xi)),(xi+Δx1,f2(xi)),(xi+Δx1,f1(xi+Δx1)),(xi,f1(xi+Δx1))]) 			 for xi in x1Rect[1:end-1]
-		  ]
-	n1slider>2 && plot!(p1,recs, label=nothing,c=:green)
-	plot!(p2; p1Opt...,ylims=(-3,6),xlims=(-1,6))
-	scatter!(p2,(poi1[1],f3(poi1[1])), label="Point of instersection",legend=:bottomright)
-	# save("./imgs/6.1/sec6.1p2.png",p2)
-	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
-	
-	md""" **How can we find the area between the two curves?**
-	
-$p1
-	
-```math
-Area = \int_a^b \left[{\color{red}f(x)} - {\color{blue}g(x)}\right] dx
-```
-"""
-
-end
-
-# ╔═╡ 2ddde4c4-8217-41e3-9235-a6370b11ae5c
+# ╔═╡ 1339001c-ad6a-485f-b2b9-43f8011c4d6b
 md"""
-
-**Remark**
-- Area = ``y_{top}-y_{bottom}``.
-
-**Example 1**
-
-Find the area of the region bounded above by $y=e^x$, bounded below by $y=x$, bounded on the sides by $x=0$ and $x=1$.
-
----
-"""
-
-# ╔═╡ 07dee140-2553-4b2e-bd28-1dda978fb34c
-begin
-	ex1x=0:0.01:1
-	ex1y=exp.(ex1x)
-	ex1plt=plot(ex1x,ex1y,label=nothing,fill=(0,0.5,:red))
-	plot!(ex1plt,ex1x,ex1x,fill=(0,0,:white),label=nothing)
-	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,3.5),label=nothing,xticks=[0,0,1])
-	ex1Rect = Shape([(0.5,0.55),(0.55,0.55),(0.55,exp(0.55)),(0.5,exp(0.55))])
-	plot!(ex1Rect,label=nothing)
-	annotate!([	(0.77,0.6,L"y=x")
-			  ,	(0.7,exp(0.7)+0.2,L"y=e^x")
-			  , (1.1,1.7,L"x=1")
-			  , (-0.1,0.5,L"x=0")
-			  , (0.54,0.44,text(L"\Delta x",10))
-			  ])
-	md"""
-	**Solution**
-	$ex1plt
-	"""
-end
-
-# ╔═╡ d7928de3-89a4-4475-ba5b-2e707084685b
-md"""
-In geberal,
-
-$p2
-	
+### The Arc Length Formula
+If ``f'`` is continuous on ``[a,b]``, then the length of the curve ``y=f(x)``, ``a\leq x\leq b``, is 
 ```math
-Area = \int_a^b \left|f(x) - g(x)\right| dx
+L=\int_a^b \sqrt{1+\left[f'(x)\right]^2} dx
 ```
 
+**Remarks**
+- Using Leibniz notation 
+```math
+L=\int_a^b \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
+```
+
+**Example 1:** Find the length of the arc of the semicubical parabola $y^2=x^3$ between the points $(1,1)$ and $(4,8)$. 
 """
 
-# ╔═╡ 784142ee-1416-4ccb-a341-0497422009b6
-html"<hr>"
-
-# ╔═╡ a65d268a-cb45-4d6c-ac77-ac719010cfb3
-md"""
-**Example 2**
-
-Find the area of the region enclosed by the parabolas $y=x^2$ and $y=2x-x^2$.
-
-*Solution in class*
-
----
-"""
-
-
-# ╔═╡ 6a4dd437-8be1-4e17-b484-65707ec28215
-begin
-	ex2f1(x)=x^2
-	ex2f2(x)=2x-x^2
-	ex2poi=solve(ex2f1(x)-ex2f2(x)) .|> p->convert(Int,p.n())
-	ex2x=0:0.01:1
-	ex2widex=-1:0.01:2
-	ex2y1=ex2f1.(ex2x)
-	ex2y1wide=ex2f1.(ex2widex)
-	ex2y2=ex2f2.(ex2x)
-	ex2y2wide=ex2f2.(ex2widex)
-	ex2plt=plot(ex2x,ex2y2,label=nothing,fill=(0,0.5,:green))
-	plot!(ex2plt,ex2x,ex2y1,fill=(0,0,:white),label=nothing)
-	plot!(ex2widex,ex2y1wide, c=:red,label=nothing)
-	plot!(ex2widex,ex2y2wide, c=:blue,label=nothing)
-	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,2),label=nothing,xticks=[0,0,1])
-	ex2Rect = Shape([ (0.5,ex2f2(0.55))
-					, (0.55,ex2f2(0.55))
-					, (0.55,ex2f1(0.55))
-					, (0.5,ex2f1(0.55))
-					])
-	plot!(ex2Rect,label=nothing)
-	scatter!(ex2poi,ex2f1.(ex2poi),label=nothing)
-	annotate!([	(0.77,0.4,L"y=x^2")
-			  ,	(0.7,1.1,L"y=2x-x^2")
-			  , (0.54,0.24,text(L"\Delta x",10))
-			  ])
-	md"""
-	**Solution**
-	
-	$ex2plt
-	"""
+# ╔═╡ 48ed74ef-8e71-4873-b1eb-01d8f183c938
+begin 
+	p2 = plot()
+	scatter!(p2,[1 4],[1 8],xlims=(0,5), label=nothing)
+	plot!(p2,t->t^(3/2),label=nothing,c=:blue)
+	plot!(p2,t->-t^(3/2),label=nothing,c=:blue)
 end
 
-# ╔═╡ 4337bc1f-933f-4e8d-abae-46b8ad99409e
+# ╔═╡ cf63184e-1d0e-4917-bd0d-ee965abc1eb9
 md"""
-**Example 3**
+**Remark :**
 
-Find the area of the region bounded by the curves 
+- If ``x=g(y)``, ``c\leq y\leq d`` and ``g'(y)`` is continuous, then we have 
+```math
+L = \int_c^d \sqrt{1+\left[g'(y)\right]^2} dy=\int_c^d \sqrt{1+\left(\frac{dx}{dy}\right)^2} dy
+```
+
+**Example 2:**
+Find the length of the arc of the parabola $y^2=x$ between the
+points $(0,0)$ and $(1,1)$.
+"""
+
+# ╔═╡ 5fd0f18f-d40a-4492-a63d-566037c42ae9
+md"""
+**Example 3:** __Set up an integral__ for the length of the arc of the hyperbola $xy=1$ from the point $(1,1)$ to the point $(2,{1 \over 2})$ 
+
+"""
+
+# ╔═╡ da787418-b9b7-437d-8d56-9a201936b9e7
+integrate(sqrt(1 + 1/x^4),(x,1,2)).n()
+
+# ╔═╡ fe1e7aae-e0f1-47db-a129-4d35b1b27938
+md"""
+### The Arc Length Function
+```math
+s(x) = \int_a^x\sqrt{1+\left[f'(t)\right]^2} dt
+```
+
+**The differential of arc length is**
 
 ```math 
-y=\cos(x), \;\; y=\sin(2x), \;\; x=0, \;\; x=\frac{\pi}{2}
-```
-
-
----
-"""
-
-# ╔═╡ 539cbac4-c1be-4f9d-b076-215c4430a3a6
-begin
-	ex3f1(x) = cos(x)
-	ex3f2(x) = sin(2x)
-	ex3X=0:0.01:(π+0.019)/2
-	
-	ex3Y1=ex3f1.(ex3X)
-	ex3Y2=ex3f2.(ex3X)
-	ex3P = plot(ex3X,ex3Y1,label=L"y=\cos(x)", c=:red)
-	plot!(ex3P,ex3X,ex3Y1,fill=(ex3Y2,0.25,:green),label=nothing,c=nothing)
-	plot!(ex3P,ex3X,ex3Y2,label=L"y=\sin(2x)",c=:blue)
-	plot!(ex3P;p1Opt...,xlims=(-1,π),ylims=(-1.1,1.1))
-	scatter!(ex3P,(π/6,ex3f1(π/6)),label=nothing,c=:black)
-	
-	md"""
-	**Solution**
-	
-	$ex3P
-	"""
-end
-
-# ╔═╡ 1006936d-e13e-4146-b0ac-905acb1f7d08
-begin
-	img1 = load(download("https://www.dropbox.com/s/r39ny15umqafmls/wrty.png?raw=1"))
-	img1 = imresize(img1,ratio=1.5)
-	md"""
-	### Integrating with Respect to ``y``
-	
-	$img1
-	
-	"""
-	
-end
-
-# ╔═╡ 64f36566-5747-4c8f-b90f-1ced674365cb
-md"""
-**Example 4**
-
-Find the area enclosed by the line ``y=x-1``  and the parabola ``y^2=2x+6``.
-
-"""
-
-# ╔═╡ 61b6234e-5cb2-4337-ae29-14106ac6bd59
-begin
-	ex4FRight(y)=-3+y^2/2
-	ex4FLeft(y)=y+1
-	ex4p = plot(x->x^2/2 -3,x->x,-5,6,c=:blue,label=L"y^2=2x+6")
-	ex4Rect = Shape([ (ex4FRight(1.8),2)
-					, (ex4FLeft(2),2)
-					, (ex4FLeft(2),1.8)
-					, (ex4FRight(1.8),1.8)
-					])
-	plot!(ex4Rect,label=nothing)
-	plot!(ex4p,x->x,x->x-1,-5,6;p1Opt...,c=:red,label=L"y=x-1",xticks=-3:1:15)
-	(ex4poi1,ex4poi2)=solve([y^2-2*x-6,y-x+1],[x,y]) 
-	scatter!([ex4poi1,ex4poi2],xlims=(-3.5,7),label=nothing,legend=:topleft)
-	md"""
-	**Solution:**
-	$ex4p
-	"""
-end
-
-# ╔═╡ 237a0543-7d70-48ff-a8b5-37bb31dd98d8
-
-
-# ╔═╡ e370f794-41b6-4acf-9ef6-453fba223dea
-# integrate(y+1-(y^2/2-3),(y,-2,4))
-
-# ╔═╡ 629f1cf7-ffa9-496b-9a3f-405089b43a8e
-md"""
-**Example 5**
-
-Find the area of the region enclosed by the curves ``y= {1\over x}``, ``y=x``, and ``y={1\over 4} x``, using
-* ``x`` as the variable of integration and
-* ``y`` as the variable of integration.
-
-
-"""
-
-# ╔═╡ 0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
-begin
-	x5=0.1:0.1:10
-	x51=0:0.1:1
-	p5 = plot(x->x/4, xlims=(-1,10), framestyle=:origin, aspectratio=1,label=nothing)
-	plot!(x->x,c=:red,label=nothing)
-	# plot!(x51,1 ./ x51,fill=(x51/4,0.5,:blue),c=:white)
-	plot!(x5,1 ./ x5,c=:green,label=nothing)
-	xlims!(-0.1,3)
-	ylims!(-0.1,2)
-end
-
-# ╔═╡ 13625b14-ac53-4995-bbcb-205cdf672c2a
-md"""
-### [Problem Set 6.1](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.1/ps6.1.pdf)
-
-([Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.1/ps6.1-solution.pdf))
-"""
-
-# ╔═╡ 598b7b2e-01dd-41aa-966a-a361921a5c60
-md"""
-## Section 6.2
-**Volumes**
-
-Let's start with a simple solid **`cylinders`**
-
-$(load(download("https://www.dropbox.com/s/mofqdenjokjci44/img1.png?dl=0")))
-
-### Cross-Section Method
-$(load(download("https://www.dropbox.com/s/xz80mrwj2fserd5/img2.png?dl=0")))
-
-Let's now try to find a formula for finding the volume of this solid
-
-$(load(download("https://www.dropbox.com/s/uvz7my3n08fgm6w/img3.png?dl=0")))
-
-
-"""
-
-# ╔═╡ 5c1989f5-bd7b-4c82-a9e3-54f47539fe2d
-md"""
-* Let’s divide ``S`` into ``n`` “slabs” of equal width ``\Delta x`` by using the planes``P_{x_1},P_{x_2},\cdots`` to slice the solid. (*Think of slicing a loaf of bread.*) 
-* If we choose sample points ``x_i^*`` in ``[x_{i-1},x_i]`` , we can approximate the ``i``th slab ``S_i`` by a cylinder with base area ``A(x_i^*)`` and height ``\Delta x``.
-
-```math
-V(S_i) \approx A(x_i^*)\Delta x
-```
-
-So, we have
-
-```math
-V \approx \sum_{i=1}^{n} A(x_i^*)\Delta x
-```
-#### Definition of Volume
-Let ``S`` be a solid that lies between ``x=a`` and ``x=b``. If the cross-sectional area of ``S`` in the plane ``P_x`` , through ``x`` and perpendicular to the ``x``-axis, is ``A(x)`` , where ``A`` is a continuous function, then the **volume** of ``S``  is 
-```math
-V = \lim_{n\to\infty} \sum_{i=1}^{n} A(x_i^*)\Delta x = \int_{a}^{b}A(x) dx
+ds = \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
 ```
 """
 
-# ╔═╡ 078023da-23bc-4401-a1dc-fe869400f9b0
-md"""
-### Volumes of Solids of Revolution
-If we revolve a region about a line, we obtain a **solid of revolution**. In the following examples we see that for such a solid, cross-sections perpendicular to the axis of rotation are **circular**.
-
-**Example 1**
-Find the volume of the solid obtained by rotating about the ``x``-axis the region under the curve ``y=\sqrt{x}`` from ``0`` to ``1`` . Illustrate the definition of volume by sketching a typical approximating cylinder.
-"""
-
-# ╔═╡ 440eec5a-5a9b-4783-9dd2-3427fe340bc6
+# ╔═╡ 7f026b61-84b8-466b-a270-491ba0fbcaf9
 begin
-	fun(x)=sqrt(x)
-	s6e1 = PlotData(0:0.01:1, fun)	
-	tt=range(0.1,stop=1,length=100) |> collect
-	ss=range(0.1,stop=1,length=100) |> collect
-	y_grid = [x for x=ss for y=tt]
-	z_grid = [y for x=ss for y=tt]
-	f(x, z) = begin
-         x ^ 2 + z ^2
-    end
-	p3 =plot(	
-				plot(s6e1; customcolor = :black )
-			,	plot_implicit((x,y,z)->y^2+z^2-x,xrng=(-2,2),yrng=(-1,1),zrng=(-1,2),
-   nlevels=200, slices=Dict(:x=>:red),aspect_ratio=1,frame_style=:origin)
-			)
-	md"""
-	**Solution**
-
-	$p3
-
-	"""
+	img2 = load("./imgs/8.1/img2.png")
+	imresize(img2,(300,500))
 end
 
-# ╔═╡ 835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
+# ╔═╡ d822d7aa-d77e-4cea-a3ef-40a72b72ccf4
 md"""
-**Example 2**
-Find the volume of the solid obtained by rotating the region bounded by ``y=x^3``, ``y=8`` , and ``x=0`` about the ``y``-axis.
+**Example 4:** Find the arc length function for the curve $y=x^2-{1 \over 8}\ln x$ taking $P_0(1,1)$ as the starting point.
 """
 
-# ╔═╡ 635e4f34-9401-4234-936b-8b1029c6a7db
+# ╔═╡ bf7bb4e5-abae-4051-97ad-6d08e83871d6
 md"""
-**Example 3** The region ``\mathcal{R}`` enclosed by the curves ``y=x`` and ``y=x^2`` is rotated about the ``x``-axis. Find the volume of the resulting solid.
+## Section 2:
+**Surface Area of Solid of revolution**
 
-"""
 
-# ╔═╡ c9b6ee5f-be74-4067-8bff-8e408ddd0196
-md"""
-**Example 4** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``y=2``.
-"""
-
-# ╔═╡ 48dcb862-d764-4421-851a-213c9d733b02
-md"""
-**Example 5** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``x=-1``.
-"""
-
-# ╔═╡ 383f7db2-80f5-4a68-a2d1-e34bdc804bff
-md"""
-
-**Summary: Volume of Solids of Revolution (Rotation)**
-
-WE USE CROSS-SECTION METHOD
-1. If the cross-section is a __DESK__ we user $$A=\pi r^2$$
-2. If the cross-section is a __WASHER__ (وردة), we user $$A=\pi \left(r_{\text{out}}^2-r_{\text{in}}^2\right)$$
 
 """
 
-# ╔═╡ 8d1a94f7-f6e6-4b95-a45e-03550125801e
-md"""
-**Example 6** Figure below shows a solid with a circular base of radius ``1``. Parallel cross-sections perpendicular to the base are equilateral triangles. Find the volume of the solid.
-$(load(download("https://www.dropbox.com/s/bbxedang718jvvp/img4.png?dl=0")))
-"""
 
-# ╔═╡ 5e9b4aad-328e-443b-8f9e-d643e93414e1
-md"""
-### [Problem Set 6.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.and.revision.pdf)
-
-
-([Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.2/ps6.2.and.revision-solution.pdf))
-"""
-
-# ╔═╡ 3d267c3e-4509-48d6-a094-39e15940fd6c
-md"""
-## Section 6.3
-**Volumes by Cylindrical Shells**
-
-**Problem**
-Find the volume of the solid generated by rotating the region bounded by ``y=2x^2-x^3`` and ``y=0`` about the ``y-``axis.
-"""
-
-# ╔═╡ 21848166-fbf0-4e1d-8e90-e0060abcc170
-begin
-	show_graph_s = @bind show_graph CheckBox() 
-	show_rect_s = @bind show_rect CheckBox() 
-	show_labels_s = @bind show_labels CheckBox() 
-	md"""
-	Step 1: $show_graph_s
-	Step 2: $show_rect_s
-	Step 3: $show_labels_s
-	"""
-end
-
-# ╔═╡ 088a349a-f632-45af-866f-6315ed1e47a5
-begin
-	
-	f30(x)=2*x^2-x^3
-	s3e0= PlotData(0:0.01:2,f30)
-	s3e0p0 = plot(s3e0)
-	annotate!(s3e0p0,[(1,1.2,L"y=2x^2-x^3")])
-	recty=Shape([ (0.75,f30(0.75))
-			, (1.75,f30(0.75))
-			, (1.75,f30(0.75)+0.05)
-			, (0.75,f30(0.75)+0.05)])
-	ux, lx = Plots.unzip(Plots.partialcircle(0,π,100,-0.1))
-	plot!(ux,lx .+ 1.15,c=:red)
-	anns = [(0.65,f30(0.76),L"x_L=?",10),(1.88,f30(0.76),L"x_R=?",10)]
-	s3e0p =	if show_labels 
-		plot!(s3e0p0,recty,label=nothing)
-		annotate!(anns)
-	elseif show_rect
-		plot!(s3e0p0,recty,label=nothing)
-	elseif show_graph
-		s3e0p0
-		
-	else
-		""
-	end
-end
-
-# ╔═╡ 1dbbef99-3674-42fe-ab48-1ab6b72d0652
+# ╔═╡ 1594d4fe-f421-4d37-8a84-1135b4486a8e
 begin 
-	shellImg=load(download("https://www.dropbox.com/s/8a2njc50e2hptok/shell.png?dl=0"))
-	md"""
-	A shell is a hallow circular cylinder
-	
-	$shellImg
-	"""
+	img3 = load("./imgs/8.2/img1.png")
+	imresize(img3,(500,550))
 end
 
-# ╔═╡ 05af66f4-1013-4374-8c85-9265f123934e
+# ╔═╡ b84fd528-21c2-4161-aab1-2ab41f58cb98
 md"""
-```math
-V = 2 \pi r h \Delta r = \text{[circumference][height][thickness]}
+In the case where ``f`` is positive and has a continuous derivative, we define the **_surface area_** of the surface obtained by rotating the curve ``y=f(x)``, ``a\leq x\leq b``, about the ``x``-axis as
 
+```math
+S = \int_a^b 2\pi f(x) \sqrt{1+\left[f'(x)\right]^2} dx
+=\int_a^b 2\pi y \sqrt{1+\left(\frac{dy}{dx}\right)^2} dx
+```
+
+If the curve is described as ``x=g(x)``, ``c\leq y\leq d``, then the formula for **_surface area_** becomes
+
+```math
+S =
+\int_c^d 2\pi y \sqrt{1+\left(\frac{dx}{dy}\right)^2} dy
+```
+
+**Remarkd**
+* Symbolically
+```math
+S=\int 2\pi y ds
+```
+
+```math
+S=\int 2\pi x ds
 ```
 """
 
-# ╔═╡ 7396e0b3-753e-40fa-8bb5-30ccb4bac550
-html"""
-<div style="display: flex; justify-content:center; padding:20px; border: 2px solid rgba(125,125,125,0.2);">
-<div>
-<h5>Cylindrical Shells Illustration</h5>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/JrRniVSW9tg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-</div>
-"""
-
-# ╔═╡ af99b1ed-07cc-47aa-b05a-35590bd19da8
+# ╔═╡ aa5e90e5-26f4-436e-acdb-6be4c557e568
 md"""
-```math
-V \approx \sum_{i=1}^n V_i = \sum_{i=1}^n 2\pi \bar{x}_if(\bar{x}_i)\Delta x
-```
+**Example :**
+The curve ``y=\sqrt{4-x^2}``, ``-1\leq x \leq 1``, is an arc of the circle ``x^2+y^2=4``. Find the area of the surface obtained by rotating this arc about the ``x``-axis.
 
-Hence,
-```math
-V = \lim_{n\to\infty}\sum_{i=1}^n 2\pi \bar{x}_if(\bar{x}_i)\Delta x = \int_a^b 2\pi x f(x) dx
-```
+**Example :**
+The arc of the parabola ``y=x^2`` from ``(1,1)`` to ``(2,4)`` is rotated about the ``y``-axis. Find the area of the resulting surface
+
+**Example :**
+Find the area of the surface generated by rotating the curve ``y=e^x`` ,
+``0\leq x\leq 1``, about the ``x``-axis.
+
 """
 
-# ╔═╡ 5e5c5013-2b13-4a59-a325-91ebcf811cb2
-begin
-	s3e0p1 = plot(s3e0)
-	annotate!(s3e0p1,[(1,1.2,L"y=2x^2-x^3")])
-	plot!(s3e0p1, 
-			Shape( 
-				[ (1.2,0),(1.3,0),(1.3,f30(1.3)),(1.2,f30(1.3))
-				]
-				)
-		, label=nothing
-		)
-	md"""
-**Example 1:**
-Find the volume of the solid generated by rotating the region bounded by ``y=2x^2-x^3`` and ``y=0`` about the ``y-``axis.
 
-Solution:
-	
-$s3e0p1
-"""
-end
 
-# ╔═╡ d61e07a2-25da-4189-9689-57a6bb642b6e
+# ╔═╡ 63c5c52a-0efd-4532-9043-44f9c092920f
 md"""
-**Example 2:**
-Find the volume of the solid obtained by rotating about the ``y-``axis the region between ``y=x`` and ``y=x^2``.
+### [Problem Set 8.1-8.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps8.1/ps8.1.pdf)
 
+[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps8.1/ps8.1-solution.pdf)
 """
-
-# ╔═╡ 5072c45e-2efd-44cf-a0fc-380972e270e2
-md"""
-**Example 4:**
-Find the volume of the solid obtained by rotating the region bounded by ``y=x-x^2`` and ``y=0`` about the line ``x=2``.
-
-"""
-
-# ╔═╡ 1397dcce-011f-4cf2-948d-16a344a5f018
-md"""
-### [Problem Set 6.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.3/ps6.3.pdf)
-
-[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.3/ps6.3-solution.pdf)
-"""
-
-# ╔═╡ 28e60db5-e3d7-49d5-b530-97fc52a8fe5b
-md"""
-## Section 6.5 
-**Average Value of a Function**
-
-**Question**: What is the avergae value of finitely many numbers $y_1, y_2, \cdots, y_n$?
-
-Answer: 
-```math
-y_{\text{avg}}=\frac{y_1+y_2+\cdots+y_n}{n}
-```
-**Question**: What is the average value of a function $y=f(x)$ where $x\in [a,b]$?
-
-Answer: 
-```math
-f_{\text{avg}}=\frac{1}{b-a}\int_a^b f(x) dx
-```
-
-"""
-
-# ╔═╡ 851f9c56-2d0c-493a-be53-b2fc77ec1bfb
-md"""
-**Remark**
-For a positive function, we can think of this definition as saying 
-```math
-\frac{\text{area}}{\text{width}}=\text{average height}
-```
-
-**Example 1:** Find the average value of the function ``f(x)=1+x^2`` on the interval ``[-1,2]`` .
-
-"""
-
-# ╔═╡ 530c6d53-1a7b-4b0f-87c3-949e92d16784
-md"""
-### The Mean Value Theorem for Integrals 
-
-If ``f`` is continuous on ``[a,b]``, then there exists a number ``c`` in 
-``[a,b]`` such that 
-```math
-f(c)=f_{\text{avg}}=\frac{1}{b-a}\int_a^b f(x) dx
-```
-that is,
-```math
-\int_a^b f(x) dx = f(c)(b-a)
-```
-"""
-
-# ╔═╡ b01b8817-be8d-4c67-8a8f-8515d11da0f5
-md"""
-**Example:**
-Find the sum of the numbers ``c`` for which the average value of 
-```math
-f(x)=9x^2+4x+3
-```
-becomes 4 on the interval ``[0,c]``.
-"""
-
-# ╔═╡ cb7d7e25-a12a-4043-8954-a4547fe6c968
-md"""
-### [Problem Set 6.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.5/ps6.5.pdf)
-
-[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps6.5/ps6.5-solution.pdf)
-"""
-
-# ╔═╡ ca2016b0-83dd-445f-99a0-b685d6151eb3
-hline()=html"<hr>"
-
-# ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
-rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
-#Shape(x .+ [0,Δx,Δx,0], [0,0,f(xs),f(xs)])
-
-# ╔═╡ a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-function reimannSum(f,n,a,b;method="l",color=:green)
-	Δx =(b-a)/n
-	x =a:0.1:b
-	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
-	
-	p=plot(x,f.(x);legend=nothing)
-	(partition,recs) = if method=="r"
-		 parts = (a+Δx):Δx:b
-		 rcs = [rect(p-Δx,Δx,p,f) for p in parts]
-		 (parts,rcs)
-	elseif method=="m"
-		parts = (a+(Δx/2)):Δx:(b-(Δx/2))
-		rcs = [rect(p-Δx/2,Δx,p,f) for p in parts]
-		(parts,rcs)
-	elseif method=="l"
-		parts = a:Δx:(b-Δx)
-		rcs = [rect(p,Δx,p,f) for p in parts]
-		(parts,rcs)
-	else 
-		parts = a:Δx:(b-Δx)
-		rcs = [rect(p,Δx,rand(p:0.1:p+Δx),f) for p in parts]
-		(parts,rcs)
-	end
-	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
-	plot!(p,recs,framestyle=:origin,opacity=.4, color=color)
-	s = round(sum(f.(partition)*Δx),sigdigits=6)
-	return (p,s)
-end
-
-# ╔═╡ 6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
-StartPause() = @htl("""
-<div>
-<button>Start</button>
-
-<script>
-
-	// Select elements relative to `currentScript`
-	var div = currentScript.parentElement
-	var button = div.querySelector("button")
-
-	// we wrapped the button in a `div` to hide its default behaviour from Pluto
-
-	var count = false
-
-	button.addEventListener("click", (e) => {
-		count = !count
-
-		// we dispatch the input event on the div, not the button, because 
-		// Pluto's `@bind` mechanism listens for events on the **first element** in the
-		// HTML output. In our case, that's the div.
-
-		div.value = count
-		div.dispatchEvent(new CustomEvent("input"))
-		e.preventDefault()
-		button.innerHTML = count? "Pause" : "Start"
-	})
-	// Set the initial value
-	div.value = count
-
-</script>
-</div>
-""")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
-CommonMark = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
-Contour = "d38c429a-6771-53c6-b99e-75d170b6e991"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 HypertextLiteral = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
@@ -811,21 +198,18 @@ LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 PlotThemes = "ccf2f8ad-2431-5c83-bf29-c5338b663b6a"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 
 [compat]
-CommonMark = "~0.8.6"
-Contour = "~0.6.2"
-FileIO = "~1.15.0"
+FileIO = "~1.16.0"
 HypertextLiteral = "~0.9.4"
 ImageIO = "~0.6.6"
 ImageShow = "~0.3.6"
 ImageTransformations = "~0.9.5"
 LaTeXStrings = "~1.3.0"
-PlotThemes = "~3.0.0"
-Plots = "~1.33.0"
-PlutoUI = "~0.7.40"
+PlotThemes = "~3.1.0"
+Plots = "~1.35.7"
+PlutoUI = "~0.7.48"
 SymPy = "~1.1.7"
 """
 
@@ -835,7 +219,7 @@ PLUTO_MANIFEST_TOML_CONTENTS = """
 
 julia_version = "1.8.2"
 manifest_format = "2.0"
-project_hash = "c3b2c3b3825dc6abb396b6fd3cd117b54c233f27"
+project_hash = "c562a47625b9863e3925a8966bf68c4d54a78c27"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -871,6 +255,11 @@ version = "1.0.1"
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
+[[deps.BitFlags]]
+git-tree-sha1 = "84259bb6172806304b9101094a7cc4bc6f56dbc6"
+uuid = "d1d4a3ce-64b1-5f1a-9ba4-7e7e69966f35"
+version = "0.1.5"
+
 [[deps.Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "19a35467a82e236ff51bc17a3a44b69ef35185a2"
@@ -888,17 +277,11 @@ git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.16.1+1"
 
-[[deps.Calculus]]
-deps = ["LinearAlgebra"]
-git-tree-sha1 = "f641eb0a4f00c343bbc32346e1217b86f3ce9dad"
-uuid = "49dc2e85-a5d0-5ad3-a950-438e2897f1b9"
-version = "0.5.1"
-
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "dc4405cee4b2fe9e1108caec2d760b7ea758eca2"
+git-tree-sha1 = "e7ff6cadf743c098e08fca25c91103ee4303c9bb"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.15.5"
+version = "1.15.6"
 
 [[deps.ChangesOfVariables]]
 deps = ["ChainRulesCore", "LinearAlgebra", "Test"]
@@ -941,22 +324,16 @@ git-tree-sha1 = "d1beba82ceee6dc0fce8cb6b80bf600bbde66381"
 uuid = "3709ef60-1bee-4518-9f2f-acd86f176c50"
 version = "0.2.0"
 
-[[deps.CommonMark]]
-deps = ["Crayons", "JSON", "URIs"]
-git-tree-sha1 = "4cd7063c9bdebdbd55ede1af70f3c2f48fab4215"
-uuid = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
-version = "0.8.6"
-
 [[deps.CommonSolve]]
-git-tree-sha1 = "332a332c97c7071600984b3c31d9067e1a4e6e25"
+git-tree-sha1 = "9441451ee712d1aec22edad62db1a9af3dc8d852"
 uuid = "38540f10-b2f7-11e9-35d8-d573e4eb0ff2"
-version = "0.2.1"
+version = "0.2.3"
 
 [[deps.Compat]]
 deps = ["Dates", "LinearAlgebra", "UUIDs"]
-git-tree-sha1 = "5856d3031cdb1f3b2b6340dfdc66b6d9a149a374"
+git-tree-sha1 = "3ca828fe1b75fa84b021a7860bd039eaea84d2f2"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "4.2.0"
+version = "4.3.0"
 
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -980,15 +357,10 @@ git-tree-sha1 = "681ea870b918e7cff7111da58791d7f718067a19"
 uuid = "150eb455-5306-5404-9cee-2592286d6298"
 version = "0.6.2"
 
-[[deps.Crayons]]
-git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
-uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
-version = "4.1.1"
-
 [[deps.DataAPI]]
-git-tree-sha1 = "fb5f5316dd3fd4c5e7c30a24d50643b73e37cd40"
+git-tree-sha1 = "46d2680e618f8abd007bce0c3026cb0c4a8f2032"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
-version = "1.10.0"
+version = "1.12.0"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -1010,20 +382,14 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
-git-tree-sha1 = "5158c2b41018c5f7eb1470d558127ac274eca0c9"
+git-tree-sha1 = "c36550cb29cbe373e95b3f40486b9a4148f89ffd"
 uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
-version = "0.9.1"
+version = "0.9.2"
 
 [[deps.Downloads]]
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 version = "1.6.0"
-
-[[deps.DualNumbers]]
-deps = ["Calculus", "NaNMath", "SpecialFunctions"]
-git-tree-sha1 = "5837a837389fccf076445fce071c8ddaea35a566"
-uuid = "fa6b7ba4-c1ee-5f82-b5fc-ecf0adba8f74"
-version = "0.6.8"
 
 [[deps.Expat_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1045,9 +411,9 @@ version = "4.4.2+2"
 
 [[deps.FileIO]]
 deps = ["Pkg", "Requires", "UUIDs"]
-git-tree-sha1 = "94f5101b96d2d968ace56f7f2db19d0a5f592e28"
+git-tree-sha1 = "7be5f99f7d15578798f338f5433b6c432ea8037b"
 uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
-version = "1.15.0"
+version = "1.16.0"
 
 [[deps.FileWatching]]
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
@@ -1089,16 +455,16 @@ uuid = "0656b61e-2033-5cc2-a64a-77c0f6c09b89"
 version = "3.3.8+0"
 
 [[deps.GR]]
-deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Printf", "Random", "RelocatableFolders", "Serialization", "Sockets", "Test", "UUIDs"]
-git-tree-sha1 = "cf0a9940f250dc3cb6cc6c6821b4bf8a4286cf9c"
+deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Preferences", "Printf", "Random", "Serialization", "Sockets", "Test", "UUIDs"]
+git-tree-sha1 = "00a9d4abadc05b9476e937a5557fcce476b9e547"
 uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
-version = "0.66.2"
+version = "0.69.5"
 
 [[deps.GR_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Pkg", "Qt5Base_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "3697c23d09d5ec6f2088faa68f0d926b6889b5be"
+git-tree-sha1 = "bc9f7725571ddb4ab2c4bc74fa397c1c5ad08943"
 uuid = "d2c73de3-f751-5644-a686-071e5b155ba9"
-version = "0.67.0+0"
+version = "0.69.1+0"
 
 [[deps.Gettext_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
@@ -1107,10 +473,10 @@ uuid = "78b55507-aeef-58d4-861c-77aaff3498b1"
 version = "0.21.0+0"
 
 [[deps.Glib_jll]]
-deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "a32d672ac2c967f3deb8a81d828afc739c838a06"
+deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Pkg", "Zlib_jll"]
+git-tree-sha1 = "fb83fbe02fe57f2c068013aa94bcdf6760d3a7a7"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.68.3+2"
+version = "2.74.0+1"
 
 [[deps.Graphics]]
 deps = ["Colors", "LinearAlgebra", "NaNMath"]
@@ -1130,10 +496,10 @@ uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
 [[deps.HTTP]]
-deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
-git-tree-sha1 = "59ba44e0aa49b87a8c7a8920ec76f8afe87ed502"
+deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
+git-tree-sha1 = "a97d47758e933cd5fe5ea181d178936a9fc60427"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "1.3.3"
+version = "1.5.1"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
@@ -1216,20 +582,26 @@ uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
 [[deps.Interpolations]]
 deps = ["Adapt", "AxisAlgorithms", "ChainRulesCore", "LinearAlgebra", "OffsetArrays", "Random", "Ratios", "Requires", "SharedArrays", "SparseArrays", "StaticArrays", "WoodburyMatrices"]
-git-tree-sha1 = "f67b55b6447d36733596aea445a9f119e83498b6"
+git-tree-sha1 = "842dd89a6cb75e02e85fdd75c760cdc43f5d6863"
 uuid = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
-version = "0.14.5"
+version = "0.14.6"
 
 [[deps.InverseFunctions]]
 deps = ["Test"]
-git-tree-sha1 = "b3364212fb5d870f724876ffcd34dd8ec6d98918"
+git-tree-sha1 = "49510dfcb407e572524ba94aeae2fced1f3feb0f"
 uuid = "3587e190-3f89-42d0-90ee-14403ec27112"
-version = "0.1.7"
+version = "0.1.8"
 
 [[deps.IrrationalConstants]]
 git-tree-sha1 = "7fd44fd4ff43fc60815f8e764c0f352b83c49151"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
 version = "0.1.1"
+
+[[deps.JLFzf]]
+deps = ["Pipe", "REPL", "Random", "fzf_jll"]
+git-tree-sha1 = "f377670cda23b6b7c1c0b3893e37451c5c1a2185"
+uuid = "1019f520-868f-41f5-a6de-eb00f4b6a39c"
+version = "0.1.5"
 
 [[deps.JLLWrappers]]
 deps = ["Preferences"]
@@ -1378,11 +750,16 @@ git-tree-sha1 = "5d4d2d9904227b8bd66386c1138cf4d5ffa826bf"
 uuid = "e6f89c97-d47a-5376-807f-9c37f3926c36"
 version = "0.4.9"
 
+[[deps.MIMEs]]
+git-tree-sha1 = "65f28ad4b594aebe22157d6fac869786a255b7eb"
+uuid = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
+version = "0.1.4"
+
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
-git-tree-sha1 = "3d3e902b31198a27340d0bf00d6ac452866021cf"
+git-tree-sha1 = "42324d08725e200c23d4dfb549e0d5d89dede2d2"
 uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-version = "0.5.9"
+version = "0.5.10"
 
 [[deps.MappedArrays]]
 git-tree-sha1 = "e8b359ef06ec72e8c030463fe02efe5527ee5142"
@@ -1395,9 +772,9 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
 [[deps.MbedTLS]]
 deps = ["Dates", "MbedTLS_jll", "MozillaCACerts_jll", "Random", "Sockets"]
-git-tree-sha1 = "6872f9594ff273da6d13c7c1a1545d5a8c7d0c1c"
+git-tree-sha1 = "03a9b9718f5682ecb107ac9f7308991db4ce395b"
 uuid = "739be429-bea8-5141-9913-cc70e7f3736d"
-version = "1.1.6"
+version = "1.1.7"
 
 [[deps.MbedTLS_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -1446,9 +823,9 @@ version = "1.2.0"
 
 [[deps.OffsetArrays]]
 deps = ["Adapt"]
-git-tree-sha1 = "1ea784113a6aa054c5ebd95945fa5e52c2f378e7"
+git-tree-sha1 = "f71d8950b724e9ff6110fc948dff5a329f901d64"
 uuid = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
-version = "1.12.7"
+version = "1.12.8"
 
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1478,11 +855,17 @@ deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
 version = "0.8.1+0"
 
+[[deps.OpenSSL]]
+deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
+git-tree-sha1 = "3c3c4a401d267b04942545b1e964a20279587fd7"
+uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
+version = "1.3.0"
+
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "e60321e3f2616584ff98f0a4f18d98ae6f89bbb3"
+git-tree-sha1 = "f6e9dba33f9f2c44e08a020b0caf6903be540004"
 uuid = "458c3c95-2e84-50aa-8efc-19380b2a3a95"
-version = "1.1.17+0"
+version = "1.1.19+0"
 
 [[deps.OpenSpecFun_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Pkg"]
@@ -1506,17 +889,11 @@ deps = ["Artifacts", "Libdl"]
 uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
 version = "10.40.0+0"
 
-[[deps.PCRE_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "b2a7af664e098055a7529ad1a900ded962bca488"
-uuid = "2f80f16e-611a-54ab-bc61-aa92de5b98fc"
-version = "8.44.0+0"
-
 [[deps.PNGFiles]]
 deps = ["Base64", "CEnum", "ImageCore", "IndirectArrays", "OffsetArrays", "libpng_jll"]
-git-tree-sha1 = "e925a64b8585aa9f4e3047b8d2cdc3f0e79fd4e4"
+git-tree-sha1 = "f809158b27eba0c18c269cf2a2be6ed751d3e81d"
 uuid = "f57f5aa1-a3ce-4bc8-8ab9-96f992907883"
-version = "0.3.16"
+version = "0.3.17"
 
 [[deps.PaddedViews]]
 deps = ["OffsetArrays"]
@@ -1526,9 +903,14 @@ version = "0.5.11"
 
 [[deps.Parsers]]
 deps = ["Dates"]
-git-tree-sha1 = "3d5bf43e3e8b412656404ed9466f1dcbf7c50269"
+git-tree-sha1 = "6c01a9b494f6d2a9fc180a08b182fcb06f0958a0"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
-version = "2.4.0"
+version = "2.4.2"
+
+[[deps.Pipe]]
+git-tree-sha1 = "6842804e7867b115ca9de748a0cf6b364523c16d"
+uuid = "b98c9c47-44ae-5843-9183-064241ee97a0"
+version = "1.3.0"
 
 [[deps.Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1549,9 +931,9 @@ version = "0.3.2"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
-git-tree-sha1 = "8162b2f8547bc23876edd0c5181b27702ae58dce"
+git-tree-sha1 = "1f03a2d339f42dca4a4da149c7e15e9b896ad899"
 uuid = "ccf2f8ad-2431-5c83-bf29-c5338b663b6a"
-version = "3.0.0"
+version = "3.1.0"
 
 [[deps.PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "SnoopPrecompile", "Statistics"]
@@ -1560,16 +942,16 @@ uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.3.1"
 
 [[deps.Plots]]
-deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
-git-tree-sha1 = "6062b3b25ad3c58e817df0747fc51518b9110e5f"
+deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JLFzf", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SnoopPrecompile", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
+git-tree-sha1 = "8c5643a30c97e02f4e80b9fff99544f64292eb6f"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.33.0"
+version = "1.35.7"
 
 [[deps.PlutoUI]]
-deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "UUIDs"]
-git-tree-sha1 = "a602d7b0babfca89005da04d89223b867b55319f"
+deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "FixedPointNumbers", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "MIMEs", "Markdown", "Random", "Reexport", "URIs", "UUIDs"]
+git-tree-sha1 = "efc140104e6d0ae3e7e30d56c98c4a927154d684"
 uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-version = "0.7.40"
+version = "0.7.48"
 
 [[deps.Preferences]]
 deps = ["TOML"]
@@ -1606,10 +988,10 @@ uuid = "ea2cea3b-5b76-57ae-a6ef-0a8af62496e1"
 version = "5.15.3+1"
 
 [[deps.Quaternions]]
-deps = ["DualNumbers", "LinearAlgebra", "Random"]
-git-tree-sha1 = "b327e4db3f2202a4efafe7569fcbe409106a1f75"
+deps = ["LinearAlgebra", "Random"]
+git-tree-sha1 = "fcebf40de9a04c58da5073ec09c1c1e95944c79b"
 uuid = "94ee1d12-ae83-5a48-8b1c-48b8ff168ae0"
-version = "0.5.6"
+version = "0.6.1"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
@@ -1626,15 +1008,16 @@ uuid = "c84ed2f1-dad5-54f0-aa8e-dbefe2724439"
 version = "0.4.3"
 
 [[deps.RecipesBase]]
-git-tree-sha1 = "6bf3f380ff52ce0832ddd3a2a7b9538ed1bcca7d"
+deps = ["SnoopPrecompile"]
+git-tree-sha1 = "d12e612bba40d189cead6ff857ddb67bd2e6a387"
 uuid = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
-version = "1.2.1"
+version = "1.3.1"
 
 [[deps.RecipesPipeline]]
-deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
-git-tree-sha1 = "e7eac76a958f8664f2718508435d058168c7953d"
+deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase", "SnoopPrecompile"]
+git-tree-sha1 = "249df6fb3520492092ccebe921829920215ab205"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
-version = "0.6.3"
+version = "0.6.9"
 
 [[deps.Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
@@ -1643,9 +1026,9 @@ version = "1.2.2"
 
 [[deps.RelocatableFolders]]
 deps = ["SHA", "Scratch"]
-git-tree-sha1 = "22c5201127d7b243b9ee1de3b43c408879dff60f"
+git-tree-sha1 = "90bc7a7c96410424509e4263e277e43250c05691"
 uuid = "05181044-ff0b-4ac5-8273-598c1e38db00"
-version = "0.3.0"
+version = "1.0.0"
 
 [[deps.Requires]]
 deps = ["UUIDs"]
@@ -1655,9 +1038,9 @@ version = "1.3.0"
 
 [[deps.Rotations]]
 deps = ["LinearAlgebra", "Quaternions", "Random", "StaticArrays", "Statistics"]
-git-tree-sha1 = "3d52be96f2ff8a4591a9e2440036d4339ac9a2f7"
+git-tree-sha1 = "793b6ef92f9e96167ddbbd2d9685009e200eb84f"
 uuid = "6038ab10-8711-5258-84ad-4b1120ba62dc"
-version = "1.3.2"
+version = "1.3.3"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -1725,14 +1108,14 @@ version = "0.1.1"
 
 [[deps.StaticArrays]]
 deps = ["LinearAlgebra", "Random", "StaticArraysCore", "Statistics"]
-git-tree-sha1 = "efa8acd030667776248eabb054b1836ac81d92f0"
+git-tree-sha1 = "f86b3a049e5d05227b10e15dbb315c5b90f14988"
 uuid = "90137ffa-7385-5640-81b9-e52037218182"
-version = "1.5.7"
+version = "1.5.9"
 
 [[deps.StaticArraysCore]]
-git-tree-sha1 = "ec2bd695e905a3c755b33026954b119ea17f2d22"
+git-tree-sha1 = "6b7ba252635a5eff6a0b0664a41ee140a1c9e72a"
 uuid = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
-version = "1.3.0"
+version = "1.4.0"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
@@ -1988,6 +1371,12 @@ git-tree-sha1 = "e45044cd873ded54b6a5bac0eb5c971392cf1927"
 uuid = "3161d3a3-bdf6-5164-811a-617609db77b4"
 version = "1.5.2+0"
 
+[[deps.fzf_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "868e669ccb12ba16eaf50cb2957ee2ff61261c56"
+uuid = "214eeab7-80f7-51ab-84ad-2988db7cef09"
+version = "0.29.0+0"
+
 [[deps.libaom_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "3a2ea60308f0996d26f1e5354e10c24e9ef905d4"
@@ -2059,59 +1448,23 @@ version = "1.4.1+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─ad045108-9dca-4a61-ac88-80a3417c95f2
-# ╟─1e9f4829-1f50-47ae-8745-0daa90e7aa42
-# ╟─90f42d35-f81e-4c38-8a73-77b37755f671
-# ╟─b048a772-05c3-4cd0-97ae-5cf825127584
-# ╟─aac97852-3abc-4455-80fe-a61aec320d24
-# ╟─e427ab16-9d5a-4200-8d96-8e49ec0da312
-# ╟─2ddde4c4-8217-41e3-9235-a6370b11ae5c
-# ╟─07dee140-2553-4b2e-bd28-1dda978fb34c
-# ╟─d7928de3-89a4-4475-ba5b-2e707084685b
-# ╟─784142ee-1416-4ccb-a341-0497422009b6
-# ╟─a65d268a-cb45-4d6c-ac77-ac719010cfb3
-# ╟─6a4dd437-8be1-4e17-b484-65707ec28215
-# ╟─4337bc1f-933f-4e8d-abae-46b8ad99409e
-# ╟─539cbac4-c1be-4f9d-b076-215c4430a3a6
-# ╟─1006936d-e13e-4146-b0ac-905acb1f7d08
-# ╟─64f36566-5747-4c8f-b90f-1ced674365cb
-# ╠═61b6234e-5cb2-4337-ae29-14106ac6bd59
-# ╠═237a0543-7d70-48ff-a8b5-37bb31dd98d8
-# ╠═e370f794-41b6-4acf-9ef6-453fba223dea
-# ╟─629f1cf7-ffa9-496b-9a3f-405089b43a8e
-# ╟─0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
-# ╟─13625b14-ac53-4995-bbcb-205cdf672c2a
-# ╟─598b7b2e-01dd-41aa-966a-a361921a5c60
-# ╟─5c1989f5-bd7b-4c82-a9e3-54f47539fe2d
-# ╟─078023da-23bc-4401-a1dc-fe869400f9b0
-# ╟─440eec5a-5a9b-4783-9dd2-3427fe340bc6
-# ╟─835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
-# ╟─635e4f34-9401-4234-936b-8b1029c6a7db
-# ╟─c9b6ee5f-be74-4067-8bff-8e408ddd0196
-# ╟─48dcb862-d764-4421-851a-213c9d733b02
-# ╟─383f7db2-80f5-4a68-a2d1-e34bdc804bff
-# ╟─8d1a94f7-f6e6-4b95-a45e-03550125801e
-# ╟─5e9b4aad-328e-443b-8f9e-d643e93414e1
-# ╟─3d267c3e-4509-48d6-a094-39e15940fd6c
-# ╟─21848166-fbf0-4e1d-8e90-e0060abcc170
-# ╟─088a349a-f632-45af-866f-6315ed1e47a5
-# ╟─1dbbef99-3674-42fe-ab48-1ab6b72d0652
-# ╟─05af66f4-1013-4374-8c85-9265f123934e
-# ╟─7396e0b3-753e-40fa-8bb5-30ccb4bac550
-# ╟─af99b1ed-07cc-47aa-b05a-35590bd19da8
-# ╟─5e5c5013-2b13-4a59-a325-91ebcf811cb2
-# ╟─d61e07a2-25da-4189-9689-57a6bb642b6e
-# ╟─5072c45e-2efd-44cf-a0fc-380972e270e2
-# ╟─1397dcce-011f-4cf2-948d-16a344a5f018
-# ╟─28e60db5-e3d7-49d5-b530-97fc52a8fe5b
-# ╟─851f9c56-2d0c-493a-be53-b2fc77ec1bfb
-# ╟─530c6d53-1a7b-4b0f-87c3-949e92d16784
-# ╟─b01b8817-be8d-4c67-8a8f-8515d11da0f5
-# ╟─cb7d7e25-a12a-4043-8954-a4547fe6c968
-# ╟─ca2016b0-83dd-445f-99a0-b685d6151eb3
-# ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-# ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
-# ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
-# ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╟─a267a6be-6141-4472-bc34-156ba6bf8f56
+# ╟─e1426763-9558-4e05-a10f-3713badece23
+# ╟─9444b967-d4d9-441a-b295-0cc29c7fb578
+# ╟─a8d3d297-bd27-408b-857f-95ae790530a3
+# ╟─1339001c-ad6a-485f-b2b9-43f8011c4d6b
+# ╟─48ed74ef-8e71-4873-b1eb-01d8f183c938
+# ╟─cf63184e-1d0e-4917-bd0d-ee965abc1eb9
+# ╟─5fd0f18f-d40a-4492-a63d-566037c42ae9
+# ╟─da787418-b9b7-437d-8d56-9a201936b9e7
+# ╟─fe1e7aae-e0f1-47db-a129-4d35b1b27938
+# ╟─7f026b61-84b8-466b-a270-491ba0fbcaf9
+# ╟─d822d7aa-d77e-4cea-a3ef-40a72b72ccf4
+# ╟─bf7bb4e5-abae-4051-97ad-6d08e83871d6
+# ╟─1594d4fe-f421-4d37-8a84-1135b4486a8e
+# ╟─b84fd528-21c2-4161-aab1-2ab41f58cb98
+# ╟─aa5e90e5-26f4-436e-acdb-6be4c557e568
+# ╟─63c5c52a-0efd-4532-9043-44f9c092920f
+# ╠═01820aa0-d887-11eb-0307-758b12f13e10
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

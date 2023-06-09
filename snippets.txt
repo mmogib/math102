@@ -1,0 +1,37 @@
+begin
+	show_abs_stds = @bind show_abs CheckBox() 
+	cm"""
+	Show Absent Stundets: $show_abs_stds
+	"""
+end
+
+
+begin 
+	if show_abs
+	dys(dindx) = get(["01","02","03","04","05","06","07","08","09"],dindx,dindx)
+	mnths(mindx) = get(["01","02","03","04","05","06","07","08","09","10","11","12"],mindx,mindx)
+	tdy_raw = Dates.today()
+	tdy = "$(dys(Dates.day(tdy_raw)))-$(mnths(Dates.month(tdy_raw)))-$(Dates.year(tdy_raw))"
+@htl("""
+
+<div
+    x-data="{ students: {} }"
+    x-init="students = await (await fetch('https://api.airtable.com/v0/appJtfvewTxYdc3Uf/Attendance?filterByFormula=Day%3D%22$(tdy)%22&maxRecords=70&view=All',{
+	'method': 'GET',
+	'headers': {
+		'Authorization': 'Bearer -------------'
+	}
+	})).json()"
+>
+<h5>Students Absent Today</h5>
+<ol>
+	<template x-for="student in students.records" :key="student.id">
+        <li x-text="`\${student.fields.Name[0]}-\${student.fields.StudentEmail[0]}`">
+		</li>
+    </template>
+</ol>
+
+</div>
+""")
+	end
+end

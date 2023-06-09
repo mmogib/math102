@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.12
+# v0.19.19
 
 using Markdown
 using InteractiveUtils
@@ -14,57 +14,114 @@ macro bind(def, element)
     end
 end
 
-# ╔═╡ 56c992d7-5f55-4f21-be9b-673db0c3565d
+# ╔═╡ e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 begin
+	# import Pkg
+	# Pkg.add("Contour")
+	# Pkg.activate(mktempdir())
+	# Pkg.add([
+	# 	Pkg.PackageSpec(name="ImageIO", version="0.5"),
+	# 	Pkg.PackageSpec(name="ImageShow", version="0.3"),
+	# 	Pkg.PackageSpec(name="FileIO", version="1.9"),
+	# 	Pkg.PackageSpec(name="CommonMark", version="0.8"),
+	# 	Pkg.PackageSpec(name="Plots", version="1.16"),
+	# 	Pkg.PackageSpec(name="PlotThemes", version="2.0"),
+	# 	Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
+	# 	Pkg.PackageSpec(name="PlutoUI", version="0.7"),
+	# 	Pkg.PackageSpec(name="Pluto", version="0.14"),
+	# 	Pkg.PackageSpec(name="SymPy", version="1.0"),
+	#   	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
+	# 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
+	# ])
+
+	
+	using CommonMark, ImageIO, FileIO, ImageShow
 	using PlutoUI
-	using Plots, PlotThemes, LaTeXStrings
+	using Plots, PlotThemes, LaTeXStrings, Random
 	using SymPy
+	using HypertextLiteral
+	using ImageTransformations
+	using Contour
 	using Dates
 end
 
-# ╔═╡ 36385992-7458-4252-902d-89153ad3e85e
-html"""
+# ╔═╡ 0c3da8f0-7138-4521-ac5b-362a36380a8c
+cm"""
+<script src="//unpkg.com/alpinejs" defer></script>
+"""
+
+# ╔═╡ 014747b8-d1be-414b-adcb-1bc6971b84be
+@htl("""
 <style>
-.div-50 {
-  position: relative;
-  height: 50px;
+.img-container {
+	display:flex;
+	align-items:center;
+	flex-direction: column;
 }
-.div-100 {
-  position: relative;
-  height: 100px;
+blockquote {
+  background: #0e08bf;
+  border-left: 10px solid #0e08bf;
+  margin: 1.5em 10px;
 }
-.div-200 {
-  position: relative;
-  height: 200px;
+blockquote:before {
+  color: #0e08bf;
+  content: open-quote;
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
 }
-.div-300 {
-  position: relative;
-  height: 300px;
+blockquote:after {
+  color: transparent;
+  content: close-quote;
 }
-.div-400 {
-  position: relative;
-  height: 400px;
+blockquote p {
+  display: inline;
 }
-
-.right-formula {
-  width: 50%;
-  text-align: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-  border: 2px solid blue;
+blockquote > ol {
+  list-style: none;
+  counter-reset: steps;
 }
-
+blockquote > ol li {
+  counter-increment: steps;
+}
+blockquote > ol li::before {
+  content: counter(steps);
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  background: #ff6f00;
+  color: white;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  line-height: 1.2em;
+}
+blockquote > ol ol li::before {
+  background: darkorchid;
+}
 </style>
+""")
+
+# ╔═╡ ad045108-9dca-4a61-ac88-80a3417c95f2
+TableOfContents(title="MATH102 - TERM 222")
+
+# ╔═╡ 1e9f4829-1f50-47ae-8745-0daa90e7aa42
+md""" # Chapter 7
+
+## Section 7.1
+### Area of a Region Between Two Curves
+
+> __Objectives__
+> - Find the area of a region between two curves using integration.
+> - Find the area of a region between intersecting curves using integration.
+> - Describe integration as an accumulation process.
 
 """
 
-# ╔═╡ 7532bb48-d0a5-11eb-0369-23288ac68dbc
-TableOfContents(title="MATH102")
-
-# ╔═╡ d1815ea6-9a32-4d88-b580-95f29d7ef914
-begin
+# ╔═╡ 90f42d35-f81e-4c38-8a73-77b37755f671
+begin 
 	struct PlotData
 		x::StepRangeLen
 		fun::Function
@@ -82,683 +139,947 @@ begin
 		x, fun.(x)
 	end
 	x, y = symbols("x,y", real=true)
-	
-	html""
+	p1Opt = (framestyle=:origin, aspectration=1)
+	function plot_implicit(F, c=0;
+			xrng=(-5,5), yrng=xrng, zrng=xrng,
+			nlevels=6,         # number of levels in a direction
+			slices=Dict(:x => :blue,
+				:y => :red,
+				:z => :green), # which directions and color
+			kwargs...          # passed to initial `plot` call
+		)
+
+		_linspace(rng, n=150) = range(rng[1], stop=rng[2], length=n)
+
+		X1, Y1, Z1 = _linspace(xrng), _linspace(yrng), _linspace(zrng)
+
+		p = Plots.plot(;legend=false,kwargs...)
+
+		if :x ∈ keys(slices)
+			for x in _linspace(xrng, nlevels)
+				local X1 = [F(x,y,z) for y in Y1, z in Z1]
+				cnt = contours(Y1,Z1,X1, [c])
+				for line in lines(levels(cnt)[1])
+					ys, zs = coordinates(line) # coordinates of this line segment
+					plot!(p, x .+ 0 * ys, ys, zs, color=slices[:x])
+				end
+			end
+		end
+
+		if :y ∈ keys(slices)
+			for y in _linspace(yrng, nlevels)
+				local Y1 = [F(x,y,z) for x in X1, z in Z1]
+				cnt = contours(Z1,X1,Y1, [c])
+				for line in lines(levels(cnt)[1])
+					xs, zs = coordinates(line) # coordinates of this line segment
+					plot!(p, xs, y .+ 0 * xs, zs, color=slices[:y])
+				end
+			end
+		end
+
+		if :z ∈ keys(slices)
+			for z in _linspace(zrng, nlevels)
+				local Z1 = [F(x, y, z) for x in X1, y in Y1]
+				cnt = contours(X1, Y1, Z1, [c])
+				for line in lines(levels(cnt)[1])
+					xs, ys = coordinates(line) # coordinates of this line segment
+					plot!(p, xs, ys, z .+ 0 * xs, color=slices[:z])
+				end
+			end
+		end
+
+
+		p
+	end
+	html"......"
 end
 
-# ╔═╡ d7831013-a8bf-4bed-83f3-c436b2dd1464
-md"""
-# Chapter 7: Techniques of Integration
+# ╔═╡ aac97852-3abc-4455-80fe-a61aec320d24
+begin
+	cnstSlider = @bind cnstslider Slider(-2:1:2, default=0)
+	n1Slider = @bind n1slider Slider(1:200, default=1,show_value=true)
+	md"""
+	| | |
+	|---|---|
+	|move $cnstSlider| ``n`` = $n1Slider|
+	|||
+	"""
+end
 
-## Section 7.1
-**Integration by Parts**
-
-*The integration rule that corresponds to the Product Rule for differentiation is called __integration by parts__*
-"""
-
-# ╔═╡ 561cdfe6-fde5-4e09-bbac-8c9f9b68917c
-md"""
-### Indefinite Integrals
+# ╔═╡ e427ab16-9d5a-4200-8d96-8e49ec0da312
+begin
+	f1(x) = sin(x)+3+cnstslider
+	f2(x) = cos(2x)+1+cnstslider
+	f3(x) = cos(2x)+4+cnstslider
+	poi1=solve(f1(x)-f3(x),x) .|> p -> p.n()
+	theme(:wong)
+	a1,b1 = 1, 5
+	Δx1 = (b1-a1)/n1slider
+	x1Rect =a1:Δx1:b1
+	x1 = a1:0.1:b1
+	y1 = f1.(x1)
+	y2 = f2.(x1)
+	y3 = f3.(x1)
+	
+	p1=plot(x1,y1, fill=(y2,0.25,:green), label=nothing,c=:red)
+	p2=plot(x1,y1, fill=(y3,0.25,:green), label=nothing,c=:red)
+	
+	plot!(p1,x1,y2,label=nothing)
+	plot!(p2,x1,y3,label=nothing)
+	annotate!(p1,[
+				(3.5,3.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(3.2,1+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	annotate!(p2,[
+				(1.2,4.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(4,5+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	
+	plot!(p1; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	recs =[
+			Shape([(xi,f2(xi)),(xi+Δx1,f2(xi)),(xi+Δx1,f1(xi+Δx1)),(xi,f1(xi+Δx1))]) 			 for xi in x1Rect[1:end-1]
+		  ]
+	n1slider>2 && plot!(p1,recs, label=nothing,c=:green)
+	plot!(p2; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	scatter!(p2,(poi1[1],f3(poi1[1])), label="Point of instersection",legend=:bottomright)
+	# save("./imgs/6.1/sec6.1p2.png",p2)
+	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
+	
+	md""" **How can we find the area between the two curves?**
+	
+$p1
+	
 ```math
-\int f(x)g'\,(x) dx = f(x) g(x) - \int g(x) f'\,(x) dx
+Area = \int_a^b \left[{\color{red}f(x)} - {\color{blue}g(x)}\right] dx
 ```
 """
 
-# ╔═╡ 17b3c7a5-3170-4b6b-81b5-fc5f29eedd0f
+end
+
+# ╔═╡ 2ddde4c4-8217-41e3-9235-a6370b11ae5c
 md"""
-**Example**
+
+**Remark**
+- Area = ``y_{top}-y_{bottom}``.
+
+**Example 1**
+
+Find the area of the region bounded above by $y=e^x$, bounded below by $y=x$, bounded on the sides by $x=0$ and $x=1$.
+
+---
+"""
+
+# ╔═╡ 07dee140-2553-4b2e-bd28-1dda978fb34c
+begin
+	ex1x=0:0.01:1
+	ex1y=exp.(ex1x)
+	ex1plt=plot(ex1x,ex1y,label=nothing,fill=(0,0.5,:red))
+	plot!(ex1plt,ex1x,ex1x,fill=(0,0,:white),label=nothing)
+	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,3.5),label=nothing,xticks=[0,0,1])
+	ex1Rect = Shape([(0.5,0.55),(0.55,0.55),(0.55,exp(0.55)),(0.5,exp(0.55))])
+	plot!(ex1Rect,label=nothing)
+	annotate!([	(0.77,0.6,L"y=x")
+			  ,	(0.7,exp(0.7)+0.2,L"y=e^x")
+			  , (1.1,1.7,L"x=1")
+			  , (-0.1,0.5,L"x=0")
+			  , (0.54,0.44,text(L"\Delta x",10))
+			  ])
+	md"""
+	**Solution**
+	$ex1plt
+	"""
+end
+
+# ╔═╡ d7928de3-89a4-4475-ba5b-2e707084685b
+md"""
+### Area of a Region Between Intersecting Curves
+In geberal,
+
+$p2
+	
+```math
+Area = \int_a^b \left|f(x) - g(x)\right| dx
+```
+
+"""
+
+# ╔═╡ 784142ee-1416-4ccb-a341-0497422009b6
+html"<hr>"
+
+# ╔═╡ a65d268a-cb45-4d6c-ac77-ac719010cfb3
+md"""
+**Example 2**
+
+Find the area of the region enclosed by the parabolas $y=x^2$ and $y=2x-x^2$.
+
+*Solution in class*
+
+---
+"""
+
+
+# ╔═╡ 6a4dd437-8be1-4e17-b484-65707ec28215
+begin
+	ex2f1(x)=x^2
+	ex2f2(x)=2x-x^2
+	ex2poi=solve(ex2f1(x)-ex2f2(x)) .|> p->p.n()
+	ex2x=0:0.01:1
+	ex2widex=-1:0.01:2
+	ex2y1=ex2f1.(ex2x)
+	ex2y1wide=ex2f1.(ex2widex)
+	ex2y2=ex2f2.(ex2x)
+	ex2y2wide=ex2f2.(ex2widex)
+	ex2plt=plot(ex2x,ex2y2,label=nothing,fill=(0,0.5,:green))
+	plot!(ex2plt,ex2x,ex2y1,fill=(0,0,:white),label=nothing)
+	plot!(ex2widex,ex2y1wide, c=:red,label=nothing)
+	plot!(ex2widex,ex2y2wide, c=:blue,label=nothing)
+	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,2),label=nothing,xticks=[0,0,1])
+	ex2Rect = Shape([ (0.5,ex2f2(0.55))
+					, (0.55,ex2f2(0.55))
+					, (0.55,ex2f1(0.55))
+					, (0.5,ex2f1(0.55))
+					])
+	plot!(ex2Rect,label=nothing)
+	scatter!(ex2poi,ex2f1.(ex2poi),label=nothing)
+	annotate!([	(0.77,0.4,L"y=x^2")
+			  ,	(0.7,1.1,L"y=2x-x^2")
+			  , (0.54,0.24,text(L"\Delta x",10))
+			  ])
+	md"""
+	**Solution**
+	
+	$ex2plt
+	"""
+end
+
+# ╔═╡ 4337bc1f-933f-4e8d-abae-46b8ad99409e
+md"""
+**Example 3**
+
+Find the area of the region bounded by the curves 
 
 ```math 
-\int x \cos(x) dx 
+y=\cos(x), \;\; y=\sin(2x), \;\; x=0, \;\; x=\frac{\pi}{2}
 ```
 
 
+---
 """
 
-# ╔═╡ ea89d5dc-3d70-42d3-9cc7-6cc4c3e8ad2b
+# ╔═╡ 539cbac4-c1be-4f9d-b076-215c4430a3a6
 begin
+	ex3f1(x) = cos(x)
+	ex3f2(x) = sin(2x)
+	ex3X=0:0.01:(π+0.019)/2
 	
+	ex3Y1=ex3f1.(ex3X)
+	ex3Y2=ex3f2.(ex3X)
+	ex3P = plot(ex3X,ex3Y1,label=L"y=\cos(x)", c=:red)
+	plot!(ex3P,ex3X,ex3Y1,fill=(ex3Y2,0.25,:green),label=nothing,c=nothing)
+	plot!(ex3P,ex3X,ex3Y2,label=L"y=\sin(2x)",c=:blue)
+	plot!(ex3P;p1Opt...,xlims=(-1,π),ylims=(-1.1,1.1))
+	scatter!(ex3P,(π/6,ex3f1(π/6)),label=nothing,c=:black)
+	
+	md"""
+	**Solution**
+	
+	$ex3P
+	"""
+end
+
+# ╔═╡ 1006936d-e13e-4146-b0ac-905acb1f7d08
+begin
+	img1 = load(download("https://www.dropbox.com/s/r39ny15umqafmls/wrty.png?raw=1"))
+	img1 = imresize(img1,ratio=1.5)
+	md"""
+	### Integrating with Respect to ``y``
+	
+	$img1
+	
+	"""
+	
+end
+
+# ╔═╡ 64f36566-5747-4c8f-b90f-1ced674365cb
+md"""
+**Example 4**
+
+Find the area enclosed by the line ``y=x-1``  and the parabola ``y^2=2x+6``.
+
+"""
+
+# ╔═╡ 61b6234e-5cb2-4337-ae29-14106ac6bd59
+begin
+	ex4FRight(y)=-3+y^2/2
+	ex4FLeft(y)=y+1
+	ex4p = plot(x->x^2/2 -3,x->x,-5,6,c=:blue,label=L"y^2=2x+6")
+	ex4Rect = Shape([ (ex4FRight(1.8),2)
+					, (ex4FLeft(2),2)
+					, (ex4FLeft(2),1.8)
+					, (ex4FRight(1.8),1.8)
+					])
+	plot!(ex4Rect,label=nothing)
+	plot!(ex4p,x->x,x->x-1,-5,6;p1Opt...,c=:red,label=L"y=x-1",xticks=-3:1:15)
+	(ex4poi1,ex4poi2)=solve([y^2-2*x-6,y-x+1],[x,y]) 
+	scatter!([ex4poi1,ex4poi2],xlims=(-3.5,7),label=nothing,legend=:topleft)
 	md"""
 	**Solution:**
-	
-	```math
-	\int x \cos(x) dx = \int \underbrace{x}_{f(x)} \overbrace{\cos(x)}^{g'(x)} dx = x \sin(x) - \int \sin(x) \overbrace{ \;\;\;\;dx}^{f'\,(x) dx} = x\sin(x) + \cos(x) +C  
-	
-	```
+	$ex4p
 	"""
 end
 
-# ╔═╡ 1c821257-3b61-4187-a556-0e5736af27b2
+# ╔═╡ 237a0543-7d70-48ff-a8b5-37bb31dd98d8
+
+
+# ╔═╡ e370f794-41b6-4acf-9ef6-453fba223dea
+# integrate(y+1-(y^2/2-3),(y,-2,4))
+
+# ╔═╡ 629f1cf7-ffa9-496b-9a3f-405089b43a8e
 md"""
-**Remarks:**
+**Example 5**
 
-```math
-\int f(x)g'\,(x) dx = f(x) g(x) - \int g(x) f'\,(x) dx 
-```
-  
-```math
-\begin{array}{lll}
-  u=f(x), & \qquad & dv=g'(x) dx \\
-      &\searrow&\\
-  du = f'(x)dx & \underset{-}{\longleftarrow} & v = g(x) 
-  \end{array}
-```
+Find the area of the region enclosed by the curves ``y= {1\over x}``, ``y=x``, and ``y={1\over 4} x``, using
+* ``x`` as the variable of integration and
+* ``y`` as the variable of integration.
 
-
-  
-```math
-\int u dv = uv - \int v du 
-```
-**_It is helpful to use the pattern:_**
-```math
-\begin{array}{rcr}
-  u=\fbox{\rule{0.2in}{0pt}\rule[-0.1ex]{0pt}{2ex}} & \qquad & dv=\fbox{\rule{0.2in}{0pt}\rule[-0.1ex]{0pt}{2ex}} \\
-      &\searrow&\\
-  du = \fbox{\rule{0.2in}{0pt}\rule[-0.1ex]{0pt}{2ex}}& \underset{-}{\longleftarrow} & v = \fbox{\rule{0.2in}{0pt}\rule[-0.1ex]{0pt}{2ex}} 
-  \end{array}
-```
-
-### Definite Integrals
-
-```math
-\int_a^b u dv = \left[uv\right]_a^b - \int_a^b v du
-```
-"""
-
-# ╔═╡ 1a6fc415-eb31-4df1-a314-40aff9e0fa96
-md"""
-### Examples
-__SOLUTION IN CLASS__
-
-1. ``\int \ln x dx``
-2. ``\int t^2 e^t dt ``
-3. ``\int e^x \sin(x)dx``
-4. ``\int_0^1 \tan^{-1}x dx``
-5. ``\int x^3 \sin{\left(x\over 6\right)} dx``
-6. ``\int \sin^5(x) dx``
 
 """
 
-# ╔═╡ 030a2871-1b68-48c6-9f51-d4bcd0e86bb6
-md"""
-**Example**
-
-Calculate the volume generated by rotating the region bounded by the curves ``y=\ln x``, ``y=0``, and ``x=2`` about each axis.
-"""
-
-# ╔═╡ 84ad187d-e4a7-48c6-8a5c-e9e518788689
+# ╔═╡ 0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
 begin
-
-	release71 = Date(2021,6,25) < now()
-	solution71 = release71 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.1/ps7.1-solution.pdf)" : md"Solution will be released soon"
-	md"""
-	### [Problem Set 7.1](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.1/ps7.1.pdf)
-	$(solution71)
-	"""
+	x5=0.1:0.1:10
+	x51=0:0.1:1
+	p5 = plot(x->x/4, xlims=(-1,10), framestyle=:origin, aspectratio=1,label=nothing)
+	plot!(x->x,c=:red,label=nothing)
+	# plot!(x51,1 ./ x51,fill=(x51/4,0.5,:blue),c=:white)
+	plot!(x5,1 ./ x5,c=:green,label=nothing)
+	xlims!(-0.1,3)
+	ylims!(-0.1,2)
 end
 
-# ╔═╡ 58719d77-9812-4002-b83f-2be9050ccf8a
-md"""
+# ╔═╡ 598b7b2e-01dd-41aa-966a-a361921a5c60
+cm"""
 ## Section 7.2
-**Trigonometric Integrals**
+### Volume: The Disk Method
+> __Objectives__
+> - Find the volume of a solid of revolution using the disk method.
+> - Find the volume of a solid of revolution using the washer method.
+> - Find the volume of a solid with known cross sections.
 
-**RECALL**
+**Solids of Revolution**
 
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/z2k777veuxiaorq/solids_of_revs.png?raw=1"))
+</div>
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/ik73cokibh1fuj6/disk_volume.png?raw=1"))
+
+__Volume of a disk__
 ```math
-
-
-
-\displaystyle
-\sin^2 x + \cos^2 x =1, \quad  \tan^2 x + 1 =\sec^2 x,  \quad  1+\cot^2 x  =\csc^2 x,
-
+V = \pi R^2 w
 ```
+</div>
+
+<div class="img-container">
+
+__Disk Method__
+
+$(Resource("https://www.dropbox.com/s/odttq795nrpcznw/disk_method.png?raw=1"))
+</div>
 
 ```math
-\displaystyle
-\cos^2 x = \frac{1 +\cos 2x }{2}, \quad \sin^2 x = \frac{1 -\cos 2x }{2}
-```
-
-```math
-\displaystyle
-\begin{array}{ccc}
-\sin A\cos B & = & \frac{1}{2}\left[\sin(A-B)+\sin(A+B)\right], \\[0.2cm]
-\sin A\sin B & = & \frac{1}{2}\left[\cos(A-B)-\cos(A+B)\right], \\[0.2cm]
-\cos A\cos B & = & \frac{1}{2}\left[\cos(A-B)+\cos(A+B)\right], \\
+\begin{array}{lcl}
+\textrm{Volume of solid} & \approx &\displaystyle \sum_{i=1}^n\pi\bigl[R(x_i)\bigr]^2 \Delta x \\
+	& = &\displaystyle \pi\sum_{i=1}^n\bigl[R(x_i)\bigr]^2 \Delta x
 \end{array}
 ```
-
-```math
-\int \tan x dx = \ln|\sec x| +C, \quad \int \sec x dx = \ln|\sec x+\tan x| +C
-```
+Taking the limit ``\|\Delta\|\to 0 (n\to \infty)``, we get
 
 
 ```math
-\int \cot x dx = -\ln|\csc x| +C, \quad \int \csc x dx = \ln|\csc x-\cot x| +C
+\begin{array}{lcl}
+\textrm{Volume of solid} & = &\displaystyle\lim_{\|\Delta\|\to 0}\pi \sum_{i=1}^n\bigl[R(x_i)\bigr]^2 \Delta x \end{array} = \pi \int_{a}^{b}\bigl[R(x)\bigr]^2 dx.
 ```
+
+<div class="img-container">
+
+__Disk Method__
+
+__To find the volume of a solid of revolution with the disk method, use one of the formulas below__
+
+$(Resource("https://www.dropbox.com/s/9kpj2dcrwj5y5h8/disk_volume_v_h.png?raw=1"))
+</div>
+
 """
 
-# ╔═╡ 5bbb85cb-a5be-4010-bd41-caa339ef92dd
+# **Volumes**
+
+# Let's start with a simple solid **`cylinders`**
+
+# $(Resource("https://www.dropbox.com/s/mofqdenjokjci44/img1.png?raw=1"))
+
+# ### Cross-Section Method
+# $(Resource("https://www.dropbox.com/s/xz80mrwj2fserd5/img2.png?raw=1"))
+
+# Let's now try to find a formula for finding the volume of this solid
+
+# $(Resource("https://www.dropbox.com/s/uvz7my3n08fgm6w/img3.png?raw=1"))
+
+# ╔═╡ ffcdd27d-0974-4071-9543-8474a02f09e8
+cm"""
+__Example 1:__
+Find the volume of the solid formed by revolving the region bounded by the graph of
+```math
+f(x) = \sqrt{\sin x}
+```
+and the ``x``-axis (``0\leq x\leq \pi``) about the ``x``-axis
+"""
+
+# ╔═╡ e7a8a1e7-b4c5-4d33-8e2d-e4fd6b15e89b
+cm"""
+__Example 2__:
+Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+f(x)=2-x^2
+```
+and ``g(x)=1``  about the line ``y=1``.
+"""
+
+# ╔═╡ 35c589c5-8206-4cd5-b4e6-cc5758d17cf6
+cm"""
+### The Washer Method
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/ajra8g5fr8ssewe/washer_volume.png?raw=1"))
+
+```math
+\textrm{Volume of washer} = \pi(R^2-r^2)w
+```
+</div>
+
+__Washer Method__
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/hvwa3707bftjir0/washer_method.png?raw=1"))
+
+```math
+V = \pi\int_a^b \bigl[\left(R[x]\right)^2-\left(r[x]\right)^2) dx
+```
+</div>
+"""
+
+# ╔═╡ bc3988a9-048c-4bbf-8197-edcea8898818
+cm"""
+__Example 3__ Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+y=\sqrt{x} \qquad \textrm{and}\qquad  y = x^2
+```
+about the ``x``-axis.
+
+"""
+
+# ╔═╡ dad5ee5f-b2f4-4582-b2ef-855e7b9dc49b
+cm"""
+__Example 4__ Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+y=x^2+1, \quad y=0, \quad x=0, \quad \textrm{and}\quad x=1
+```
+about the ``y``-axis
+"""
+
+# ╔═╡ 02fd559e-2a51-4a15-af4e-bd50149cb0e8
+cm"""
+### Solids with Known Cross Sections
+
+[Example 1](https://www.geogebra.org/m/XFgMaKTy) | [Example 2](https://www.geogebra.org/m/XArpgR3A)
+
+1. For cross sections of area ``A(x)`` taken perpendicular to the ``x``-axis,
+```math
+V = \int_a^b A(x) dx
+```
+2. For cross sections of area ``A(y)`` taken perpendicular to the ``y``-axis,
+```math
+V = \int_c^d A(y) dy
+```
+
+__Example 6__ 
+The base of a solid is the region bounded by the lines
+```math
+f(x)=1-\frac{x}{2},\quad g(x)=-1+\frac{x}{2}\quad \textrm{and}\quad x=0.
+```
+The cross sections perpendicular to the ``x``-axis are equilateral triangles.
+"""
+
+# ╔═╡ 5c1989f5-bd7b-4c82-a9e3-54f47539fe2d
+# md"""
+# * Let’s divide ``S`` into ``n`` “slabs” of equal width ``\Delta x`` by using the planes``P_{x_1},P_{x_2},\cdots`` to slice the solid. (*Think of slicing a loaf of bread.*) 
+# * If we choose sample points ``x_i^*`` in ``[x_{i-1},x_i]`` , we can approximate the ``i``th slab ``S_i`` by a cylinder with base area ``A(x_i^*)`` and height ``\Delta x``.
+
+# ```math
+# V(S_i) \approx A(x_i^*)\Delta x
+# ```
+
+# So, we have
+
+# ```math
+# V \approx \sum_{i=1}^{n} A(x_i^*)\Delta x
+# ```
+# #### Definition of Volume
+# Let ``S`` be a solid that lies between ``x=a`` and ``x=b``. If the cross-sectional area of ``S`` in the plane ``P_x`` , through ``x`` and perpendicular to the ``x``-axis, is ``A(x)`` , where ``A`` is a continuous function, then the **volume** of ``S``  is 
+# ```math
+# V = \lim_{n\to\infty} \sum_{i=1}^{n} A(x_i^*)\Delta x = \int_{a}^{b}A(x) dx
+# ```
+# """
+
+# ╔═╡ 078023da-23bc-4401-a1dc-fe869400f9b0
+# md"""
+# ### Volumes of Solids of Revolution
+# If we revolve a region about a line, we obtain a **solid of revolution**. In the following examples we see that for such a solid, cross-sections perpendicular to the axis of rotation are **circular**.
+
+# **Example 1**
+# Find the volume of the solid obtained by rotating about the ``x``-axis the region under the curve ``y=\sqrt{x}`` from ``0`` to ``1`` . Illustrate the definition of volume by sketching a typical approximating cylinder.
+# """
+
+# ╔═╡ 440eec5a-5a9b-4783-9dd2-3427fe340bc6
+# begin
+# 	fun(x)=sqrt(x)
+# 	s6e1 = PlotData(0:0.01:1, fun)	
+# 	tt=range(0.1,stop=1,length=100) |> collect
+# 	ss=range(0.1,stop=1,length=100) |> collect
+# 	y_grid = [x for x=ss for y=tt]
+# 	z_grid = [y for x=ss for y=tt]
+# 	f(x, z) = begin
+#          x ^ 2 + z ^2
+#     end
+# 	p3 =plot(	
+# 				plot(s6e1; customcolor = :black )
+# 			,	plot_implicit((x,y,z)->y^2+z^2-x,xrng=(-2,2),yrng=(-1,1),zrng=(-1,2),
+#    nlevels=200, slices=Dict(:x=>:red),aspect_ratio=1,frame_style=:origin)
+# 			)
+# 	md"""
+# 	**Solution**
+
+# 	$p3
+
+# 	"""
+# end
+
+# ╔═╡ 835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
 md"""
-### Integrals of Powers of Sine and Cosine
-```math
-\int \sin^mx \cos^n x dx
-```
-
-* ``m`` is ``{\color{red}\text{odd}}``, write as ``\int \sin^{m-1}x \cos^n x \sin x  dx``. _Example_: $\int \sin^5x \cos^2 x dx$
-
-
-* ``n`` is ``{\color{red}\text{odd}}``,  write as ``\int \sin^mx \cos^{n-1}\cos x  dx``. _Example_ ``\int \sin^5x \cos^3 x dx``
-
-
-* ``m`` and ``n`` are ``{\color{red}\text{even}}``, use formulae (_Example_ ``\int \cos^2 x dx`` and  ``\int \sin^4 x dx``)
-```math
-\sin^2(x)=\frac{1-\cos(2x)}{2}, \quad \cos^2(x)=\frac{1+\cos(2x)}{2}.
-```
+**Exercise**
+Find the volume of the solid obtained by rotating the region bounded by ``y=x^3``, ``y=8`` , and ``x=0`` about the ``y``-axis.
 """
 
-# ╔═╡ 9cc8c631-741d-4020-a74c-4fb4541fce70
+# ╔═╡ 635e4f34-9401-4234-936b-8b1029c6a7db
 md"""
-### Integrals of Powers of Secant and Tangent
-
-```math
-\int \tan^mx \sec^n x dx
-```
-
-* ``n`` is even, write as ``\int \tan^mx \sec^{n-2}\sec^2 x  dx``. _Example_ ``\int \tan^6x \sec^4 x dx``
-
-
-* ``m`` is odd, write as ``\int \tan^{m-1}x \sec^{n-1}\tan x\sec x  dx``. _Example_ ``\int \tan^5x \sec^7 x dx``.
-
+**Exercise** The region ``\mathcal{R}`` enclosed by the curves ``y=x`` and ``y=x^2`` is rotated about the ``x``-axis. Find the volume of the resulting solid.
 
 """
 
-# ╔═╡ c67e0db7-f34a-4e4d-852b-23d3ab18be26
+# ╔═╡ c9b6ee5f-be74-4067-8bff-8e408ddd0196
 md"""
-**Examples**
-
-1. ``\int \tan^3 x dx``
-
-
-2. ``\int \sec^3 x dx``
-
+**Exercise** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``y=2``.
 """
 
-# ╔═╡ 46b710e8-2903-47de-a26b-62537d8fd2e1
+# ╔═╡ 48dcb862-d764-4421-851a-213c9d733b02
 md"""
-### Using Product Identities
-```math 
-\int \sin mx \cos n x dx, 
-```
-```math
-\int \sin mx \sin n x dx, 
-```
-```math
-\int \cos mx \cos n x dx.
-```
-
-Use
-
-
-```math
-\displaystyle
-\begin{array}{ccc}
-\sin A\cos B & = & \frac{1}{2}\left[\sin(A-B)+\sin(A+B)\right], \\[0.2cm]
-\sin A\sin B & = & \frac{1}{2}\left[\cos(A-B)-\cos(A+B)\right], \\[0.2cm]
-\cos A\cos B & = & \frac{1}{2}\left[\cos(A-B)+\cos(A+B)\right], \\
-\end{array}
-```
-
-
+**Exercise** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``x=-1``.
 """
 
-# ╔═╡ 48a57bf3-0c09-4f43-bd1f-0e31c4acb288
+# ╔═╡ 8d1a94f7-f6e6-4b95-a45e-03550125801e
 md"""
-**Example**
-
-```math
-\int \sin(4x)\cos(5x) dx
-```
+**Example 6** Figure below shows a solid with a circular base of radius ``1``. Parallel cross-sections perpendicular to the base are equilateral triangles. Find the volume of the solid.
+$(load(download("https://www.dropbox.com/s/bbxedang718jvvp/img4.png?dl=0")))
 """
 
-# ╔═╡ 6f66f032-fcfa-43ac-978e-3598aebaa6e8
-begin
-
-	release72 = Date(2021,6,25) < now()
-	solution72 = release72 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.2/ps7.2-solution.pdf)" : md"Solution will be released soon"
-	md"""
-	### [Problem Set 7.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.2/ps7.2.pdf)
-	$(solution72)
-	"""
-end
-
-# ╔═╡ 1e0a2bb0-62bc-4c42-8269-7dd3943bcce1
+# ╔═╡ 3d267c3e-4509-48d6-a094-39e15940fd6c
 md"""
 ## Section 7.3
-**Trigonometric Substitution**
+**Volume: The Shell Method**
+> __Objectives__
+> - Find the volume of a solid of revolution using the shell method.
+> - Compare the uses of the disk method and the shell method.
 
+**Problem**
+Find the volume of the solid generated by rotating the region bounded by ``y=2x^2-x^3`` and ``y=0`` about the ``y-``axis.
 """
 
-# ╔═╡ dfa3ca61-61db-4b15-b9ba-555a0637e31c
-md"""
-
-```math
-\displaystyle
-\text{For }\sqrt{a^2-x^2}, \quad \text{ use } \quad x = a\sin\theta, \quad -\frac{\pi}{2}\leq \theta \leq \frac{\pi}{2}.
-```
-**Example** 
-``\int\frac{\sqrt{9-x^2}}{x^2}dx``
-
-------------
-```math
-	\displaystyle
-	\text{For }\sqrt{a^2+x^2}, \quad \text{ use } \quad x = a\tan\theta, \quad -\frac{\pi}{2}< \theta <\frac{\pi}{2}.
-```
-**Example** ``\int\frac{dx}{x^2\sqrt{x^2+4}}``
-
-**Example** ``\int_0^1\sqrt{1+4x^2}dx``
-
-------------
-
-```math
-	\displaystyle
-	\text{For }\sqrt{x^2-a^2}, \quad \text{ use } \quad x = a\sec\theta, \quad 0\leq \theta < \frac{\pi}{2} \text{ or }\pi \leq \theta <\frac{3\pi}{2}.
-```
-
-**Example**
-``\int_0^3\sqrt{x^2-9}dx``
-
-------------
-
-**Example**
-```math
-\int \sqrt{5+4x-x^2} dx
-```
-"""
-
-# ╔═╡ 0b7c21ca-a24b-4d62-8b40-beb1d7dc3281
+# ╔═╡ 21848166-fbf0-4e1d-8e90-e0060abcc170
 begin
-	release73 = Date(2021,6,25) < now()
-	solution73 = release73 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.3/ps7.3-solution.pdf)" : md"Solution will be released soon"
+	show_graph_s = @bind show_graph CheckBox() 
+	show_rect_s = @bind show_rect CheckBox() 
+	show_labels_s = @bind show_labels CheckBox() 
 	md"""
-	### [Problem Set 7.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.3/ps7.3.pdf)
-	$(solution73)
+	Step 1: $show_graph_s
+	Step 2: $show_rect_s
+	Step 3: $show_labels_s
 	"""
 end
 
-# ╔═╡ b23b18fd-ebe1-481a-b606-40c4f8708e1a
-md"""
-## Section 7.4
-**Integration of Rational Functions By Partial Fractions**
-
-We learn how to integrate rational function: quotient of polunomial.
-```math
- f(x) =\frac{P(x)}{Q(x)}, \qquad P, Q \text{ are polynomials}
-```
- 
-**How?**
-
-◾ __STEP 0__ : if degree of ``P`` is greater than or equal to degree of ``Q`` goto
-__STEP 1__, else GOTO __STEP 2__.
-
-◾ __STEP 1__ : Peform long division of ``P`` by ``Q`` to get 
-```math
- \frac{P(x)}{Q(x)} = S(x) + \frac{R(x)}{Q(x)}
-```
-and apply __STEP 2__ on  ``\frac{R(x)}{Q(x)}``.
-
-◾ __STEP 2__ : Write the __partial fractions decomposition__  
-
-◾ __STEP 3__ : Integrate
- 
-"""
-
-# ╔═╡ dcf55188-6a87-448d-809d-3c7e40817be0
-md"""
-### Partial Fractions Decomposition
-
-We need to write ``\frac{R(x)}{Q(x)}`` as sum of __partial fractions__ by __factor__ ``Q(x)``. Based on the factors, we write the decomposition accoding to the following cases
-
-__case 1__: ``Q(x)`` is a product of distinct linear factors.
-we write 
-```math
-Q(x)=(a_1x+b_1)(a_2x+b_2)\cdots (a_kx+b_k)
-```
-then there exist constants ``A_1, A_2, \cdots, A_k`` such that
-```math
-\frac{R(x)}{Q(x)}= \frac{A_1}{a_1x+b_1}+\frac{A_2}{a_2x+b_2}+\cdots +\frac{A_k}{a_kx+b_k}
-```
-
-__case 2__: ``Q(x)`` is a product of linear factors, some of which are repeated.
-say first one 
-```math
-Q(x)=(a_1x+b_1)^r(a_2x+b_2)\cdots (a_kx+b_k)
-```
-then there exist constants ``B_1, B_2, \cdots B_r, A_2, \cdots, A_k`` such that
-```math
-\frac{R(x)}{Q(x)}= \left[\frac{B_1}{a_1x+b_1}+\frac{B_2}{(a_1x+b_1)^2}+\cdots \frac{B_r}{(a_1x+b_1)^r}\right]+ \frac{A_2}{a_2x+b_2}+\cdots +\frac{A_k}{a_kx+b_k}
-```
-
-
-__case 3__: ``Q(x)`` contains irreducible quadratic factors, none of which is repeated.
-say we have (Note: the quadratic factor ``ax^2+bx+c`` is irreducible if ``b^2-4ac<0``). For eaxmple if
-```math
-Q(x)=(ax^2+bx+c)(a_1x+b_1)
-```
-then there exist constants ``A, B,`` and ``C`` such that
-```math
-\frac{R(x)}{Q(x)}= \frac{Ax+B}{ax^2+bx+c}+\frac{C}{a_1x+b_1}
-```
-
-__case 4__: ``Q(x)`` contains irreducible quadratic factors, some of which are repeated. For example if
-```math
-Q(x)=(ax^2+bx+c)^r(a_1x+b_1)
-```
-then there exist constants ``A_1, B_1, A_2, B_2, \cdots A_r, B_r `` and ``C`` such that
-```math
-\frac{R(x)}{Q(x)}= \left[\frac{A_1x+B_1}{ax^2+bx+c}+\frac{A_2x+B_2}{(ax^2+bx+c)^2}+\cdots+\frac{A_rx+B_r}{(ax^2+bx+c)^r}\right]+\frac{C}{a_1x+b_1}
-```
-
-
-
-"""
-
-# ╔═╡ 6b4a9e6c-34fc-40a8-a46f-ab9775adf6d8
-md"""
-**Example:** Write out the form of the partial fractions decomposition of the function
-```math
-\frac{x^3+x+1}{x(x-1)(x+1)^2(x^2+x+1)(x^2+4)^2}
-```
-
-"""
-
-# ╔═╡ c2963ff4-d598-4195-a585-8884bf106b84
-md"""
-**More Examples**
-
-Find
-```math
-\begin{array}{lll}
-\text{(1)} & \int \frac{x^3+x}{x-1}dx. \\
-\text{(2)} & \int \frac{x^2+2x-1}{2x^3+3x^2-2x}dx. \\
-\text{(3)} & \int \frac{dx}{x^2-a^2}, \text{  where } a\not = 0 \\
-\text{(4)} & \int \frac{x^4-2x^2+4x+1}{x^3-x^2-x+1}dx \\
-\text{(5)} & \int \frac{2x^2-x+4}{x^3+4x}dx \\
-\text{(6)} & \int \frac{4x^2-3x+2}{4x^2-4x+3}dx \\
-\text{(7)} & \int \frac{1-x+2x^2-x^3}{x(x^2+1)^2}dx \\
-\end{array}
-```
-
-"""
-
-# ╔═╡ cca2812e-e1e7-499a-9c08-a76d8c77db66
-md"""
-**Remarks**
-```math
-\int \frac{dx}{x^2-a^2} = \frac{1}{2a}\ln\left|\frac{x-a}{x+a}\right|
-```
-
-```math
-\int \frac{dx}{x^2+a^2} = \frac{1}{a}\tan^{-1}\left(\frac{x}{a}\right)
-```
-"""
-
-# ╔═╡ 283c0dc4-d510-4581-9d26-d64e1f4bbe23
-md"""
-### Rationalizing Substitutions
-Find
-```math
-\begin{array}{lll}
-\text{(1)} & \int \frac{\sqrt{x+4}}{x}dx. \qquad \text{Example 9}\\
-\text{(2)} & \int \frac{dx}{2\sqrt{x+3}+\;x}. \\
-\end{array}
-```
-"""
-
-# ╔═╡ 1e271f61-1835-49f3-9a4b-fdf7c7883c8a
-md"""
-### (Exercise (59 ed. 8) 63 ed. 9 )
-
-Special Substitution (``t = \tan \left(\frac{x}{2}\right), \quad -\pi < x < \pi``)
-**(for rational functions of ``\sin x`` and ``\cos x``)**
-```math
-\begin{array}{lll}
-dx=\frac{2}{1+t^2}dt, & \cos{x}=\frac{1-t^2}{1+t^2}, &  \sin{x}=\frac{2t}{1+t^2} \\
-\end{array}
-```
-```math
-\begin{array}{lll}
-\text{(1)} & \int \frac{dx}{3\sin x - 4 \cos x}. \\
-\end{array}
-```
-
-"""
-
-# ╔═╡ f8de5f89-881e-43e7-b478-9cadc4ab6950
+# ╔═╡ 088a349a-f632-45af-866f-6315ed1e47a5
 begin
-	release74 = Date(2021,6,25) < now()
-	solution74 = release74 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.4/ps7.4-solution.pdf)" : md"Solution will be released soon"
+	
+	f30(x)=2*x^2-x^3
+	s3e0= PlotData(0:0.01:2,f30)
+	s3e0p0 = plot(s3e0)
+	annotate!(s3e0p0,[(1,1.2,L"y=2x^2-x^3")])
+	recty=Shape([ (0.75,f30(0.75))
+			, (1.75,f30(0.75))
+			, (1.75,f30(0.75)+0.05)
+			, (0.75,f30(0.75)+0.05)])
+	ux, lx = Plots.unzip(Plots.partialcircle(0,π,100,-0.1))
+	plot!(ux,lx .+ 1.15,c=:red)
+	anns = [(0.65,f30(0.76),L"x_L=?",10),(1.88,f30(0.76),L"x_R=?",10)]
+	s3e0p =	if show_labels 
+		plot!(s3e0p0,recty,label=nothing)
+		annotate!(anns)
+	elseif show_rect
+		plot!(s3e0p0,recty,label=nothing)
+	elseif show_graph
+		s3e0p0
+		
+	else
+		""
+	end
+end
+
+# ╔═╡ 90d1778a-61bf-46ee-a7cd-5fd1b5d5d980
+cm"""
+### The Shell Method
+"""
+
+# ╔═╡ 1dbbef99-3674-42fe-ab48-1ab6b72d0652
+begin 
+	shellImg=load(download("https://www.dropbox.com/s/8a2njc50e2hptok/shell.png?dl=0"))
 	md"""
-	### [Problem Set 7.4](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.4/ps7.4.pdf)
-	$(solution74)
+	A shell is a hallow circular cylinder
+	
+	$shellImg
 	"""
 end
 
-# ╔═╡ 8a10bc2c-72d9-47aa-a46b-79c6cdce2d23
+# ╔═╡ 05af66f4-1013-4374-8c85-9265f123934e
+md"""
+```math
+V = 2 \pi r h \Delta r = \text{[circumference][height][thickness]}
+
+```
+"""
+
+# ╔═╡ 7396e0b3-753e-40fa-8bb5-30ccb4bac550
+html"""
+<div style="display: flex; justify-content:center; padding:20px; border: 2px solid rgba(125,125,125,0.2);">
+<div>
+<h5>Cylindrical Shells Illustration</h5>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JrRniVSW9tg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</div>
+"""
+
+# ╔═╡ d3139bfe-4ae8-49d3-a9a5-19bd222a1eca
+cm"""
+<div style="display: flex;  justify-content: center;">
+<div style="margin-right:12px;padding:4px;border: 2px solid white; border-radius: 10px;background: #eee;">
+<span style="font-size:1.5M; font-weight: 800;">Horizontal Axis of Revolution</span>
+
+```math
+\text{Volume}=V = 2\pi \int_c^d p(y) h(y) dy
+```
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/6qmijrhprht4kqj/shell_y.png?raw=1"))
+
+</div>
+
+</div>
+
+<div style="margin-right:12px;padding:4px;border: 2px solid white; border-radius: 10px;background: #eee;"><span style="font-size:1.5M; font-weight: 800;">Vertical  Axis of Revolution</span>
+
+```math
+\text{Volume}=V = 2\pi \int_a^b p(x) h(x) dx
+```
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/ivbwuge5ti8vrff/shell_x.png?raw=1"))
+
+</div>
+
+</div>
+</div>
+
+"""
+
+# ╔═╡ 5e5c5013-2b13-4a59-a325-91ebcf811cb2
 begin
-	release75 = Date(2021,6,25) < now()
-	solution75 = release75 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.5/ps7.5-solution.pdf)" : md"Solution will be released soon"
-md"""
-## Section 7.5
-**Strategy for Integration**
-	
-### [Problem Set 7.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.5/ps7.5.pdf)
-$(solution75)
-"""
-end
-
-
-# ╔═╡ 3d784225-debf-46db-8479-b4be15a1166a
-md"""
-## Section 7.8
-**Improper Integrals**
-
-*__Do you know how to evaluate the following?__*
-```math
-
-\begin{array}{llr}
-\text{(1)} & \int_1^{\infty} \frac{1}{x^2} dx & (\text{Type 1}) \\ \\
-\text{(2)} & \int_0^{2} \frac{1}{x-1} dx & (\text{Type 2}) \\ \\
-\end{array}
-```
-
-"""
-
-# ╔═╡ 9d55715e-f798-4d2b-876c-097397f7697b
-md"""
-*__Definition of an Improper Integral of Type 1__*
-
-**(a)** If ``\int_a^t f(x) dx`` exists for every number ``t\ge a``, then
-```math
-\int_a^{\infty} f(x) dx = \lim_{t\to \infty} \int_a^t f(x) dx
-```
-provided this limit exists (as a finite number).
-
-
-**(b)** If ``\int_t^b f(x) dx`` exists for every number ``t\le b``, then
-```math
-\int_{-\infty}^b f(x) dx = \lim_{t\to -\infty} \int_t^b f(x) dx
-```
-provided this limit exists (as a finite number).
-
-The improper integrals ``\int_a^{\infty} f(x) dx`` and ``\int_{-\infty}^b f(x) dx`` are called *__convergent__* if the corresponding limit exists and *__divergent__* if the limit does not exist.
-
-**(c)** If both ``\int_a^{\infty} f(x) dx`` and ``\int_{-\infty}^b f(x) dx`` are convergent, then we define
-```math
-\int_{-\infty}^{\infty} f(x) dx =  \int_{-\infty}^a f(x) dx +\int_a^{\infty} f(x) dx
-```
-
-In part (c) any real number  can be used
-"""
-
-
-# ╔═╡ 2b2ce933-42da-4b8b-be43-8fce0a5a1002
-md"""
-**Example:** Determine whether the following integrals  are convergent or divergent.
-
-```math
-\begin{array}{ll}
-\text{(1)} & \int_1^{\infty} \frac{1}{x^2} dx \\ \\
-\text{(2)} & \int_1^{\infty} \frac{1}{x} dx \\ \\
-\text{(3)} & \int_{-\infty}^{\infty} \frac{1}{1+x^2} dx\\ \\
-\end{array}
-```
-
-
-"""
-
-# ╔═╡ 4b13012b-f8ac-4dce-9874-5d3f48f31878
-begin
-	tSlider = @bind tslider Slider(1:10000,show_value=true)
+	s3e0p1 = plot(s3e0)
+	annotate!(s3e0p1,[(1,1.2,L"y=2x^2-x^3")])
+	plot!(s3e0p1, 
+			Shape( 
+				[ (1.2,0),(1.3,0),(1.3,f30(1.3)),(1.2,f30(1.3))
+				]
+				)
+		, label=nothing
+		)
 	md"""
-	
-	-------------
-	
+**Example 1:**
+Find the volume of the solid generated by rotating the region bounded by ``y=2x^2-x^3`` and ``y=0`` about the ``y-``axis.
 
-	t = $tSlider
+Solution:
 	
-	"""
+$s3e0p1
+"""
 end
 
-# ╔═╡ 43fb92dd-f108-4bb8-afca-de94bbf28d33
-begin
-	pd1 = PlotData(1:0.1:10,x->1/x)
-	pd2 = PlotData(1:0.1:10,x->1/x^2)
-	int1 = round(integrate(1/x,(x,1,tslider)).n(),digits=3)
-	int2 = round(integrate(1/x^2,(x,1,tslider)).n(),digits=3)
-	pt1=tslider
-	pt1=L"\int_1^{%$tslider} \frac{1}{x}dx = %$int1"
-	pt2=L"\int_1^{%$tslider} \frac{1}{x^2}dx = %$int2"
-	p1 = plot(pd1,annotation=[(3.5,4.5,pt1,12)],ylims=(-1,6))
-	p2 = plot(pd2,annotation=[(3.5,4.5,pt2,12)],ylims=(-1,6))
-	plot(p1,p2,layout=@layout([a b]))
-	
-end
-
-# ╔═╡ 037d45ef-5173-43f6-b9cf-d4e4232406c8
-begin
-	ttSlider = @bind ttslider Slider(1:10000,show_value=true)
-	pSlider = @bind pslider NumberField(-10:0.1:10,default=1)
-	md"""
-	
-	-------------
-	
-	|||
-	|---|---|
-	|||
-	|p = $pSlider | t = $ttSlider|
-	|||
-	
-	"""
-end
-
-# ╔═╡ 03e7485c-9c82-4d6d-ada8-1cf4e8df9b3b
-begin
-	tt,pp=ttslider, pslider
-	ptxt = pslider==1 ? "x" : "x^{$pslider}"
-	fn3(p) = p>0 ? 1/x^p : p==0 ? x : x^abs(p) 
-	int3(p,t) = (t<1000) ? (p==0 ? ttslider-1 : round(integrate(fn3(p),(x,1,ttslider)).n(),digits=3)) : integrate(fn3(p),(x,1,oo))
-	pt3(t)= t<1000 ? L"\int_1^{%$ttslider} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))" : L"\int_1^{\infty} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))"
-	p3=plot(1:5;annotations=[(3,4,pt3(tt),14)], showaxis=:hide,ticks=[],label=:none,
-		c=:white,ylims=(0,5))
-	md"""
-	
-	-------------
-	
-	$p3
-	
-	"""
-end
-
-# ╔═╡ 8525a617-73a2-45be-beab-f496b1c87c9b
+# ╔═╡ d61e07a2-25da-4189-9689-57a6bb642b6e
 md"""
-**Remark**
+**Example 2:**
+Find the volume of the solid obtained by rotating about the ``y-``axis the region between ``y=x`` and ``y=x^2``.
 
+"""
+
+# ╔═╡ 5072c45e-2efd-44cf-a0fc-380972e270e2
+md"""
+**Example 4:**
+Find the volume of the solid obtained by rotating the region bounded by ``y=x-x^2`` and ``y=0`` about the line ``x=2``.
+
+"""
+
+# ╔═╡ 28e60db5-e3d7-49d5-b530-97fc52a8fe5b
+md"""
+## Section 7.4 
+**Arc Length and Surfaces of Revolution**
+> __Objectives__
+> - Find the arc length of a smooth curve.
+> - Find the area of a surface of revolution.
+
+"""
+
+# ╔═╡ 74b15b63-ce1a-4d61-b000-9cd64a0fa8d1
+cm"""
+### Arc Length
+"""
+
+# ╔═╡ 530c6d53-1a7b-4b0f-87c3-949e92d16784
+cm"""
+__Definition of Arc Length__
+
+Let the function ``y=f(x)`` represents a smooth curve on the interval ``[a,b]``. The __arc length__ of ``f`` between ``a`` and ``b`` is
 ```math
-\int_1^{\infty} \frac{1}{x^p}dx \quad \text{ is convergent if } p > 1 \text{ and divergent if } p\leq 1.
+s = \int_a^b\sqrt{1+[f'(x)]^2} dx.
+```
+
+Similarly, for a smooth curve ``x=g(y)``, the arc length of ``g`` between ``c`` and  ``d`` is
+```math
+s = \int_c^d\sqrt{1+[g'(y)]^2} dy.
 ```
 
 """
 
-# ╔═╡ cd3a1142-0ebf-48e8-8438-c70d43b05070
-md"""
-*__Definition of an Improper Integral of Type 2__*
+# ╔═╡ b01b8817-be8d-4c67-8a8f-8515d11da0f5
+cm"""
+__Example__ 
+Find the arc length of the graph of ``y=\displaystyle \frac{x^3}{6}+\frac{1}{2x}`` on the interval ``[\frac{1}{2},2]``. 
+"""
 
-**(a)** If ``f`` is continuous on ``[a,b)`` and is discontinuous at ``b``, then
+
+# ╔═╡ 0a19d8c3-163a-42e8-9c4b-10dba2e7fe9e
+cm"""
+__Example__ Find the arc length of the graph of ``y=\ln(\cos x)`` from ``x=0`` to ``x=\pi/4``.
+"""
+
+# ╔═╡ 7c7ee2ba-39ed-4513-af13-aab5330bc1cd
+cm"""
+### Area of a Surface of Revolution
+__Definition of Surface of Revolution__ When the graph of a continuous function is revolved about a line, the resulting surface is a __surface of revolution__.
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/199tfveph8mi2kz/surface_rev.png?raw=1"))
+
+__Surface Area of *frustum*__
 ```math
-\int_a^b f(x) dx = \lim_{t\to b^-} \int_a^t f(x) dx
+S=2\pi r L, \quad \text{where}\quad r=\frac{r_1+r_2}{2}
 ```
-provided this limit exists (as a finite number).
+</div>
 
+Consider a function ``f`` that has a continuous derivative on the interval ``[a,b]``. The graph of ``f`` is revolved about the ``x``-axis
 
-**(b)** If ``f`` is continuous on ``(a,b]`` and is discontinuous at ``a``, then
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/f454ldbfk1z3o2z/surface_rev2.png?raw=1"))
+
+__Surface Area Formula__
 ```math
-\int_a^b f(x) dx = \lim_{t\to a^{+}} \int_t^b f(x) dx
+S=2\pi \int_a^b x \sqrt{1+[f'(x)]^2} dx.
 ```
-provided this limit exists (as a finite number).
+</div>
 
-The improper integral ``\int_a^b f(x) dx`` is called **convergent** if the corresponding limit exists and **divergent** if the limit does not exist.
+__Definition of the Area of a Surface of Revolution__
 
-**(c)** If ``f`` has a discontinuity at ``c``, where ``a<c<b``, and both ``\int_a^c f(x) dx`` and ``\int_c^b f(x) dx`` are convergent, then we define
+Let ``y=f(x)`` have a continuous derivative on the interval ``[a,b]``. 
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/2fup4uwh5uclrmv/surface_rev3.png?raw=1"))
+</div>
+
+The area ``S`` of the surface of revolution formed by revolving the graph of ``f`` about a horizontal or vertical axis is
+
 ```math
-\int_{a}^{b} f(x) dx =  \int_{a}^c f(x) dx +\int_c^b f(x) dx
+S=2\pi \int_a^b r(x) \sqrt{1+[f'(x)]^2} dx, \quad {\color{red} y \text{ is a function of x }}.
 ```
+where ``r(x)`` is the distance between the graph of ``f`` and the axis of revolution. 
+
+If ``x=g(y)`` on the interval ``[c,d]`` , then the surface area is
+
+```math
+S=2\pi \int_a^b r(y) \sqrt{1+[g'(y)]^2} dy, \quad {\color{red} x \text{ is a function of y }}.
+```
+where ``r(y)`` is the distance between the graph of ``g`` and the axis of revolution.
 
 """
 
-# ╔═╡ 1b18e34a-b862-4ed3-beb9-20a849173d18
-md"""
-**Example:** 
+# ╔═╡ 0672c4e3-c42d-4c7c-ab75-0fd97d181469
+cm"""
+__Remark__ 
+
+The formulas can be written as
+
 ```math
-\begin{array}{ll}
-\text{(1)} & \int_2^5 \frac{1}{\sqrt{x-2}} dx \\ \\
-\text{(2)} & \int_0^{3} \frac{1}{1-x} dx \\ \\
-\text{(3)} & \int_{0}^{1} \ln x dx\\ \\
-\end{array}
+S=2\pi \int_a^b r(x) ds, \quad {\color{red} y \text{ is a function of x }}.
 ```
-
-
+and 
+```math
+S=2\pi \int_c^d r(y) ds, \quad {\color{red} x \text{ is a function of y }}.
+```
+where 
+```math
+ds = \sqrt{1+\big[f'(x)\big]^2}dx \quad \text{and}\quad ds = \sqrt{1+\big[g'(y)\big]^2}dy \quad \text{respectively}.
 """
 
-# ╔═╡ d8c87a34-318b-45d4-bdb6-3629470889b7
-integrate(1/(sqrt(x-2)),(x,2,5))
-# integrate(1/(x-1),(x,0,3))
-# integrate(log(x),(x,0,1))
+# ╔═╡ 543df37f-92fd-43a6-b864-9ed60e81eeda
+cm"""
+__Example__ Find the area of the surface formed by revolving the graph of ``f(x)=x^3`` on the interval ``[0,1]`` about the ``x``-axis.
 
-# ╔═╡ d50e295d-c390-449c-975b-70ab5296ab97
-begin
-	release78 = Date(2021,6,25) < now()
-	solution78 = release78 ? md"[Solution](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.8/ps7.8-solution.pdf)" : md"Solution will be released soon"
-md"""
-### [Problem Set 7.8](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps7.8/ps7.8.pdf)
-$(solution78)
+
+__Example__ Find the area of the surface formed by revolving the graph of ``f(x)=x^2`` on the interval ``[0,\sqrt{2}]`` about the ``y``-axis.
 """
+
+# ╔═╡ ca2016b0-83dd-445f-99a0-b685d6151eb3
+hline()=html"<hr>"
+
+# ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
+rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
+#Shape(x .+ [0,Δx,Δx,0], [0,0,f(xs),f(xs)])
+
+# ╔═╡ a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
+function reimannSum(f,n,a,b;method="l",color=:green)
+	Δx =(b-a)/n
+	x =a:0.1:b
+	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
+	
+	p=plot(x,f.(x);legend=nothing)
+	(partition,recs) = if method=="r"
+		 parts = (a+Δx):Δx:b
+		 rcs = [rect(p-Δx,Δx,p,f) for p in parts]
+		 (parts,rcs)
+	elseif method=="m"
+		parts = (a+(Δx/2)):Δx:(b-(Δx/2))
+		rcs = [rect(p-Δx/2,Δx,p,f) for p in parts]
+		(parts,rcs)
+	elseif method=="l"
+		parts = a:Δx:(b-Δx)
+		rcs = [rect(p,Δx,p,f) for p in parts]
+		(parts,rcs)
+	else 
+		parts = a:Δx:(b-Δx)
+		rcs = [rect(p,Δx,rand(p:0.1:p+Δx),f) for p in parts]
+		(parts,rcs)
+	end
+	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
+	plot!(p,recs,framestyle=:origin,opacity=.4, color=color)
+	s = round(sum(f.(partition)*Δx),sigdigits=6)
+	return (p,s)
 end
+
+# ╔═╡ 6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
+StartPause() = @htl("""
+<div>
+<button>Start</button>
+
+<script>
+
+	// Select elements relative to `currentScript`
+	var div = currentScript.parentElement
+	var button = div.querySelector("button")
+
+	// we wrapped the button in a `div` to hide its default behaviour from Pluto
+
+	var count = false
+
+	button.addEventListener("click", (e) => {
+		count = !count
+
+		// we dispatch the input event on the div, not the button, because 
+		// Pluto's `@bind` mechanism listens for events on the **first element** in the
+		// HTML output. In our case, that's the div.
+
+		div.value = count
+		div.dispatchEvent(new CustomEvent("input"))
+		e.preventDefault()
+		button.innerHTML = count? "Pause" : "Start"
+	})
+	// Set the initial value
+	div.value = count
+
+</script>
+</div>
+""")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
+CommonMark = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
+Contour = "d38c429a-6771-53c6-b99e-75d170b6e991"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+HypertextLiteral = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
+ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
+ImageShow = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
+ImageTransformations = "02fcd773-0e25-5acc-982a-7f6622650795"
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
 PlotThemes = "ccf2f8ad-2431-5c83-bf29-c5338b663b6a"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
 
 [compat]
+CommonMark = "~0.8.6"
+Contour = "~0.6.2"
+FileIO = "~1.15.0"
+HypertextLiteral = "~0.9.4"
+ImageIO = "~0.6.6"
+ImageShow = "~0.3.6"
+ImageTransformations = "~0.9.5"
 LaTeXStrings = "~1.3.0"
 PlotThemes = "~3.0.0"
-Plots = "~1.35.2"
-PlutoUI = "~0.7.43"
+Plots = "~1.33.0"
+PlutoUI = "~0.7.40"
 SymPy = "~1.1.7"
 """
 
@@ -766,15 +1087,27 @@ SymPy = "~1.1.7"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.2"
+julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "629c98a43ce8e67e4f8c654cc35e6ecd92e46599"
+project_hash = "0b230138cd767b79e4485d940843a33a8f7c0a21"
+
+[[deps.AbstractFFTs]]
+deps = ["ChainRulesCore", "LinearAlgebra"]
+git-tree-sha1 = "69f7020bd72f069c219b5e8c236c1fa90d2cb409"
+uuid = "621f4979-c628-5d54-868e-fcf4e3e8185c"
+version = "1.2.1"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
 git-tree-sha1 = "8eaf9f1b4921132a4cff3f36a1d9ba923b14a481"
 uuid = "6e696c72-6542-2067-7265-42206c756150"
 version = "1.1.4"
+
+[[deps.Adapt]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "195c5505521008abea5aee4f96930717958eac6f"
+uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
+version = "3.4.0"
 
 [[deps.ArgTools]]
 uuid = "0dad84c5-d112-42e6-8d28-ef12dabb789f"
@@ -783,13 +1116,14 @@ version = "1.1.1"
 [[deps.Artifacts]]
 uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
 
+[[deps.AxisAlgorithms]]
+deps = ["LinearAlgebra", "Random", "SparseArrays", "WoodburyMatrices"]
+git-tree-sha1 = "66771c8d21c8ff5e3a93379480a2307ac36863f7"
+uuid = "13072b0f-2c55-5437-9ae7-d433b7a33950"
+version = "1.0.1"
+
 [[deps.Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
-
-[[deps.BitFlags]]
-git-tree-sha1 = "84259bb6172806304b9101094a7cc4bc6f56dbc6"
-uuid = "d1d4a3ce-64b1-5f1a-9ba4-7e7e69966f35"
-version = "0.1.5"
 
 [[deps.Bzip2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -797,17 +1131,28 @@ git-tree-sha1 = "19a35467a82e236ff51bc17a3a44b69ef35185a2"
 uuid = "6e34b625-4abd-537c-b88f-471c36dfa7a0"
 version = "1.0.8+0"
 
+[[deps.CEnum]]
+git-tree-sha1 = "eb4cb44a499229b3b8426dcfb5dd85333951ff90"
+uuid = "fa961155-64e5-5f13-b03f-caf6b980ea82"
+version = "0.4.2"
+
 [[deps.Cairo_jll]]
-deps = ["Artifacts", "Bzip2_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
+deps = ["Artifacts", "Bzip2_jll", "CompilerSupportLibraries_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "JLLWrappers", "LZO_jll", "Libdl", "Pixman_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libXrender_jll", "Zlib_jll", "libpng_jll"]
 git-tree-sha1 = "4b859a208b2397a7a623a03449e4636bdb17bcf2"
 uuid = "83423d85-b0ee-5818-9007-b63ccbeb887a"
 version = "1.16.1+1"
 
+[[deps.Calculus]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "f641eb0a4f00c343bbc32346e1217b86f3ce9dad"
+uuid = "49dc2e85-a5d0-5ad3-a950-438e2897f1b9"
+version = "0.5.1"
+
 [[deps.ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "e7ff6cadf743c098e08fca25c91103ee4303c9bb"
+git-tree-sha1 = "dc4405cee4b2fe9e1108caec2d760b7ea758eca2"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "1.15.6"
+version = "1.15.5"
 
 [[deps.ChangesOfVariables]]
 deps = ["ChainRulesCore", "LinearAlgebra", "Test"]
@@ -850,6 +1195,12 @@ git-tree-sha1 = "d1beba82ceee6dc0fce8cb6b80bf600bbde66381"
 uuid = "3709ef60-1bee-4518-9f2f-acd86f176c50"
 version = "0.2.0"
 
+[[deps.CommonMark]]
+deps = ["Crayons", "JSON", "URIs"]
+git-tree-sha1 = "4cd7063c9bdebdbd55ede1af70f3c2f48fab4215"
+uuid = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
+version = "0.8.6"
+
 [[deps.CommonSolve]]
 git-tree-sha1 = "332a332c97c7071600984b3c31d9067e1a4e6e25"
 uuid = "38540f10-b2f7-11e9-35d8-d573e4eb0ff2"
@@ -857,9 +1208,9 @@ version = "0.2.1"
 
 [[deps.Compat]]
 deps = ["Dates", "LinearAlgebra", "UUIDs"]
-git-tree-sha1 = "3ca828fe1b75fa84b021a7860bd039eaea84d2f2"
+git-tree-sha1 = "5856d3031cdb1f3b2b6340dfdc66b6d9a149a374"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "4.3.0"
+version = "4.2.0"
 
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
@@ -877,10 +1228,21 @@ git-tree-sha1 = "d05d9e7b7aedff4e5b51a029dced05cfb6125781"
 uuid = "d38c429a-6771-53c6-b99e-75d170b6e991"
 version = "0.6.2"
 
+[[deps.CoordinateTransformations]]
+deps = ["LinearAlgebra", "StaticArrays"]
+git-tree-sha1 = "681ea870b918e7cff7111da58791d7f718067a19"
+uuid = "150eb455-5306-5404-9cee-2592286d6298"
+version = "0.6.2"
+
+[[deps.Crayons]]
+git-tree-sha1 = "249fe38abf76d48563e2f4556bebd215aa317e15"
+uuid = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
+version = "4.1.1"
+
 [[deps.DataAPI]]
-git-tree-sha1 = "46d2680e618f8abd007bce0c3026cb0c4a8f2032"
+git-tree-sha1 = "fb5f5316dd3fd4c5e7c30a24d50643b73e37cd40"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
-version = "1.12.0"
+version = "1.10.0"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -896,6 +1258,10 @@ uuid = "ade2ca70-3891-5945-98fb-dc099432e06a"
 deps = ["Mmap"]
 uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
+[[deps.Distributed]]
+deps = ["Random", "Serialization", "Sockets"]
+uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+
 [[deps.DocStringExtensions]]
 deps = ["LibGit2"]
 git-tree-sha1 = "5158c2b41018c5f7eb1470d558127ac274eca0c9"
@@ -906,6 +1272,12 @@ version = "0.9.1"
 deps = ["ArgTools", "FileWatching", "LibCURL", "NetworkOptions"]
 uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 version = "1.6.0"
+
+[[deps.DualNumbers]]
+deps = ["Calculus", "NaNMath", "SpecialFunctions"]
+git-tree-sha1 = "5837a837389fccf076445fce071c8ddaea35a566"
+uuid = "fa6b7ba4-c1ee-5f82-b5fc-ecf0adba8f74"
+version = "0.6.8"
 
 [[deps.Expat_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -924,6 +1296,12 @@ deps = ["Artifacts", "Bzip2_jll", "FreeType2_jll", "FriBidi_jll", "JLLWrappers",
 git-tree-sha1 = "74faea50c1d007c85837327f6775bea60b5492dd"
 uuid = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
 version = "4.4.2+2"
+
+[[deps.FileIO]]
+deps = ["Pkg", "Requires", "UUIDs"]
+git-tree-sha1 = "94f5101b96d2d968ace56f7f2db19d0a5f592e28"
+uuid = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+version = "1.15.0"
 
 [[deps.FileWatching]]
 uuid = "7b1f6079-737a-58dc-b8bc-7a2ca5c1b5ee"
@@ -965,16 +1343,16 @@ uuid = "0656b61e-2033-5cc2-a64a-77c0f6c09b89"
 version = "3.3.8+0"
 
 [[deps.GR]]
-deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Preferences", "Printf", "Random", "Serialization", "Sockets", "Test", "UUIDs"]
-git-tree-sha1 = "a9ec6a35bc5ddc3aeb8938f800dc599e652d0029"
+deps = ["Base64", "DelimitedFiles", "GR_jll", "HTTP", "JSON", "Libdl", "LinearAlgebra", "Pkg", "Printf", "Random", "RelocatableFolders", "Serialization", "Sockets", "Test", "UUIDs"]
+git-tree-sha1 = "cf0a9940f250dc3cb6cc6c6821b4bf8a4286cf9c"
 uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
-version = "0.69.3"
+version = "0.66.2"
 
 [[deps.GR_jll]]
 deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Pkg", "Qt5Base_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "bc9f7725571ddb4ab2c4bc74fa397c1c5ad08943"
+git-tree-sha1 = "3697c23d09d5ec6f2088faa68f0d926b6889b5be"
 uuid = "d2c73de3-f751-5644-a686-071e5b155ba9"
-version = "0.69.1+0"
+version = "0.67.0+0"
 
 [[deps.Gettext_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
@@ -983,10 +1361,16 @@ uuid = "78b55507-aeef-58d4-861c-77aaff3498b1"
 version = "0.21.0+0"
 
 [[deps.Glib_jll]]
-deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE2_jll", "Pkg", "Zlib_jll"]
-git-tree-sha1 = "fb83fbe02fe57f2c068013aa94bcdf6760d3a7a7"
+deps = ["Artifacts", "Gettext_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE_jll", "Pkg", "Zlib_jll"]
+git-tree-sha1 = "a32d672ac2c967f3deb8a81d828afc739c838a06"
 uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
-version = "2.74.0+1"
+version = "2.68.3+2"
+
+[[deps.Graphics]]
+deps = ["Colors", "LinearAlgebra", "NaNMath"]
+git-tree-sha1 = "d61890399bc535850c4bf08e4e0d3a7ad0f21cbd"
+uuid = "a2bd30eb-e257-5431-a919-1863eab51364"
+version = "1.1.2"
 
 [[deps.Graphite2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1000,10 +1384,10 @@ uuid = "42e2da0e-8278-4e71-bc24-59509adca0fe"
 version = "1.0.2"
 
 [[deps.HTTP]]
-deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "OpenSSL", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
-git-tree-sha1 = "4abede886fcba15cd5fd041fef776b230d004cee"
+deps = ["Base64", "CodecZlib", "Dates", "IniFile", "Logging", "LoggingExtras", "MbedTLS", "NetworkOptions", "Random", "SimpleBufferStream", "Sockets", "URIs", "UUIDs"]
+git-tree-sha1 = "59ba44e0aa49b87a8c7a8920ec76f8afe87ed502"
 uuid = "cd3eb016-35fb-5094-929b-558a96fad6f3"
-version = "1.4.0"
+version = "1.3.3"
 
 [[deps.HarfBuzz_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "FreeType2_jll", "Glib_jll", "Graphite2_jll", "JLLWrappers", "Libdl", "Libffi_jll", "Pkg"]
@@ -1029,6 +1413,52 @@ git-tree-sha1 = "f7be53659ab06ddc986428d3a9dcc95f6fa6705a"
 uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
 version = "0.2.2"
 
+[[deps.ImageBase]]
+deps = ["ImageCore", "Reexport"]
+git-tree-sha1 = "b51bb8cae22c66d0f6357e3bcb6363145ef20835"
+uuid = "c817782e-172a-44cc-b673-b171935fbb9e"
+version = "0.1.5"
+
+[[deps.ImageCore]]
+deps = ["AbstractFFTs", "ColorVectorSpace", "Colors", "FixedPointNumbers", "Graphics", "MappedArrays", "MosaicViews", "OffsetArrays", "PaddedViews", "Reexport"]
+git-tree-sha1 = "acf614720ef026d38400b3817614c45882d75500"
+uuid = "a09fc81d-aa75-5fe9-8630-4744c3626534"
+version = "0.9.4"
+
+[[deps.ImageIO]]
+deps = ["FileIO", "IndirectArrays", "JpegTurbo", "LazyModules", "Netpbm", "OpenEXR", "PNGFiles", "QOI", "Sixel", "TiffImages", "UUIDs"]
+git-tree-sha1 = "342f789fd041a55166764c351da1710db97ce0e0"
+uuid = "82e4d734-157c-48bb-816b-45c225c6df19"
+version = "0.6.6"
+
+[[deps.ImageShow]]
+deps = ["Base64", "FileIO", "ImageBase", "ImageCore", "OffsetArrays", "StackViews"]
+git-tree-sha1 = "b563cf9ae75a635592fc73d3eb78b86220e55bd8"
+uuid = "4e3cecfd-b093-5904-9786-8bbb286a6a31"
+version = "0.3.6"
+
+[[deps.ImageTransformations]]
+deps = ["AxisAlgorithms", "ColorVectorSpace", "CoordinateTransformations", "ImageBase", "ImageCore", "Interpolations", "OffsetArrays", "Rotations", "StaticArrays"]
+git-tree-sha1 = "8717482f4a2108c9358e5c3ca903d3a6113badc9"
+uuid = "02fcd773-0e25-5acc-982a-7f6622650795"
+version = "0.9.5"
+
+[[deps.Imath_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "87f7662e03a649cffa2e05bf19c303e168732d3e"
+uuid = "905a6f67-0a94-5f89-b386-d35d92009cd1"
+version = "3.1.2+0"
+
+[[deps.IndirectArrays]]
+git-tree-sha1 = "012e604e1c7458645cb8b436f8fba789a51b257f"
+uuid = "9b13fd28-a010-5f03-acff-a1bbcff69959"
+version = "1.0.0"
+
+[[deps.Inflate]]
+git-tree-sha1 = "5cd07aab533df5170988219191dfad0519391428"
+uuid = "d25df0c9-e2be-5dd7-82c8-3ad0b3e990b9"
+version = "0.1.3"
+
 [[deps.IniFile]]
 git-tree-sha1 = "f550e6e32074c939295eb5ea6de31849ac2c9625"
 uuid = "83e8ac13-25f8-5344-8a64-a9f2b223428f"
@@ -1038,22 +1468,22 @@ version = "0.5.1"
 deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
 
+[[deps.Interpolations]]
+deps = ["Adapt", "AxisAlgorithms", "ChainRulesCore", "LinearAlgebra", "OffsetArrays", "Random", "Ratios", "Requires", "SharedArrays", "SparseArrays", "StaticArrays", "WoodburyMatrices"]
+git-tree-sha1 = "f67b55b6447d36733596aea445a9f119e83498b6"
+uuid = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
+version = "0.14.5"
+
 [[deps.InverseFunctions]]
 deps = ["Test"]
-git-tree-sha1 = "49510dfcb407e572524ba94aeae2fced1f3feb0f"
+git-tree-sha1 = "b3364212fb5d870f724876ffcd34dd8ec6d98918"
 uuid = "3587e190-3f89-42d0-90ee-14403ec27112"
-version = "0.1.8"
+version = "0.1.7"
 
 [[deps.IrrationalConstants]]
 git-tree-sha1 = "7fd44fd4ff43fc60815f8e764c0f352b83c49151"
 uuid = "92d709cd-6900-40b7-9082-c6be49f344b6"
 version = "0.1.1"
-
-[[deps.JLFzf]]
-deps = ["Pipe", "REPL", "Random", "fzf_jll"]
-git-tree-sha1 = "f377670cda23b6b7c1c0b3893e37451c5c1a2185"
-uuid = "1019f520-868f-41f5-a6de-eb00f4b6a39c"
-version = "0.1.5"
 
 [[deps.JLLWrappers]]
 deps = ["Preferences"]
@@ -1066,6 +1496,12 @@ deps = ["Dates", "Mmap", "Parsers", "Unicode"]
 git-tree-sha1 = "3c837543ddb02250ef42f4738347454f95079d4e"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.3"
+
+[[deps.JpegTurbo]]
+deps = ["CEnum", "FileIO", "ImageCore", "JpegTurbo_jll", "TOML"]
+git-tree-sha1 = "a77b273f1ddec645d1b7c4fd5fb98c8f90ad10a5"
+uuid = "b835a17e-a41a-41e7-81f0-2f016b05efe0"
+version = "0.1.1"
 
 [[deps.JpegTurbo_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1101,6 +1537,11 @@ deps = ["Formatting", "InteractiveUtils", "LaTeXStrings", "MacroTools", "Markdow
 git-tree-sha1 = "ab9aa169d2160129beb241cb2750ca499b4e90e9"
 uuid = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
 version = "0.15.17"
+
+[[deps.LazyModules]]
+git-tree-sha1 = "a560dd966b386ac9ae60bdd3a3d3a326062d3c3e"
+uuid = "8cdb02fc-e678-4876-92c5-9defec4f444e"
+version = "0.3.1"
 
 [[deps.LibCURL]]
 deps = ["LibCURL_jll", "MozillaCACerts_jll"]
@@ -1150,9 +1591,9 @@ version = "1.42.0+0"
 
 [[deps.Libiconv_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "42b62845d70a619f063a7da093d995ec8e15e778"
+git-tree-sha1 = "c7cb1f5d892775ba13767a87c7ada0b980ea0a71"
 uuid = "94ce4f54-9a6c-5748-9c1c-f9c7231a4531"
-version = "1.16.1+1"
+version = "1.16.1+2"
 
 [[deps.Libmount_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1193,9 +1634,14 @@ version = "0.4.9"
 
 [[deps.MacroTools]]
 deps = ["Markdown", "Random"]
-git-tree-sha1 = "42324d08725e200c23d4dfb549e0d5d89dede2d2"
+git-tree-sha1 = "3d3e902b31198a27340d0bf00d6ac452866021cf"
 uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
-version = "0.5.10"
+version = "0.5.9"
+
+[[deps.MappedArrays]]
+git-tree-sha1 = "e8b359ef06ec72e8c030463fe02efe5527ee5142"
+uuid = "dbb5928d-eab1-5f90-85c2-b9b0edb7c900"
+version = "0.4.1"
 
 [[deps.Markdown]]
 deps = ["Base64"]
@@ -1226,6 +1672,12 @@ version = "1.0.2"
 [[deps.Mmap]]
 uuid = "a63ad114-7e13-5084-954f-fe012c677804"
 
+[[deps.MosaicViews]]
+deps = ["MappedArrays", "OffsetArrays", "PaddedViews", "StackViews"]
+git-tree-sha1 = "b34e3bc3ca7c94914418637cb10cc4d1d80d877d"
+uuid = "e94cdb99-869f-56ef-bcf0-1ae2bcbe0389"
+version = "0.3.3"
+
 [[deps.MozillaCACerts_jll]]
 uuid = "14a3606d-f60d-562e-9121-12d972cd8159"
 version = "2022.2.1"
@@ -1236,9 +1688,21 @@ git-tree-sha1 = "a7c3d1da1189a1c2fe843a3bfa04d18d20eb3211"
 uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "1.0.1"
 
+[[deps.Netpbm]]
+deps = ["FileIO", "ImageCore"]
+git-tree-sha1 = "18efc06f6ec36a8b801b23f076e3c6ac7c3bf153"
+uuid = "f09324ee-3d7c-5217-9330-fc30815ba969"
+version = "1.0.2"
+
 [[deps.NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
 version = "1.2.0"
+
+[[deps.OffsetArrays]]
+deps = ["Adapt"]
+git-tree-sha1 = "1ea784113a6aa054c5ebd95945fa5e52c2f378e7"
+uuid = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
+version = "1.12.7"
 
 [[deps.Ogg_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1251,16 +1715,22 @@ deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]
 uuid = "4536629a-c528-5b80-bd46-f80d51c5b363"
 version = "0.3.20+0"
 
+[[deps.OpenEXR]]
+deps = ["Colors", "FileIO", "OpenEXR_jll"]
+git-tree-sha1 = "327f53360fdb54df7ecd01e96ef1983536d1e633"
+uuid = "52e1d378-f018-4a11-a4be-720524705ac7"
+version = "0.3.2"
+
+[[deps.OpenEXR_jll]]
+deps = ["Artifacts", "Imath_jll", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
+git-tree-sha1 = "923319661e9a22712f24596ce81c54fc0366f304"
+uuid = "18a262bb-aa17-5467-a713-aee519bc75cb"
+version = "3.1.1+0"
+
 [[deps.OpenLibm_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "05823500-19ac-5b8b-9628-191a04bc5112"
 version = "0.8.1+0"
-
-[[deps.OpenSSL]]
-deps = ["BitFlags", "Dates", "MozillaCACerts_jll", "OpenSSL_jll", "Sockets"]
-git-tree-sha1 = "ebe81469e9d7b471d7ddb611d9e147ea16de0add"
-uuid = "4d8831e6-92b7-49fb-bdf8-b643e874388c"
-version = "1.2.1"
 
 [[deps.OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1290,16 +1760,29 @@ deps = ["Artifacts", "Libdl"]
 uuid = "efcefdf7-47ab-520b-bdef-62a2eaa19f15"
 version = "10.40.0+0"
 
+[[deps.PCRE_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "b2a7af664e098055a7529ad1a900ded962bca488"
+uuid = "2f80f16e-611a-54ab-bc61-aa92de5b98fc"
+version = "8.44.0+0"
+
+[[deps.PNGFiles]]
+deps = ["Base64", "CEnum", "ImageCore", "IndirectArrays", "OffsetArrays", "libpng_jll"]
+git-tree-sha1 = "e925a64b8585aa9f4e3047b8d2cdc3f0e79fd4e4"
+uuid = "f57f5aa1-a3ce-4bc8-8ab9-96f992907883"
+version = "0.3.16"
+
+[[deps.PaddedViews]]
+deps = ["OffsetArrays"]
+git-tree-sha1 = "03a7a85b76381a3d04c7a1656039197e70eda03d"
+uuid = "5432bcbf-9aad-5242-b902-cca2824c8663"
+version = "0.5.11"
+
 [[deps.Parsers]]
 deps = ["Dates"]
 git-tree-sha1 = "3d5bf43e3e8b412656404ed9466f1dcbf7c50269"
 uuid = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
 version = "2.4.0"
-
-[[deps.Pipe]]
-git-tree-sha1 = "6842804e7867b115ca9de748a0cf6b364523c16d"
-uuid = "b98c9c47-44ae-5843-9183-064241ee97a0"
-version = "1.3.0"
 
 [[deps.Pixman_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1311,6 +1794,12 @@ version = "0.40.1+0"
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 version = "1.8.0"
+
+[[deps.PkgVersion]]
+deps = ["Pkg"]
+git-tree-sha1 = "f6cf8e7944e50901594838951729a1861e668cb8"
+uuid = "eebad327-c553-4316-9ea0-9fa01ccd7688"
+version = "0.3.2"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
@@ -1325,16 +1814,16 @@ uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.3.1"
 
 [[deps.Plots]]
-deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JLFzf", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SnoopPrecompile", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
-git-tree-sha1 = "65451f70d8d71bd9d06821c7a53adbed162454c9"
+deps = ["Base64", "Contour", "Dates", "Downloads", "FFMPEG", "FixedPointNumbers", "GR", "JSON", "LaTeXStrings", "Latexify", "LinearAlgebra", "Measures", "NaNMath", "Pkg", "PlotThemes", "PlotUtils", "Printf", "REPL", "Random", "RecipesBase", "RecipesPipeline", "Reexport", "RelocatableFolders", "Requires", "Scratch", "Showoff", "SparseArrays", "Statistics", "StatsBase", "UUIDs", "UnicodeFun", "Unzip"]
+git-tree-sha1 = "6062b3b25ad3c58e817df0747fc51518b9110e5f"
 uuid = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
-version = "1.35.2"
+version = "1.33.0"
 
 [[deps.PlutoUI]]
 deps = ["AbstractPlutoDingetjes", "Base64", "ColorTypes", "Dates", "Hyperscript", "HypertextLiteral", "IOCapture", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "UUIDs"]
-git-tree-sha1 = "2777a5c2c91b3145f5aa75b61bb4c2eb38797136"
+git-tree-sha1 = "a602d7b0babfca89005da04d89223b867b55319f"
 uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
-version = "0.7.43"
+version = "0.7.40"
 
 [[deps.Preferences]]
 deps = ["TOML"]
@@ -1346,17 +1835,35 @@ version = "1.3.0"
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 
+[[deps.ProgressMeter]]
+deps = ["Distributed", "Printf"]
+git-tree-sha1 = "d7a7aef8f8f2d537104f170139553b14dfe39fe9"
+uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
+version = "1.7.2"
+
 [[deps.PyCall]]
 deps = ["Conda", "Dates", "Libdl", "LinearAlgebra", "MacroTools", "Serialization", "VersionParsing"]
 git-tree-sha1 = "53b8b07b721b77144a0fbbbc2675222ebf40a02d"
 uuid = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
 version = "1.94.1"
 
+[[deps.QOI]]
+deps = ["ColorTypes", "FileIO", "FixedPointNumbers"]
+git-tree-sha1 = "18e8f4d1426e965c7b532ddd260599e1510d26ce"
+uuid = "4b34888f-f399-49d4-9bb3-47ed5cae4e65"
+version = "1.0.0"
+
 [[deps.Qt5Base_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "Libdl", "Libglvnd_jll", "OpenSSL_jll", "Pkg", "Xorg_libXext_jll", "Xorg_libxcb_jll", "Xorg_xcb_util_image_jll", "Xorg_xcb_util_keysyms_jll", "Xorg_xcb_util_renderutil_jll", "Xorg_xcb_util_wm_jll", "Zlib_jll", "xkbcommon_jll"]
-git-tree-sha1 = "c6c0f690d0cc7caddb74cef7aa847b824a16b256"
+git-tree-sha1 = "0c03844e2231e12fda4d0086fd7cbe4098ee8dc5"
 uuid = "ea2cea3b-5b76-57ae-a6ef-0a8af62496e1"
-version = "5.15.3+1"
+version = "5.15.3+2"
+
+[[deps.Quaternions]]
+deps = ["DualNumbers", "LinearAlgebra", "Random"]
+git-tree-sha1 = "b327e4db3f2202a4efafe7569fcbe409106a1f75"
+uuid = "94ee1d12-ae83-5a48-8b1c-48b8ff168ae0"
+version = "0.5.6"
 
 [[deps.REPL]]
 deps = ["InteractiveUtils", "Markdown", "Sockets", "Unicode"]
@@ -1366,17 +1873,22 @@ uuid = "3fa0cd96-eef1-5676-8a61-b3b8758bbffb"
 deps = ["SHA", "Serialization"]
 uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
+[[deps.Ratios]]
+deps = ["Requires"]
+git-tree-sha1 = "dc84268fe0e3335a62e315a3a7cf2afa7178a734"
+uuid = "c84ed2f1-dad5-54f0-aa8e-dbefe2724439"
+version = "0.4.3"
+
 [[deps.RecipesBase]]
-deps = ["SnoopPrecompile"]
-git-tree-sha1 = "612a4d76ad98e9722c8ba387614539155a59e30c"
+git-tree-sha1 = "6bf3f380ff52ce0832ddd3a2a7b9538ed1bcca7d"
 uuid = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
-version = "1.3.0"
+version = "1.2.1"
 
 [[deps.RecipesPipeline]]
 deps = ["Dates", "NaNMath", "PlotUtils", "RecipesBase"]
-git-tree-sha1 = "017f217e647cf20b0081b9be938b78c3443356a0"
+git-tree-sha1 = "e7eac76a958f8664f2718508435d058168c7953d"
 uuid = "01d81517-befc-4cb6-b9ec-a95719d0359c"
-version = "0.6.6"
+version = "0.6.3"
 
 [[deps.Reexport]]
 git-tree-sha1 = "45e428421666073eab6f2da5c9d310d99bb12f9b"
@@ -1385,15 +1897,21 @@ version = "1.2.2"
 
 [[deps.RelocatableFolders]]
 deps = ["SHA", "Scratch"]
-git-tree-sha1 = "90bc7a7c96410424509e4263e277e43250c05691"
+git-tree-sha1 = "22c5201127d7b243b9ee1de3b43c408879dff60f"
 uuid = "05181044-ff0b-4ac5-8273-598c1e38db00"
-version = "1.0.0"
+version = "0.3.0"
 
 [[deps.Requires]]
 deps = ["UUIDs"]
 git-tree-sha1 = "838a3a4188e2ded87a4f9f184b4b0d78a1e91cb7"
 uuid = "ae029012-a4dd-5104-9daa-d747884805df"
 version = "1.3.0"
+
+[[deps.Rotations]]
+deps = ["LinearAlgebra", "Quaternions", "Random", "StaticArrays", "Statistics"]
+git-tree-sha1 = "3d52be96f2ff8a4591a9e2440036d4339ac9a2f7"
+uuid = "6038ab10-8711-5258-84ad-4b1120ba62dc"
+version = "1.3.2"
 
 [[deps.SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
@@ -1408,6 +1926,10 @@ version = "1.1.1"
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
 
+[[deps.SharedArrays]]
+deps = ["Distributed", "Mmap", "Random", "Serialization"]
+uuid = "1a1011a3-84de-559e-8e89-a11a2f7dc383"
+
 [[deps.Showoff]]
 deps = ["Dates", "Grisu"]
 git-tree-sha1 = "91eddf657aca81df9ae6ceb20b959ae5653ad1de"
@@ -1418,6 +1940,12 @@ version = "1.0.3"
 git-tree-sha1 = "874e8867b33a00e784c8a7e4b60afe9e037b74e1"
 uuid = "777ac1f9-54b0-4bf8-805c-2214025038e7"
 version = "1.1.0"
+
+[[deps.Sixel]]
+deps = ["Dates", "FileIO", "ImageCore", "IndirectArrays", "OffsetArrays", "REPL", "libsixel_jll"]
+git-tree-sha1 = "8fb59825be681d451c246a795117f317ecbcaa28"
+uuid = "45858cf5-a6b0-47a3-bbea-62219f50df47"
+version = "0.1.2"
 
 [[deps.SnoopPrecompile]]
 git-tree-sha1 = "f604441450a3c0569830946e5b33b78c928e1a85"
@@ -1442,6 +1970,23 @@ deps = ["ChainRulesCore", "IrrationalConstants", "LogExpFunctions", "OpenLibm_jl
 git-tree-sha1 = "d75bda01f8c31ebb72df80a46c88b25d1c79c56d"
 uuid = "276daf66-3868-5448-9aa4-cd146d93841b"
 version = "2.1.7"
+
+[[deps.StackViews]]
+deps = ["OffsetArrays"]
+git-tree-sha1 = "46e589465204cd0c08b4bd97385e4fa79a0c770c"
+uuid = "cae243ae-269e-4f55-b966-ac2d0dc13c15"
+version = "0.1.1"
+
+[[deps.StaticArrays]]
+deps = ["LinearAlgebra", "Random", "StaticArraysCore", "Statistics"]
+git-tree-sha1 = "efa8acd030667776248eabb054b1836ac81d92f0"
+uuid = "90137ffa-7385-5640-81b9-e52037218182"
+version = "1.5.7"
+
+[[deps.StaticArraysCore]]
+git-tree-sha1 = "ec2bd695e905a3c755b33026954b119ea17f2d22"
+uuid = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
+version = "1.3.0"
 
 [[deps.Statistics]]
 deps = ["LinearAlgebra", "SparseArrays"]
@@ -1473,7 +2018,7 @@ version = "1.0.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.1"
+version = "1.10.0"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
@@ -1484,6 +2029,12 @@ version = "0.1.1"
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[[deps.TiffImages]]
+deps = ["ColorTypes", "DataStructures", "DocStringExtensions", "FileIO", "FixedPointNumbers", "IndirectArrays", "Inflate", "Mmap", "OffsetArrays", "PkgVersion", "ProgressMeter", "UUIDs"]
+git-tree-sha1 = "70e6d2da9210371c927176cb7a56d41ef1260db7"
+uuid = "731e570b-9d59-4bfa-96dc-6df516fadf69"
+version = "0.6.1"
 
 [[deps.TranscodingStreams]]
 deps = ["Random", "Test"]
@@ -1535,6 +2086,12 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "4528479aa01ee1b3b4cd0e6faef0e04cf16466da"
 uuid = "2381bf8a-dfd0-557d-9999-79630e7b1b91"
 version = "1.25.0+0"
+
+[[deps.WoodburyMatrices]]
+deps = ["LinearAlgebra", "SparseArrays"]
+git-tree-sha1 = "de67fa59e33ad156a590055375a30b23c40299d3"
+uuid = "efce3f68-66dc-5838-9240-27a6d6f5f9b6"
+version = "0.5.5"
 
 [[deps.XML2_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "Zlib_jll"]
@@ -1685,12 +2242,6 @@ git-tree-sha1 = "e45044cd873ded54b6a5bac0eb5c971392cf1927"
 uuid = "3161d3a3-bdf6-5164-811a-617609db77b4"
 version = "1.5.2+0"
 
-[[deps.fzf_jll]]
-deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "868e669ccb12ba16eaf50cb2957ee2ff61261c56"
-uuid = "214eeab7-80f7-51ab-84ad-2988db7cef09"
-version = "0.29.0+0"
-
 [[deps.libaom_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "3a2ea60308f0996d26f1e5354e10c24e9ef905d4"
@@ -1719,6 +2270,12 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
 git-tree-sha1 = "94d180a6d2b5e55e447e2d27a29ed04fe79eb30c"
 uuid = "b53b4c65-9356-5827-b1ea-8c7a1a84506f"
 version = "1.6.38+0"
+
+[[deps.libsixel_jll]]
+deps = ["Artifacts", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Pkg", "libpng_jll"]
+git-tree-sha1 = "d4f63314c8aa1e48cd22aa0c17ed76cd1ae48c3c"
+uuid = "075b6546-f08a-558a-be8f-8157d0f608a5"
+version = "1.10.3+0"
 
 [[deps.libvorbis_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Ogg_jll", "Pkg"]
@@ -1756,48 +2313,66 @@ version = "1.4.1+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─36385992-7458-4252-902d-89153ad3e85e
-# ╟─7532bb48-d0a5-11eb-0369-23288ac68dbc
-# ╟─d1815ea6-9a32-4d88-b580-95f29d7ef914
-# ╟─d7831013-a8bf-4bed-83f3-c436b2dd1464
-# ╟─561cdfe6-fde5-4e09-bbac-8c9f9b68917c
-# ╟─17b3c7a5-3170-4b6b-81b5-fc5f29eedd0f
-# ╟─ea89d5dc-3d70-42d3-9cc7-6cc4c3e8ad2b
-# ╟─1c821257-3b61-4187-a556-0e5736af27b2
-# ╟─1a6fc415-eb31-4df1-a314-40aff9e0fa96
-# ╟─030a2871-1b68-48c6-9f51-d4bcd0e86bb6
-# ╟─84ad187d-e4a7-48c6-8a5c-e9e518788689
-# ╟─58719d77-9812-4002-b83f-2be9050ccf8a
-# ╟─5bbb85cb-a5be-4010-bd41-caa339ef92dd
-# ╟─9cc8c631-741d-4020-a74c-4fb4541fce70
-# ╟─c67e0db7-f34a-4e4d-852b-23d3ab18be26
-# ╟─46b710e8-2903-47de-a26b-62537d8fd2e1
-# ╟─48a57bf3-0c09-4f43-bd1f-0e31c4acb288
-# ╟─6f66f032-fcfa-43ac-978e-3598aebaa6e8
-# ╟─1e0a2bb0-62bc-4c42-8269-7dd3943bcce1
-# ╟─dfa3ca61-61db-4b15-b9ba-555a0637e31c
-# ╟─0b7c21ca-a24b-4d62-8b40-beb1d7dc3281
-# ╟─b23b18fd-ebe1-481a-b606-40c4f8708e1a
-# ╟─dcf55188-6a87-448d-809d-3c7e40817be0
-# ╟─6b4a9e6c-34fc-40a8-a46f-ab9775adf6d8
-# ╟─c2963ff4-d598-4195-a585-8884bf106b84
-# ╟─cca2812e-e1e7-499a-9c08-a76d8c77db66
-# ╟─283c0dc4-d510-4581-9d26-d64e1f4bbe23
-# ╟─1e271f61-1835-49f3-9a4b-fdf7c7883c8a
-# ╟─f8de5f89-881e-43e7-b478-9cadc4ab6950
-# ╟─8a10bc2c-72d9-47aa-a46b-79c6cdce2d23
-# ╟─3d784225-debf-46db-8479-b4be15a1166a
-# ╟─9d55715e-f798-4d2b-876c-097397f7697b
-# ╟─2b2ce933-42da-4b8b-be43-8fce0a5a1002
-# ╟─4b13012b-f8ac-4dce-9874-5d3f48f31878
-# ╟─43fb92dd-f108-4bb8-afca-de94bbf28d33
-# ╟─037d45ef-5173-43f6-b9cf-d4e4232406c8
-# ╟─03e7485c-9c82-4d6d-ada8-1cf4e8df9b3b
-# ╟─8525a617-73a2-45be-beab-f496b1c87c9b
-# ╟─cd3a1142-0ebf-48e8-8438-c70d43b05070
-# ╟─1b18e34a-b862-4ed3-beb9-20a849173d18
-# ╠═d8c87a34-318b-45d4-bdb6-3629470889b7
-# ╟─d50e295d-c390-449c-975b-70ab5296ab97
-# ╠═56c992d7-5f55-4f21-be9b-673db0c3565d
+# ╟─0c3da8f0-7138-4521-ac5b-362a36380a8c
+# ╟─014747b8-d1be-414b-adcb-1bc6971b84be
+# ╟─ad045108-9dca-4a61-ac88-80a3417c95f2
+# ╟─1e9f4829-1f50-47ae-8745-0daa90e7aa42
+# ╟─90f42d35-f81e-4c38-8a73-77b37755f671
+# ╟─aac97852-3abc-4455-80fe-a61aec320d24
+# ╟─e427ab16-9d5a-4200-8d96-8e49ec0da312
+# ╟─2ddde4c4-8217-41e3-9235-a6370b11ae5c
+# ╟─07dee140-2553-4b2e-bd28-1dda978fb34c
+# ╟─d7928de3-89a4-4475-ba5b-2e707084685b
+# ╟─784142ee-1416-4ccb-a341-0497422009b6
+# ╟─a65d268a-cb45-4d6c-ac77-ac719010cfb3
+# ╟─6a4dd437-8be1-4e17-b484-65707ec28215
+# ╟─4337bc1f-933f-4e8d-abae-46b8ad99409e
+# ╟─539cbac4-c1be-4f9d-b076-215c4430a3a6
+# ╟─1006936d-e13e-4146-b0ac-905acb1f7d08
+# ╟─64f36566-5747-4c8f-b90f-1ced674365cb
+# ╟─61b6234e-5cb2-4337-ae29-14106ac6bd59
+# ╠═237a0543-7d70-48ff-a8b5-37bb31dd98d8
+# ╠═e370f794-41b6-4acf-9ef6-453fba223dea
+# ╟─629f1cf7-ffa9-496b-9a3f-405089b43a8e
+# ╟─0b4677a8-93e3-4fc9-91e8-8a7e77d18e2b
+# ╟─598b7b2e-01dd-41aa-966a-a361921a5c60
+# ╟─ffcdd27d-0974-4071-9543-8474a02f09e8
+# ╟─e7a8a1e7-b4c5-4d33-8e2d-e4fd6b15e89b
+# ╟─35c589c5-8206-4cd5-b4e6-cc5758d17cf6
+# ╟─bc3988a9-048c-4bbf-8197-edcea8898818
+# ╟─dad5ee5f-b2f4-4582-b2ef-855e7b9dc49b
+# ╟─02fd559e-2a51-4a15-af4e-bd50149cb0e8
+# ╟─5c1989f5-bd7b-4c82-a9e3-54f47539fe2d
+# ╟─078023da-23bc-4401-a1dc-fe869400f9b0
+# ╟─440eec5a-5a9b-4783-9dd2-3427fe340bc6
+# ╟─835bf3cc-eca3-4e8a-9c7a-dd0fa3c17525
+# ╟─635e4f34-9401-4234-936b-8b1029c6a7db
+# ╟─c9b6ee5f-be74-4067-8bff-8e408ddd0196
+# ╟─48dcb862-d764-4421-851a-213c9d733b02
+# ╟─8d1a94f7-f6e6-4b95-a45e-03550125801e
+# ╟─3d267c3e-4509-48d6-a094-39e15940fd6c
+# ╟─21848166-fbf0-4e1d-8e90-e0060abcc170
+# ╟─088a349a-f632-45af-866f-6315ed1e47a5
+# ╟─90d1778a-61bf-46ee-a7cd-5fd1b5d5d980
+# ╟─1dbbef99-3674-42fe-ab48-1ab6b72d0652
+# ╟─05af66f4-1013-4374-8c85-9265f123934e
+# ╟─7396e0b3-753e-40fa-8bb5-30ccb4bac550
+# ╟─d3139bfe-4ae8-49d3-a9a5-19bd222a1eca
+# ╟─5e5c5013-2b13-4a59-a325-91ebcf811cb2
+# ╟─d61e07a2-25da-4189-9689-57a6bb642b6e
+# ╟─5072c45e-2efd-44cf-a0fc-380972e270e2
+# ╟─28e60db5-e3d7-49d5-b530-97fc52a8fe5b
+# ╟─74b15b63-ce1a-4d61-b000-9cd64a0fa8d1
+# ╟─530c6d53-1a7b-4b0f-87c3-949e92d16784
+# ╟─b01b8817-be8d-4c67-8a8f-8515d11da0f5
+# ╟─0a19d8c3-163a-42e8-9c4b-10dba2e7fe9e
+# ╟─7c7ee2ba-39ed-4513-af13-aab5330bc1cd
+# ╟─0672c4e3-c42d-4c7c-ab75-0fd97d181469
+# ╟─543df37f-92fd-43a6-b864-9ed60e81eeda
+# ╟─ca2016b0-83dd-445f-99a0-b685d6151eb3
+# ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
+# ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
+# ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
+# ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

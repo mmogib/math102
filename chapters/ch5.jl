@@ -39,11 +39,63 @@ begin
 	using SymPy
 	using HypertextLiteral
 	using ImageTransformations
+	using Dates
 	using PrettyTables
 end
 
+# ╔═╡ 69d7b791-2e69-490c-8d10-10fa433f0a72
+@htl("""
+<script src="//unpkg.com/alpinejs" defer></script>
+<style>
+.img-container {
+	display:flex;
+	align-items:center;
+	flex-direction: column;
+}
+blockquote {
+  background: #0e08bf;
+  border-left: 10px solid #0e08bf;
+  margin: 1.5em 10px;
+}
+blockquote:before {
+  color: #0e08bf;
+  content: open-quote;
+  font-size: 3em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+blockquote > ol {
+  list-style: none;
+  counter-reset: steps;
+}
+blockquote > ol li {
+  counter-increment: steps;
+}
+blockquote > ol li::before {
+  content: counter(steps);
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  background: #ff6f00;
+  color: white;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  line-height: 1.2em;
+}
+blockquote > ol ol li::before {
+  background: darkorchid;
+}
+</style>
+""")
+
 # ╔═╡ ad045108-9dca-4a61-ac88-80a3417c95f2
-TableOfContents(title="MATH102 - TERM 221")
+TableOfContents(title="MATH102 - TERM 222")
 
 # ╔═╡ 1e9f4829-1f50-47ae-8745-0daa90e7aa42
 md""" # Chapter 5 
@@ -52,23 +104,103 @@ md""" # Chapter 5
 
 """
 
+# ╔═╡ 9ce352ac-f374-4eb1-9a76-524ffd8a7306
+cm"""
+> __Objectives__
+> 1. Use sigma notation to write and evaluate a sum.
+> 2. Use sigma notation to write and evaluate a sum.
+> 3. Approximate the area of a plane region.
+> 4. Approximate the area of a plane region.
+
+"""
+
+# ╔═╡ 254d027d-ab13-4928-89b5-916dbf5f0044
+md"""
+### Sigma Notation
+The sum of ``n`` terms  ``a_1, a_2, \cdots, a_n`` is written as
+```math
+\sum_{i=1}^n a_i = a_1+ a_2+ \cdots+ a_n
+```
+where ``i`` is the __index of summation__, ``a_i`` is the th __``i``th term__ of the sum, and the upper and lower bounds of summation are ``n`` and ``1``.
+"""
+
+# ╔═╡ 0edc99ec-c39d-4a9e-af0d-c9778c6b4211
+begin 
+	hline = html"<hr>"
+md"""
+####  Summation Properties
+
+```math
+
+\begin{array}{lcl}
+ \displaystyle\sum_{i=1}^n c a_i &=& c\sum_{i=1}^n  a_i \\
+\\
+ \displaystyle\sum_{i=1}^n (a_i+b_i) &=& \sum_{i=1}^n  a_i+\sum_{i=1}^n  b_i \\
+\\
+\displaystyle\sum_{i=1}^n (a_i-b_i) &=& \sum_{i=1}^n  a_i-\sum_{i=1}^n  b_i \\
+\\
+\end{array} 
+```
+
+#### Summation Formulas
+
+```math
+\displaystyle
+\begin{array}{ll}
+(1) & \displaystyle\sum_{i=1}^n c = cn, \quad c \text{ is a constant} \\
+\\
+(2) & \displaystyle\sum_{i=1}^n i = \frac{n(n+1)}{2} \\
+\\
+(3) &\displaystyle \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
+\\
+(4) & \displaystyle\sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
+\\
+\end{array} 
+```
+
+
+
+$hline
+
+"""
+end
+
+# ╔═╡ 164b1c78-9f7b-4f9d-a6a6-fbe754cdb43e
+md"""
+__Example__
+
+Evaluate ``\displaystyle \sum_{i=1}^n\frac{i+1}{n}`` for ``n=10, 100, 1000`` and ``10,000``.
+
+"""
+
 # ╔═╡ b048a772-05c3-4cd0-97ae-5cf825127584
 md""" 
-### The Area Problem 
+### Area 
 
 
+In __Euclidean geometry__, the simplest type of plane region is a rectangle. Although people often say that the *formula* for the area of a rectangle is
+```math
+A = bh
+```
+it is actually more proper to say that this is the *definition* of the __area of a rectangle__.
 
+For a triangle ``A=\frac{1}{2}bh``
 
-
+$(Resource("https://www.dropbox.com/s/sfsg0d4ha1m2gc6/triangle_area.jpg?raw=1", :width=>300))
 """
 
-# ╔═╡ 41603f71-3724-4fcc-8421-1a64f34ff80f
-md""" 
-*Find the area of the regoin $S$*.
+# ╔═╡ f16cb891-26d7-41c9-9747-f7d6cd054bc7
+md"""
+### The Area of a Plane Region
 
-$(load(download("https://www.dropbox.com/s/ik2szmkiwcz389m/ex1-0.png?raw=1")))
+__Example__
+
+Use __five__ rectangles to find two approximations of the area of the region lying between the graph of
+```math
+f(x)=5-x^2
+```
+and the $x$-axis between $x=0$ and $x=2$.
 """
-
 
 # ╔═╡ 8ad65bee-9135-11eb-166a-837031c4bc45
 f(x)=5-x^2
@@ -77,17 +209,21 @@ f(x)=5-x^2
 begin 
 	ns = @bind n  Slider(2:4000,show_value=true, default=4)
 	as = @bind a  NumberField(0:1)
-	bs = @bind b  NumberField(a+1:10)
+	bs = @bind b  NumberField(a+2:10)
 	lrs = @bind lr Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint","rnd"=>"Random"])
+	
 	md"""
 	n = $ns  a = $as  b = $bs method = $lrs
-	
 	
 	"""
 end
 
+# ╔═╡ 74f6ac5d-f974-4ea6-801c-b88fe3346e55
+@bind showPlot Radio(["show" => "✅", "hide" => "❌"], default="hide")
+
 # ╔═╡ c894d994-a7fc-4e07-8941-e9f9aa89fef0
 begin 
+	if showPlot=="show"
 	Δx =(b-a)/n
 	xx1 =a:0.1:b
 	
@@ -95,12 +231,12 @@ begin
 	
 	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
 	# pp1=plot(xx1,f.(xx1);legend=nothing)
-	pp1 = plot(xx1, f.(xx1), fillrange = zero, fillalpha = 0.35, c = :green, framestyle=:origin, label=nothing)
+	pp1 = plot(xx1, f.(xx1), fillrange = zero, fillalpha = 0.35, c = :blue, framestyle=:origin, label=nothing)
 	anck1 = (b-a)/2
 	anck2 = f(anck1)/2
 	annotate!(pp1,[(anck1,anck2,L"$S$",12)])
 	annotate!(pp1,[(anck1,f(anck1),L"$y=%$f(x)$",12)])
-	""
+	end
 end
 
 # ╔═╡ 2da325ba-48cc-44b3-be34-e0cb46e33068
@@ -108,84 +244,127 @@ end
 
 # ╔═╡ 8436d1b3-c03e-42e6-bbff-e785738e0f89
 (showConnc=="show") ? md"""
-$$A=\lim_{n\to \infty} R_n =\lim_{n\to \infty} L_n =\frac{1}{3}$$
+$$A=\lim_{n\to \infty} R_n =\lim_{n\to \infty} L_n =\frac{22}{3}$$
 """ : ""
+
+# ╔═╡ d00038ba-98e9-45db-91df-dc75cb8ec101
+begin
+	findingAreaP = plot(0.2:0.1:4, x->0.6x^3-(10/3)*x^2+(13/3)*x+1.4, fillrange = zero, fillalpha = 0.35, c = :red, framestyle=:origin, label=nothing,ticks=nothing)
+	plot!(findingAreaP,-0.1:0.1:4.1, x->0.6x^3-(10/3)*x^2+(13/3)*x+1.4,c=:green,label=nothing)
+	annotate!(findingAreaP, [
+			(0.1,4,text(L"y",14)),
+			(4.1,0.1,text(L"x",14)),
+			(0.2,-0.1,text(L"a",14)),
+			(4,-0.1,text(L"b",14)),
+			(3.9,4,text(L"f",14))
+	])
+cm"""
+### Finding Area by the Limit Definition
+
+__Find the area of the region is bounded below by the ``x``-axis, and the left and right boundaries of the region are the vertical lines ``x=a`` and ``x=b``.__
+
+$findingAreaP
+
+$(Resource("https://www.dropbox.com/s/hnspiptmyybneqn/area_with_lower_and_upper.jpg?raw=1",:width=>400))
+"""
+end
+
+# ╔═╡ ef203912-b238-40a7-9d1b-4ed9b86ccbd2
+cm"""
+__Example__
+Find the upper and lower sums for the region bounded by the graph of ``f(x)=x^2`` and the ``x``-axis between ``x=0`` and ``x=2``.
+"""
+
+# ╔═╡ 614c0f82-523a-40a6-9b57-d8b16d2b2860
+cm"""
+__Theorem__ *Limits of the Lower and Upper Sums*
+
+Let ``f`` be continuous and nonnegative on the interval ``[a,b]``. The limits as ``n\to\infty`` of both the lower and upper sums exist and are equal to each other. That is,
+```math
+\displaystyle \lim_{n\to\infty}s(n)=
+\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(m_i)\Delta x
+=\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(M_i)\Delta x
+=\displaystyle \lim_{n\to\infty}S(n)
+```
+‍
+‍
+where  
+```math
+\Delta x = \frac{b-a}{n}
+```
+and ``f(m_i)`` and ``f(M_i)`` are the minimum and maximum values of ``f`` on the ``i``th subinterval.
+
+"""
+
+# ╔═╡ abd37588-b86f-4e99-8728-5a362ce5f34f
+cm"""
+__Definition of the Area of a Region in the Plane__
+Let ``f`` be continuous and nonnegative on the interval ``[a,b]``.  The area of the region bounded by the graph of ``f`` , the ``x``-axis, and the vertical lines ``x=a`` and ``y=b`` is 
+```math
+\textrm{Area} = \displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(c_i)\Delta x
+```
+where 
+```math
+x_{i-1}\leq c_i\leq x_i\quad \textrm{and}\quad \Delta x =\frac{b-a}{n}.
+```
+See the grpah
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/a3sjz8m9vspp5ec/area_def.jpg?raw=1"))
+
+</div>
+"""
 
 # ╔═╡ 1081bd99-7658-4c32-812c-14235bd82596
 begin
-	im1 = load(download("https://www.dropbox.com/s/y534s1n43406j8u/general.png?raw=1"))
-	im2 = load(download("https://www.dropbox.com/s/8yyyusiykhwhtk7/definition2.png?raw=1"))
-	im3 = load(download("https://www.dropbox.com/s/708r9pz677adef8/sample_points.png?raw=1"))
-	md"""
-	**In General**
+	cm"""
+	__Example__
 	
-	$im1
-	
-	$im2
-		
-	$im3	
+	Find the area of the region bounded by the graph of ``f(x)=x^3`` , the ``x``-axis, and the vertical lines ``x=0`` and ``x=1``.
+
 	"""
 end
+
+# ╔═╡ c97d5915-7f1f-4fd6-80d3-aecb256ea0de
+cm"""
+__Example__
+
+Find the area of the region bounded by the graph of ``f(y)=y^2`` and the ``y``-axis for ``0\leq y\leq 1``.
+
+"""
 
 # ╔═╡ 55084c2d-6f81-4e55-946c-703245a6bb86
-md"""
-**Remark**
-- ``A`` is the unique number that is smaller than all the upper sums and bigger than all the lower sums.
+cm"""
+__Midpoint Rule__
 
-* In general, we form lower (and upper) sums by choosing the sample points $x^*_i$ so that $f(x^*_i)$ is the minimum (and maximum) value of $f$ on the $i$ th subinterval. 
+```math
+\textrm{Area} \approx \sum_{i=1}^n f\left(\frac{x_{i-1}+x_i}{2}\right)\Delta x.
+```
+__Example__
 
-$(load(download("https://www.dropbox.com/s/y8l8zfqy3ct52b5/upper_lower.png?raw=1")))
+Use the Midpoint Rule with ``n=4`` to approximate the area of the region bounded by the graph of ``f(x)=\sin x`` and the ``x``-axis for ``0\leq x\leq \pi``, 
 """
 
-# ╔═╡ ba3e664e-8952-4159-bfb7-b24d9e9fb1d2
-md"""
-### Distance Problem
-
-Find the distance traveled by an object during a certain time period if the velocity of the object is known at all times. (In a sense this is the inverse problem of the velocity problem that we discussed in Section 2.1.) If the velocity
-remains constant, then the distance problem is easy to solve by means of the formula
-$$distance = velocity \times	 time$$
-
-**Example**
-
-$(load(download("https://www.dropbox.com/s/qjicr7repo0qquo/distance.png?raw=1")))
-
-"""
-
-# ╔═╡ 8e5fcb62-afeb-410d-8cc2-e0b27e052a25
-begin
-	t = 0:5:30
-	vv = [25, 31, 35, 43, 47, 45, 41]
-	l =t[1:end-1].*vv[1:end-1]
-	r =t[2:end].*vv[2:end]
-	ln, rn = l |> sum, r|>sum
-	ld = reduce((x1,x2)->"$x1 + $x2",l[2:end];init="$(l[1])") *"=$ln"
-	rd = reduce((x1,x2)->"$x1 + $x2",r[2:end];init="$(r[1])") *"=$rn"
-	md"""
-	'
-	$$L_n$$ =
-	$ld
-	
-	'
-	$$R_n$$ =
-	$rd
-	
-	"""
-end
 
 # ╔═╡ 30b561dd-6e6b-4719-abc0-9938099d5487
 md""" ## Section 5.3 
-**(The Definite Intergal)**
+### Riemann Sums and Definite Integrals
+
+> __Objectives__
+> 1. Understand the definition of a Riemann sum.
+> 2. Evaluate a definite integral using limits and geometric formulas.
+> 3. Evaluate a definite integral using properties of definite integrals.
 
 """
 
 # ╔═╡ d854d0ea-c5dd-4efa-9f46-83807339e163
-g(x)=-(x-2)^3+1
+g(x)=√x
 
 # ╔═╡ bceda6d4-b93f-4282-8f03-fc44132ea1bb
 begin 
 	ns2 = @bind n2  Slider(2:2000,show_value=true, default=4)
 	as2 = @bind a2  NumberField(-10:10, default=0)
-	bs2 = @bind b2  NumberField(a+2*pi:10)
+	bs2 = @bind b2  NumberField(a+1:10)
 	lrs2 = @bind lr2 Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint", "rnd"=>"Random"])
 	md"""
 	n = $ns2  a = $as2  b = $bs2 method = $lrs2
@@ -194,16 +373,107 @@ begin
 	"""
 end
 
+# ╔═╡ 7a4f6354-3d0c-4814-8c4c-2d2200568545
+md"__Use unequal Widths__"
+
 # ╔═╡ 94b4f73a-ee55-405a-be50-bb92048f4eb2
 md"""
-### Definition
+__Definition of Riemann Sum__
+Let ``f`` be defined on the closed interval ``[a,b]``, and let ``\Delta`` be a partition of ``[a,b]`` given by
 
-```math 
-\int_a^b f(x) dx = \lim_{n\to \infty} \sum_{i=1}^n f(x_i^*)\Delta x 
+```math
+a=x_0 < x_1 <x_2<\cdots<x_{n-1}<x_n=b
 ```
-is the **definite integral of ``f`` from ``a`` to ``b``** provided that this limit exists and gives the same value for all possible choices of *sample points*. 
 
-* If it does exist, we say that ``f`` is **integrable** on ``[a,b]``.
+where ``\Delta x_i`` is the width of the th subinterval
+
+```math
+[x_{i-1},x_i]\quad \color{red}i\textrm{{th subinterval}}
+```
+
+‍
+‍
+If ``c_i``  is any point in the th subinterval, then the sum
+
+```math
+\sum_{i=1}^n f(c_i)\Delta x_i, \quad x_{i-1}\leq c_i\leq x_i
+```
+is called a __Riemann sum__ of ``f`` for the partition ``\Delta``.
+"""
+
+# ╔═╡ 9f9345b8-a29a-41fe-a41b-3dcef2e1a366
+cm"""
+__Remark__
+
+The width of the largest subinterval of a partition ``\Delta`` is the __norm__ of the partition and is denoted by ``\|\Delta\|``. 
+
+- If every subinterval is of equal width, then the partition is __regular__ and the norm is denoted by
+```math
+\|\Delta\| = \Delta x =\frac{b-a}{n} \quad \color{red}{\textrm{Regular partition}}
+```
+
+- For a general partition, the norm is related to the number of subintervals of ``[a,b]`` in the following way.
+```math
+\frac{b-a}{\|\Delta\|}\leq n \quad \color{red}{\textrm{General partition}}
+```
+
+- Note that
+```math
+\|\Delta\|\to 0 \quad \textrm{implies that}\quad n\to \infty.
+```
+
+"""
+
+# ╔═╡ ae6ea7e0-f6f3-4d82-a45d-2c5ed299b223
+cm"""
+### Definition of Definite Integral
+If ``f`` is defined on the closed interval ``[a,b]`` and the limit of Riemann sums over partitions ``\Delta`` 
+```math
+\lim_{\|\Delta\|\to 0}\sum_{i=1}^nf(c_i)\Delta x_i
+```
+‍
+exists, then ``f`` is said to be __integrable__ on ``[a,b]`` and the limit is denoted by
+```math
+\lim_{\|\Delta\|\to 0}\sum_{i=1}^nf(c_i)\Delta x_i = \int_a^b f(x) dx.
+```
+‍
+‍The limit is called the __definite integral__ of ``f`` from ``a`` to ``b``. The number ``a`` is the __lower limit__ of integration, and the number ``b`` is the __upper limit__ of integration.
+"""
+
+# ╔═╡ fd726227-f911-4383-90a7-aaab504b68ef
+cm"""
+__Theorem__ *Continuity Implies Integrability*
+
+If a function ``f`` is continuous on the closed interval ``[a,b]``, then ``f`` is integrable on ``[a,b]``. That is, 
+
+```math
+\int_a^b f(x) dx \quad \textrm{exists}.
+```
+
+"""
+
+# ╔═╡ d76afcb0-4b38-463d-add1-a58dd6acbbc0
+cm"""
+__Theorem__ *The Definite Integral as the Area of a Region*
+
+If ``f`` is continuous and nonnegative on the closed interval ``[a,b]``, then the area of the region bounded by the graph of ``f``, the ``x``-axis, and the vertical lines ``x=a`` and ``x=b`` is
+```math
+\textrm{Area} = \int_a^b f(x) dx
+```
+‍
+‍
+"""
+
+# ╔═╡ e7ea2eb7-b394-4ce6-b0a9-31d229e69787
+cm"""
+__Example__
+
+Evaluate each integral using a geometric formula.
+
+- ``\int_1^3 4 dx``
+- ``\int_0^3 (x+2) dx``
+- ``\int_{-2}^2 \sqrt{4-x^2} dx``
+```
 """
 
 # ╔═╡ 0a344b61-a226-49ee-ba19-f618390db269
@@ -329,7 +599,29 @@ What do we mean when we say that a function $f$ is _integrable_?
 """
 
 
-# ╔═╡ 039cf09b-67c1-46d0-aecc-97e5633d5e89
+# ╔═╡ 843fec4c-3a4a-4cb2-881c-9a4e3df6a5bb
+cm"""
+### Properties of Definite Integrals
+- If ``f``  is defined at ``x=a``, then ``\displaystyle \int_a^a f(x) dx =0``.
+- If ``f``  is integrable on ``[a,b]``, then ``\displaystyle \int_b^a f(x) dx =- \int_a^b f(x) dx``.
+- If ``f`` is integrable on the three closed intervals determined by ``a, b`` and ``c``, then
+```math
+\int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx.
+```
+- If ``f``  and ``g`` are integrable on ``[a,b]`` and ``k`` is a constant, then the functions ``kf`` and ``f\pm g`` are integrable on ``[a,b]``, and
+ 	1. ``\displaystyle \int_a^b kf(x) dx = k \int_a^b f(x) dx``.
+	2. ``\displaystyle \int_a^b \left[f(x)\pm g(x)\right] dx = \int_a^b f(x) dx\pm \int_a^b g(x) dx``.
+- If ``f`` is integrable and nonnegative on the closed interval ``[a,b]``, then
+```math
+0\leq \int_a^b f(x) dx.
+```
+- If ``f`` and ``g`` are integrable on the closed interval ``[a,b]`` and ``f(x)\leq g(x)`` for every ``x`` in ``[a,b]`` , then
+```math
+\int_a^b f(x) dx \leq \int_a^b g(x) dx.
+```
+"""
+
+# ╔═╡ 09383e0f-2b37-459e-aeb3-b8eb4f194ddd
 md"""
 ### Evaluating Definite Integrals
 
@@ -340,55 +632,6 @@ md"""
 5. Using integration techniques (tricks)
 
 """
-
-# ╔═╡ 843fec4c-3a4a-4cb2-881c-9a4e3df6a5bb
-begin 
-	hline = html"<hr>"
-md"""
-#### 1. Using the definition
-
-For this, we need the following formula 
-
-```math
-\displaystyle
-\begin{array}{ll}
-(1) & \sum_{i=1}^n 1 = n \\
-\\
-(2) & \sum_{i=1}^n i = \frac{n(n+1)}{2} \\
-\\
-(3) & \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
-\\
-(4) & \sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
-\\
-\end{array} 
-```
-
-and the following properties
-
-
-```math
-\displaystyle
-\begin{array}{lcl}
- \sum_{i=1}^n c a_i &=& c\sum_{i=1}^n  a_i \\
-\\
- \sum_{i=1}^n (a_i+b_i) &=& \sum_{i=1}^n  a_i+\sum_{i=1}^n  b_i \\
-\\
-\sum_{i=1}^n (a_i-b_i) &=& \sum_{i=1}^n  a_i-\sum_{i=1}^n  b_i \\
-\\
-\end{array} 
-```
-
-**Example**
-
-Evalute 
-```math
-\int_0^1 x^2 dx
-```
-	
-$hline
-
-"""
-end
 
 # ╔═╡ 0cfb00ed-60fe-4ebb-b5e2-6182ace7a719
 begin 
@@ -407,9 +650,6 @@ md"""
 """
 
 end
-
-# ╔═╡ 74bfa860-7932-4fed-ad2d-647233b5c45a
-integrate(xx^2,(xx,0,1))
 
 # ╔═╡ bfd46851-772d-43d4-8875-7d5c5dfb1155
 integrate(exp(xx),(xx,1,3))
@@ -466,43 +706,6 @@ m5 = [0.2*(1/x) for x in 1.1:0.2:1.9] |> sum
 # ╔═╡ f9e82107-07b9-4697-88fe-81b019640e6a
 integrate(1/xx,(xx,1,2)).n()
 
-# ╔═╡ 4f7c92e6-ac18-45b9-a5ed-1dd6ca6703e0
-md""" ### Properties of the Definite Integral
-```math
-\int_b^a f(x) dx = -\int_a^b f(x) dx
-```
-
-```math
-\int_a^a f(x) dx = 0
-```
-$hline
-
-```math
-\begin{array}{ll}
-\text{(1)} & \int_a^b c dx = c(b-a)\quad \text{where } c \text{ is any constant}. \\ \\
-\text{(2)} & \int_a^b \left[f(x)+g(x)\right] dx = \int_a^b f(x) dx +\int_a^b g(x) dx \\ \\
-\text{(3)} & \int_a^b cf(x) dx =  c\int_a^b f(x) dx \\ \\
-\text{(4)} & \int_a^b \left[f(x)-g(x)\right] dx = \int_a^b f(x) dx -\int_a^b g(x) dx \\ \\
-\text{(5)} & \int_a^c f(x) dx+\int_c^b f(x) dx = \int_a^b f(x) dx \\ \\
-
-\end{array}
-```
-
-**Comparison Properties of the Integral**
-```math
-\begin{array}{ll}
-\text{(6)} & \text{If } f(x)\geq 0 \text{ for } a\leq x\leq b, \text{ then } \int_a^bf(x)dx\ge 0. \\ \\
-\text{(7)} & \text{If } f(x)\geq g(x) \text{ for } a\leq x\leq b, \text{ then } \int_a^bf(x)dx\ge \int_a^bg(x)dx. \\ \\
-\text{(8)} & \text{If } m \leq f(x)\leq M \text{ for } a\leq x\leq b, \text{ then } \\ \\
-
-& \qquad \qquad m(b-a)\leq \int_a^bf(x)dx \leq M(b-a) \\ \\
-
-\end{array}
-```
-
-
-"""
-
 # ╔═╡ be9f84d5-3c65-4ceb-8767-3fdc41429e12
 md""" **Example**
 
@@ -512,9 +715,6 @@ Estimate
 ```
 
 """
-
-# ╔═╡ 4c2f5685-8cfe-4c18-b189-61552cb154f8
-exp(-1)
 
 # ╔═╡ cf3bce53-0260-403c-8910-b04b05b558fe
 begin
@@ -531,46 +731,155 @@ $\lim_{n\to \infty}\sum_{i=1}^n\frac{1}{n}\cos\left(1+\frac{i}{n}\right)^2=$
 
 """
 
-# ╔═╡ 13625b14-ac53-4995-bbcb-205cdf672c2a
-md"""
-### [Problem Set 5.2](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.2/ps5.2.pdf)
+# ╔═╡ 7fb16fd7-feac-4a75-bcf0-cf91ca7b3599
+cm"""
+## Section 5.4
+__The Fundamental Theorem of Calculus__
+> __Objectives__
+> 1. Evaluate a definite integral using the Fundamental Theorem of Calculus.
+> 2. Understand and use the Mean Value Theorem for Integrals.
+> 3. Find the average value of a function over a closed interval.
+> 4. Understand and use the Second Fundamental Theorem of Calculus.
+> 5. Understand and use the Net Change Theorem.
 
 """
 
-# ╔═╡ 4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
-md""" 
-$hline
-## Section 5.3 
-**(The Fundamental Theorem of Calculus)**
+# ╔═╡ dd5ee5ee-b2a7-46d4-bc43-0b9778eefcc2
+cm"""
+### The Fundamental Theorem of Calculus
 
-**Discovery:**
+__Antidifferentiation and Definite Integration__
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/8f52dty2aywwr92/diff_vs_antidiff.jpg?raw=1",:width=>600))
+
+</div>
 
 
-Given that 
+* ✒ ``\displaystyle \int_a^b f(x) dx``
+    * definite integral
+    * number              
+* ✒ ``\displaystyle \int f(x) dx``
+    * indefinite integral 
+    * function
+
+__Theorem__ *The Fundamental Theorem of Calculus*
+
+If a function ``f`` is continuous on the closed interval ``[a,b]`` and ``F`` is an antiderivative of ``f`` on the interval ``[a,b]``, then
 ```math
-\int_a^b x^2 dx = \frac{b^3-a^3}{3}
+\int_a^b f(x) dx = F(b) - F(a).
 ```
-and if ``f(x)\geq -1``, let
 
+__Remark:__
+
+We use the notation 
 ```math
-A(x) = \int_{-1}^x (1+t^2) dt
+\int_a^b f(x) dx = \bigl. F(x)\Biggr|_a^b= F(b)-F(a) \quad \textrm{or}\quad 
+\int_a^b f(x) dx =\Bigl[F(x)\Bigr]_a^b = F(b)-F(a)
 ```
-``A(x)`` represents the area of a region. 
+"""
 
-* _Sketch that region_. 
-* Find an expression for ``A(x)``
-* Find ``A'(x)``. What do you notice?
+# ╔═╡ 4db12c57-014f-4aa0-a5b1-4f12eb3bf834
+cm"""
+__Example__
 
+Evaluate each definite integral.
+
+- ``\displaystyle \int_1^2 (x^2-3) dx``
+
+$("  ")
+- ``\displaystyle \int_1^4 3\sqrt{x} dx``
+
+$("  ")
+- ``\displaystyle \int_{0}^{\pi/4} \sec^2 x dx``
+
+$("  ")
+- ``\displaystyle \int_{0}^{2} \Big|2x-1\Big| dx``
+"""
+
+# ╔═╡ b592499b-cf96-486e-9067-9c79b5894641
+begin
+	theme(:wong)
+	s54e3_f(x) = 1/x
+	s54e3_x = 1:0.1:exp(1)
+	s54e3_p=plot(s54e3_x,s54e3_f.(s54e3_x), label=nothing,c=:green)
+	plot!(s54e3_p,s54e3_x,s54e3_f.(s54e3_x)/2,ribbon=s54e3_f.(s54e3_x)/2, linestyle=:dot,linealpha=0.1, framestyle=:origin, xticks=(1:4,[:1,:2,:3]), label=nothing, ylims=(-0.1,1.5),xlims=(-0.1,3))
+	annotate!(s54e3_p,[(2,1,L"y=\frac{1}{x}"),(exp(1),-0.1,L"e")])
+	cm"""
+		
+	__Example__
+	
+	Find the area of the region bounded by the graph of
+	```math
+	y=\frac{1}{x}
+	```
+	the ``x``-axis, and the vertical lines ``x=1`` and ``x=e``.
+	
+
+	$s54e3_p
+	
+	"""
+end
+
+# ╔═╡ bfbb3b72-dedc-476d-a028-997e98b61ae4
+begin
+	cm"""
+	### The Mean Value Theorem for Integrals
+	
+	__Theorem__ *Mean Value Theorem for Integrals*
+	
+	If ``f`` is continuous on the closed interval ``[a,b]``, then there exists a number ``c`` in the closed interval ``[a,b]`` such that
+	```math
+	\int_a^b f(x) dx =f(c)(b-a).
+	```
+	
+	<div class="img-container">
+
+	$(Resource("https://www.dropbox.com/s/7fnr2kfq082kq0y/mvt.jpg?raw=1",
+	:style=>"display:flex;align-items:center;flex-direction: column;"))
+	</div>
+	
+	"""
+end
+
+# ╔═╡ c3650a10-dff3-4fa2-bb56-3a19e1838766
+cm"""
+### Average Value of a Function
+
+__Definition of the Average Value of a Function on an Interval__
+
+If ``f`` is integrable on the closed interval ``[a.b``, then the __average value__ of ``f`` on the interval is
+```math
+\textbf{Avergae value} = \frac{1}{b-a}\int_a^b f(x) dx
+```
+
+__Example__
+
+Find the average value of ``f(x)=3x^2-2x``  on the interval ``[1,4]``.
 
 """
 
+# ╔═╡ 16053a54-d268-479b-bd2e-0634c4a1bb89
+cm"""
+### The Second Fundamental Theorem of Calculus
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/knjbngrqs2r2h1z/ftc2.jpg?raw=1",
+:style=>"margin-top:20px;"
+))
+
+</div>
+
+"""
 
 # ╔═╡ 3b115e62-8040-4a2c-8d6e-3d03669e7cd8
 md"""
 Consider the following function 
 
 ```math 
-g(x) = \int_a^x f(t) dt
+F(x) = \int_a^x f(t) dt
 ```
 where ``f`` is a continuous function on the interval ``[a,b]`` and ``x \in [a,b]``.
 
@@ -595,7 +904,7 @@ begin
 	plot!(p4,xVar,yVar,ribbon=yVar, linestyle=:dot,linealpha=0.1, framestyle=:origin, xticks=(1:5,[:a,"","","",:b]), label=nothing, ylims=(-1,4))
 	plot!(p4,xticks=(x4,[:a,["" for i in 2:length(xVar)-1]...,:x,["" for i in length(xVar):length(x4)-2]...,:b]))
 	annotate!(p4,[(3.5,2.5,L"y=f(t)"),(5.2,0,L"t"),(0.2,4,L"y")])
-	slider4>1 && annotate!(p4,[(slider4*0.7,1,(L"$g(x)=\int_a^x f(t) dt$",12))])
+	slider4>1 && annotate!(p4,[(slider4*0.7,1,(L"$F(x)=\int_a^x f(t) dt$",12))])
 	
 	md"""
 	
@@ -618,16 +927,22 @@ Find ``g(2)``
 """
 end
 
+# ╔═╡ 0ca459b3-36ad-46f0-b49d-af921c57b9df
+cm"""
+__Theorem__ *The Second Fundamental Theorem of Calculus*
+
+If ``f`` is continuous on an open interval ``I`` containing ``a``, then, for every ``x`` in the interval,
+
+```math
+
+\frac{d}{dx}\left[\int_a^x f(t) \right] = f(x).
+```
+
+"""
+
 # ╔═╡ 02ff212e-937d-4e8e-96d2-5f982618b92d
 begin
 md"""
-### The Fundamental Theorem of Calculus, Part 1 (FTC1)
-
-If ``f`` is continuous on ``[a,b]``, then the function ``g`` defined by
-```math
-g(x) = \int_a^x f(t) dt, \qquad a\leq x\leq b
-```
-is continuous on ``[a,b]`` and differentiable on ``(a,b)``, and ``g'(x)=f(x)``.
 
 ##### Remarks
 * ``{\large \frac{d}{dx}\left( \int_a^x f(u) du\right) = f(x)}``
@@ -645,42 +960,6 @@ Find the derivative of
 (4) ``g_4(x) = \int_{\sin(x)}^{\cos(x)} \sqrt{1+t} dt``.
 """
 end
-
-# ╔═╡ 4ce8772c-4c83-4d98-83e8-f18ebf156447
-md"""
-### The Fundamental Theorem of Calculus, Part 2 (FTC2)
-If ``f`` is continuous on ``[a,b]``, then
-```math
-\int_a^b f(x) dx = F(b)-F(a)
-```
-where ``F`` is any **antiderivative** of ``f``, that is, a function ``F`` such that
-```math
-F'=f
-```
-"""
-
-# ╔═╡ dd32db21-de4d-483b-89f8-2cd808418186
-md"""
-##### Remark:
-We use the notation 
-```math
-\left. F(x)\right|_a^b = F(b)-F(a)
-```
-So FTC2, is written as
-```math
-\int_a^b f(x) dx = \left. F(x)\right|_a^b 
-```
-
-"""
-
-# ╔═╡ 22f2a1f7-41aa-4cd6-9db9-076a6d5ed628
-md"""
-**Example**
-
-Evaluate the integral ``\int_0^1 e^x dx``.
-
-Solution: In class.
-"""
 
 # ╔═╡ c8d0298f-2336-41b8-a4f4-a5be5db751f3
 md"""
@@ -706,41 +985,7 @@ begin
 end
 
 # ╔═╡ 638eef4b-d46c-453b-ac40-179ce70cc330
-ff(x)=2*x-x^2;integrate(ff(xx),(xx,0,2))
-
-# ╔═╡ 6233eebb-9318-4794-bbdf-23a0b2ddfbd9
-md"""
-### [Problem Set 5.3](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.3/ps5.3.pdf) 
-([Solution Part 1](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps2-solution.pdf), [Solution Part 2](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps2-2-solution.pdf))
-"""
-
-# ╔═╡ 8bd4ea7f-95b3-46fc-9278-1f25487f7560
-md"""
-## Section 5.4 
-**(Indefinite Integrals and the Net Change Theorem)**
-
-```math
-\int f(x) dx = F(x) \qquad \text{means}  \qquad F'(x)=f(x)
-```
-
-**Example**
-
-```math
-\int 4 x^3 dx = 4 \frac{x^4}{4} + C = x^4 +C \quad \text{because}\quad \frac{d}{dx}\left(x^4+C\right) = 4x^3
-```
-"""
-
-# ╔═╡ b2afdafa-7179-44d9-bf0b-1ed53fc0ae63
-md"""
-**Remarks**
-
-* ✒ $\int_a^b f(x) dx$
-    * definite integral
-    * number              
-* ✒$\int f(x) dx$
-    * indefinite integral 
-    * function
-"""
+ff(x)=2*x-x^2;md""" A=$(integrate(ff(xx),(xx,0,2)))"""
 
 # ╔═╡ b0fb2fbb-0175-4cce-b90d-3f9fa9b4541e
 begin
@@ -774,29 +1019,19 @@ md"""
 """
 end
 
-# ╔═╡ a06bb557-d664-4e45-80c8-7e6e6eb6a2f5
-md"""
-**Eaxmple:**
-
-- Find
-```math
-\int \frac{\cos\theta}{\sin^2\theta} d\theta
-```
-- Evaluate
-```math
-\int_1^4 \left(\frac{4+6u}{\sqrt{u}}\right) du
-```
-"""
-
-
 # ╔═╡ 0fd76efb-6d98-43f8-b714-8cf54fd62e7d
 md"""
-### Applications
+__Applications__
+
 **Question:** If $y=F(x)$, then what does $F'(x)$ represents?
 ### Net Change Theorem 
-The integral of a rate of change is the **net change**:
+
+__Theorem__ *The Net Change Theorem*
+
+If ``F'(x)`` is the rate of change of a quantity ``F(x)`` , then the definite integral of ``F'(x)`` from ``a`` to ``b`` gives the total change, or __net change__, of ``F(x)`` on the interval ``[a,b]``.
+
 ```math
-\int_a^b F'(x) dx = F(b) - F(a)
+\int_a^b F'(x) dx = F(b) - F(a) \qquad \color{red}{\textrm{Net change of } F(x)}
 ```
 - There are many applications, we will focus on one
 
@@ -821,18 +1056,22 @@ If an object moves along a straight line with position function ``s(t)``, then i
 """
 
 # ╔═╡ 78d480bf-bc4d-48e3-b3aa-100a38d6b4bc
-md"""
+cm"""
 **Example**
 A particle is moving along aline. Its velocity function (in ``m/s^2``) is given by
 ```math
-v(t)=t^2-8t+12,
+v(t)=t^3-10t^2+29t-20,
 ```
-1. Find the displacement of the particle during the interval ``[0,10]``.
-1. Find the total distance traveled during the interval ``[0,10]``.
+<ul style="list-style-type: lower-alpha;">
+
+<li> What is the <b>displacement</b> of the particle on the time interval 1≤ t≤ 5?</li>
+<li>What is the <b>total distance</b> traveled by the particle on the time interval 1≤ t≤ 5?</li>
+
+</ul>
 """
 
 # ╔═╡ bc42cf6d-44be-4244-85de-a10d03884dfd
-v(t) = t^2-8t+12
+v(t) = t^3-10*t^2+29*t-20
 
 # ╔═╡ 78d284e8-bd29-4ec3-9470-2141574787eb
 begin
@@ -842,12 +1081,12 @@ begin
 	s1(t) = convert(Float64,integrate(v1(u),(u,0,t)).n())
 
 	theme(:default)
-	a1,b1 = 0, 20 
+	a1,b1 = 1, 5
 	t1 = a1:0.1:b1
 	timeLength = length(t1)
 	xxx = s1.(t1)
 	vvv = v1.(t1)
-	myXlims = s1(a1) .+ (-20,20)
+	myXlims = s1(a1) .+ (0,20)
 	myYlims = vvv |> ff -> (min(ff...)-1,max(ff...)+1)
 	anim =  @animate for i ∈ 1:timeLength
 		pp=plot(;layout = (2,1))
@@ -870,6 +1109,7 @@ begin
 			vvv[1:i],
 			xlims=(0,myXlims[2]),
 			ylims=myYlims,
+			xticks=(1:5,[:1,:2,:3,:4,:5]),
 			framestyle=:origin,
 			label=nothing,
 			xlabel="x",
@@ -897,17 +1137,16 @@ begin
 end
 
 
-# ╔═╡ 597cd6c2-1ea4-4c33-a3a7-f6418a8fb186
-md"""
-### [Problem Set 5.4](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.4/ps5.4.pdf)
-[Solution](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps4-1-solution.pdf)
-"""
-
 # ╔═╡ 08e5381c-4cf1-4c70-ba74-26a05b8046fa
 md"""
 ## Section 5.5:
 **The Substitution Rule**
-
+> __Objectives__
+> 1. Use pattern recognition to find an indefinite integral.
+> 2. Use a change of variables to find an indefinite integral.
+> 3. Use the General Power Rule for Integration to find an indefinite integral.
+> 4. Use a change of variables to evaluate a definite integral.
+> 5. Evaluate a definite integral involving an even or odd function.
 
 
 ||||
@@ -917,25 +1156,41 @@ md"""
 
 """
 
+# ╔═╡ f3e2034d-e259-4d0b-bca4-95fd17f69d56
+cm"### Pattern Recognition"
+
 # ╔═╡ 805cf044-8187-410e-833d-f4323ce07380
 begin
 	f155(x) = x/sqrt(1-4*x^2)
 	# ex1_55=plot(-0.49:0.01:0.49,f155.(-0.49:0.01:0.49), framestyle=:origin)
-	md"""
-	### The Substitution Rule
-	if ``u=g(x)`` is a differentiable function whose range is an interval ``I`` and ``f`` is continuous on ``I``, then 
+	cm"""
+	__Theorem__ *Antidifferentiation of a Composite Function*
+	Let ``g`` be a function whose range is an interval ``I``, and let ``f`` be a function that is continuous on ``I``. If ``g`` is differentiable on its domain and  ``F`` is an antiderivative of ``f`` on ``I``, then
 	```math
-	\int f(g(x))g'(x)dx = \int f(u) du
+	\int f(g(x))g'(x)dx = F(g(x)) + C.
 	```
-	**Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
+	Letting ``u=g(x)`` gives ``du=g'(x)dx`` and
+	```math
+	\int f(u) du = F(u) + C.
+	```
 
+	<div class="img-container">
+	
+	$(Resource("https://www.dropbox.com/s/uua8vuahfxnp48c/subs_th.jpg?raw=1"))
+	
+	</div>
+	
+	**Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
+	
 	**Example**
 	Find 
 	```math
 	\begin{array}{ll}
-	(i) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
-	(ii) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
-	(iii) & \int \tan x dx \\ \\
+	(i) & \int \bigl(x^2+1 \bigr)^2 (2x) dx \\ \\
+	(ii) & \int 5e^{5x} dx \\ \\
+	(iii) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
+	(iv) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
+	(v) & \int \tan x dx \\ \\
 	\end{array}
 	```
 	
@@ -943,22 +1198,82 @@ begin
 	"""
 end
 
+# ╔═╡ 7549863d-1e44-422f-9ddd-beec2ddcd48d
+cm"""
+### Change of Variables for Indefinite Integrals
+__Example__: Find
+```math
+	\begin{array}{ll}
+	(i) & \int \sqrt{2x-1} dx \\ \\
+	(ii) & \int x\sqrt{2x-1} dx \\ \\
+	(iii) & \int \sin^23x\cos3x dx \\ \\
+	\end{array}
+```
+	
+"""
+
+
+# ╔═╡ 47d4a0d9-467b-4717-a621-9d37e3870018
+cm"""
+### The General Power Rule for Integration
+__Theorem__ *The General Power Rule for Integration*
+If ``g`` is a differentiable function of ``x``, then
+```math
+\int\bigl[g(x)\bigr]^ng'(x) dx = \frac{\bigl[g(x)\bigr]^{n+1}}{n+1} + C, \quad n\neq -1.
+```
+‍Equivalently, if ``u=g(x)``, then
+```math
+\int u^n du = \frac{u^{n+1}}{n+1} + C, \quad n\neq -1.
+```
+‍
+__Example__: Find
+```math
+	\begin{array}{ll}
+	(i) & \int 3(3x-1)^4 dx \\ \\
+	(ii) & \int (e^x+1)(e^x+x) dx \\ \\
+	(iii) & \int 3x^2\sqrt{x^3-2} \;dx \\ \\
+	(iv) & \displaystyle \int \frac{-4x}{(1-2x^2)^2}\; dx \\ \\
+	(v) & \int \cos^2 x\sin x \;dx \\ \\
+	\end{array}
+```
+	
+
+"""
+
+# ╔═╡ afdac3e8-bc84-48fd-8a04-d838e038c16d
+cm"""
+### Change of Variables for Definite Integrals
+
+"""
+
 # ╔═╡ 497ff4cd-2705-49b3-bde6-671352e9b5a0
 begin
-	ex2fun(x)=log(x)/x
+	ex2fun1(x)=log(x)/x
+	ex2fun2(x)=x
 	ex2x1 = 1:0.1:exp(1)
-	ex2x2 = 0.1:0.1:4
+	ex2x12 = 0:0.1:1
+	ex2x2 = 0.6:0.1:4
+	ex2x22 = log(0.6):0.1:log(4)
 	
-	ex2y1 =ex2fun.(ex2x1) 
-	ex2y2 =ex2fun.(ex2x2) 
+	ex2y1 =ex2fun1.(ex2x1) 
+	ex2y12 =ex2fun2.(ex2x12) 
+	ex2y2 =ex2fun1.(ex2x2) 
+	ex2y22 =ex2fun2.(ex2x22) 
 	theme(:wong)
-	ex2plt = plot(ex2x1,ex2y1, framestyle=:origin, xlims=(0,exp(1)),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red)
-	plot!(ex2plt,ex2x2,ex2y2,c=:red)
-	xlims!(-1,4)
+	ex2plt1 = plot(ex2x1,ex2y1, framestyle=:origin, xlims=(0,exp(1)),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red,label=nothing)
+	plot!(ex2plt1,ex2x2,ex2y2,c=:red,label=nothing)
+	xlims!(ex2plt1,-1,4)
+	annotate!(ex2plt1,[(2,0.5,L"y=\frac{\ln x}{x}"),(exp(1),-0.05,text(L"e",12))])
+	plot!(ex2plt1,[exp(1),exp(1)],[0,ex2fun1(exp(1))],c=:red,linewidth=3,label=nothing)
+
+	ex2plt2 = plot(ex2x12,ex2y12, framestyle=:origin, xlims=(0,1),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red,label=nothing)
+	plot!(ex2plt2,ex2x22,ex2y22,c=:red,label=nothing)
+	xlims!(ex2plt2,-1,4)
+	annotate!(ex2plt2,[(2,0.5,L"v=u")])
 	# ylims!()
- 	# plot!(ex2plt,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
-	# xlims!(ex2plt,-1,2)
-	# plot!(ex2plt, fill=(0, 0.5, :red), xlims=(1,2))
+ 	# plot!(ex2plt2,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
+	# xlims!(ex2plt1,-1,2)
+	# plot!(ex2plt1, fill=(0, 0.5, :red), xlims=(1,2))
 	md""" 
 	### Substitution: Definite Integrals
 	**Example:**
@@ -968,17 +1283,24 @@ begin
 	\begin{array}{ll}
 	(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} \\ \\
 	(ii) & \int_1^e \frac{\ln x}{x} dx \\ \\ 
+	(iii) & \int_0^1 x(x^2+1)^3 \;dx \\ \\ 
+	(iv) & \int_1^5 \frac{x}{\sqrt{2x-1}}\;dx \\ \\ 
 	\end{array}
 	```
-		
-	
+	$ex2plt1	
+
+	$ex2plt2
 	
 	"""
 end
 
+# ╔═╡ 3feca2ed-ff05-4c1a-a614-b1fd23674741
+cm"""
+### Integration of Even and Odd Functions
+"""
+
 # ╔═╡ 297d7fdb-0117-4bd1-adee-8ad640dbf025
 md"""
-### Symmetry
 **Integrals of Symmetric Functions**
 
 Suppose ``f`` is continuous on **``[-a,a]``**.
@@ -1001,10 +1323,346 @@ Find
 
 """
 
-# ╔═╡ f1936990-709d-45a2-a349-b4f3e1eada69
-md"""
-### [Problem Set 5.5](https://github.com/mmogib/math102-term203/blob/master/problem_sets/ps/ps5.5/ps5.5.pdf)
-[Solution](https://github.com/mmogib/lia-math102/blob/master/problem_sets/ps/ps5-1-solution.pdf)
+# ╔═╡ 5bca98c2-c6ef-4e95-a2c6-e99dd88b966b
+cm"""
+## Section 5.7
+__The Natural Logarithmic Function: Integration__
+> __Objectives__
+> 1. Use the Log Rule for Integration to integrate a rational function.
+> 2. Integrate trigonometric functions.
+"""
+
+# ╔═╡ 69dc2182-fb24-4db9-9fe6-dc6d9527facd
+cm"""
+### Log Rule for Integration
+
+__Theorem__ *Log Rule for Integration*
+
+Let ``u``  be a differentiable function of ``x``.
+```math
+	\begin{array}{llll}
+	\textrm{(i) }& \displaystyle \int \frac{1}{x} dx &=& \ln|x| + C  \\ \\
+	\textrm{(ii) }& \displaystyle \int \frac{1}{u} du &=& \ln|u| + C  \\ \\
+	\end{array}
+```
+
+__Remark__
+```math
+ \displaystyle \int \frac{u'}{u} dx = \ln|u| + C
+```
+"""
+
+# ╔═╡ 703db4e5-e64a-4b09-ba22-c2808719fd58
+cm"""
+__Example__
+
+Find the area of the region bounded by the graph of
+```math
+y = \frac{x}{x^2+1}
+```
+the ``x``-axis, and the line ``x=3``.
+"""
+
+# ╔═╡ 47f63585-6b16-4545-bdf6-5cd7ed470a82
+cm"""
+__Examples__ Find
+```math
+	\begin{array}{llll}
+	\textrm{(i) }& \displaystyle \int \frac{1}{4x-1} dx   \\ \\
+	\textrm{(ii) }& \displaystyle \int \frac{3x^2+1}{x^3+x} dx   \\ \\
+	\textrm{(iii) }& \displaystyle \int \frac{\sec^2x}{\tan x} dx   \\ \\
+	\textrm{(iv) }& \displaystyle \int \frac{x^2+x+1}{x^2+1} dx   \\ \\
+	\textrm{(v) }& \displaystyle \int \frac{2x}{(x+1)^2} dx   \\ \\
+	\end{array}
+```
+"""
+
+# ╔═╡ a1a49662-a13b-430b-b1d5-47f8f3e72f65
+cm"""
+__Example__ Solve the differential equation
+```math
+\frac{dy}{dx}=\frac{1}{x\ln x}
+```
+"""
+
+# ╔═╡ 8ff69555-f7f8-4401-82c6-e27cdf65dff3
+cm"""
+### Integrals of Trigonometric Functions
+__Example__
+```math
+\int \tan x dx, \quad \int \sec x dx
+```
+
+"""
+
+# ╔═╡ 9f7d1862-b413-4292-84da-7c1d76530764
+cm"""
+__Remark__ Add the following to your table of antiderivatives
+```math
+	\begin{array}{llll}
+	\displaystyle \int \sin u du &=& -\cos u + C &\qquad&  \displaystyle \int \cos u du &=& \sin u + C \\ \\
+
+	\displaystyle \int \tan u du &=& -\ln|\cos u| + C &\qquad&  \displaystyle \int \cot u du &=& \ln|\sin u| + C \\ \\
+
+
+	\displaystyle \int \sec u du &=& \ln|\sec u +\tan u| + C &\qquad&  \displaystyle \int \csc u du &=& -\ln|\csc u +\cot u| + C \\ \\
+	\end{array}
+```
+
+"""
+
+# ╔═╡ d6f0452c-cefa-49ee-87ec-a92811880ed4
+cm"""
+__Example__ 
+
+Evaluate ``\displaystyle \int_{0}^{\pi/4}\sqrt{1+\tan^2 x}dx``
+
+"""
+
+# ╔═╡ da7c0cb8-1d2a-436a-bbb5-b53522dbd755
+cm"""
+## Section 5.8
+### Inverse Trigonometric Functions: Integration
+> __Objectives__
+> 1. Integrate functions whose antiderivatives involve inverse trigonometric functions.
+> 2. Use the method of completing the square to integrate a function.
+> 3. Review the basic integration rules involving elementary functions.
+"""
+
+# ╔═╡ 04ce6f4c-1581-4ae1-9e9c-8d4dc75b01c7
+cm"""
+### Integrals Involving Inverse Trigonometric Functions
+__Theorem__
+
+Let ``u`` be a differential function of ``x``, and let ``a>0``.
+```math
+\begin{array}{lllll}
+\textrm{1.} & \displaystyle \int\frac{du}{\sqrt{a^2-u^2}} &=&\arcsin\frac{u}{a} + C \\ \\
+
+\textrm{2.} & \displaystyle \int\frac{du}{a^2+u^2} &=&\frac{1}{a}\arctan\frac{u}{a} + C \\ \\
+
+\textrm{3.} & \displaystyle \int\frac{du}{u\sqrt{u^2-a^2}} &=&\frac{1}{a}\text{arcsec}\frac{|u|}{a} + C \\ \\
+\end{array}
+```
+
+__Examples__
+Find
+```math
+\begin{array}{lllll}
+\textrm{➡} & \displaystyle \int\frac{dx}{\sqrt{4-x^2}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{2+9x^2}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{x\sqrt{4x^2-9}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{\sqrt{e^{2x}-1}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{x+2}{\sqrt{4-x^2}}dx. \\ \\
+\end{array}
+```
+"""
+
+# ╔═╡ 97a73cbe-6874-4641-9ad8-66df1e8c58c1
+cm"""
+### Completing the Square
+__Example__
+Find
+```math
+\int\frac{dx}{x^2-4x+7}.
+```
+__Example__
+
+Find the area of the region bounded by the graph of
+```math
+f(x) = \frac{1}{\sqrt{3x-x^2}}
+```
+the ``x``-axis, and the lines ``x=\frac{3}{2}`` and ``x=\frac{9}{4}``.
+"""
+
+# ╔═╡ a1439122-d0e6-4f02-9039-41edc141f64f
+cm"""
+## Section 5.9
+__Hyperbolic Functions__
+
+> __Objectives__
+> 1. Develop properties of hyperbolic functions.
+> 2. Differentiate and integrate hyperbolic functions.
+> 3. Develop properties of inverse hyperbolic functions.
+> 4. Differentiate and integrate functions involving inverse hyperbolic functions.
+
+### Hyperbolic Functions
+
+__Circle__: ``x^2+y^2=1``
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/c53yvdcyul4vvlz/circle.jpg?raw=1"))
+
+</div>
+
+__Hyperbola__: ``-x^2+y^2=1``
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/iy6fw024c6r50f8/hyperbola.jpg?raw=1"))
+
+</div>
+
+
+"""
+
+# ╔═╡ e306b52c-0508-4314-9358-a12aca62ea9e
+cm"""
+__Definitions of the Hyperbolic Functions__
+```math
+\begin{array}{lllllll}
+\sinh x &=& \displaystyle \frac{e^x-e^{-x}}{2} &\qquad& 
+\text{csch}\; x &=& \displaystyle \frac{1}{\sinh x},\; x\neq 0\\ \\
+\cosh x &=& \displaystyle \frac{e^x+e^{-x}}{2} &\qquad& 
+\text{sech}\; x &=& \displaystyle \frac{1}{\cosh x}\\ \\
+\tanh x &=& \displaystyle \frac{\sinh x}{\cosh x} &\qquad& 
+\text{coth}\; x &=& \displaystyle \frac{1}{\tanh x},\; x\neq 0\\ \\
+\end{array}
+```
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/0q1vcqb77u0ft1t/hyper_graphs.jpg?raw=1"))
+
+</div>
+"""
+
+# ╔═╡ 47e805e5-8558-4522-a10c-c3c9ae52b17e
+cm"""
+__Hyperbolic Identities__
+```math
+\begin{array}{rllllll}
+\cosh^2 x - \sinh^2 x &=& 1, &\qquad& 
+\sinh (x+y)\;  &=& \sinh x\cosh y +\cosh x\sinh y\\ \\
+
+\tanh^2 x + \text{sech}^2 x &=& 1, &\qquad& 
+\sinh (x-y)\;  &=& \sinh x\cosh y -\cosh x\sinh y\\ \\
+
+
+\coth^2 x - \text{csch}^2 x &=& 1, &\qquad& 
+\cosh (x+y)\;  &=& \cosh x\cosh y +\sinh x\sinh y\\ \\
+
+ &&  &\qquad& 
+\cosh (x-y)\;  &=& \cosh x\cosh y -\sinh x\sinh y\\ \\
+
+\sinh^2 x &=& \displaystyle\frac{\cosh 2x -1}{2}, &\qquad& 
+\cosh^2 x\;  &=& \displaystyle\frac{\cosh 2x +1}{2}\\ \\
+
+
+\sin 2x &=& 2\sinh x\cosh x, &\qquad& 
+\cosh 2x\;  &=& \cosh^2 x +\sinh^2 x\\ \\
+
+
+\end{array}
+```
+"""
+
+# ╔═╡ 21b53a25-5fef-4ac5-aab0-59232566c5d2
+cm"""
+### Differentiation and Integration of Hyperbolic Functions
+
+__Theorem__ Let ``u`` be a differentiable function of ``x``.
+```math
+\begin{array}{rllllll}
+\displaystyle \frac{d}{dx}\left(\sinh u\right) &=& \left(\cosh u\right)u', &\qquad& 
+\displaystyle \int \cosh u du  &=& \sinh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\cosh u\right) &=& \left(\sinh u\right)u', &\qquad& 
+\displaystyle \int \sinh u du  &=& \cosh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\tanh u\right) &=& \left(\text{sech}^2 u\right)u', &\qquad& 
+\displaystyle \int \text{sech}^2 u du  &=& \tanh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\coth u\right) &=& -\left(\text{csch}^2 u\right)u', &\qquad& 
+\displaystyle \int \text{csch}^2 u du  &=& -\coth u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\text{sech} u\right) &=& -\left(\text{sech }u \tanh u\right)u', &\qquad& 
+\displaystyle \int \text{sech } u\tanh u du  &=& -\text{sech } u \; +\; C\\ \\
+
+
+\displaystyle \frac{d}{dx}\left(\text{csch} u\right) &=& -\left(\text{csch }u \coth u\right)u', &\qquad& 
+\displaystyle \int \text{csch } u\coth u du  &=& -\text{csch } u \; +\; C\\ \\
+
+\end{array}
+```
+
+"""
+
+# ╔═╡ 23f24ea9-b33b-4aac-b17d-1f749360bfe7
+cm"""
+__Examples__
+
+Find
+```math
+\begin{array}{llll}
+\text{(a)} & \displaystyle \frac{d}{dx}\left[\sinh(x^2-3)\right]\\\\
+\text{(b)} & \displaystyle \frac{d}{dx}\bigl[\ln\left(\cosh x\right)\bigr]\\\\
+\end{array}
+```
+
+__Example__
+
+Find the relative extrema of
+```math
+f(x) = (x-1)\cosh x \; -\; \sinh x.
+```
+
+__Example__ Find
+```math
+\int \cosh 2x \sinh^2 2x dx
+```
+"""
+
+# ╔═╡ 5a3b6e5c-5e6f-4fcd-be83-325974e42008
+cm"""
+__Remark__
+
+Power cables are suspended between two towers form a curve with equation
+```math
+y=a\cosh\frac{x}{a}.
+```
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/24biyozrcl7mk2q/wire.jpg?raw=1"))
+
+</div>
+
+"""
+
+# ╔═╡ 894378b1-811d-43ac-a700-71350e88ee40
+cm"""
+### Inverse Hyperbolic Functions
+
+__Theorem__ Inverse Hyperbolic Functions
+```math
+\begin{array}{llllll}
+\textbf{Function} &  & &\qquad& \textbf{Domain}\\ \\
+
+\sinh^{-1}x & = & \ln\left(x+\sqrt{x^2+1}\right) &\qquad& \left(-\infty,\infty\right)\\ \\
+
+\cosh^{-1}x & = & \ln\left(x+\sqrt{x^2-1}\right) &\qquad& \left[1,\infty\right)\\ \\
+
+\tanh^{-1}x & = & \displaystyle\frac{1}{2}\ln\left(\frac{1+x}{1-x}\right) &\qquad& \left(-1,1\right)\\ \\
+
+
+\coth^{-1}x & = & \displaystyle\frac{1}{2}\ln\left(\frac{x+1}{x-1}\right) &\qquad& \left(-\infty,-1\right)\cup \left(1,\infty\right)\\ \\
+
+
+\text{sech}^{-1}x & = & \displaystyle\ln\left(\frac{1+\sqrt{1-x^2}}{x}\right) &\qquad& \left(0,1\right]\\ \\
+
+\text{csch}^{-1}x & = & \displaystyle\ln\left(\frac{1}{x}+\frac{\sqrt{1+x^2}}{|x|}\right) &\qquad& \left(-\infty,0\right)\cup \left(0,\infty\right)\\ \\
+
+\end{array}
+```
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/yc0305sd3i8yr44/inverse_hyper_graphs.jpg?raw=1"))
+
+</div>
+
 """
 
 # ╔═╡ 2460d407-0fff-44c4-90ec-639f32414f49
@@ -1017,9 +1675,6 @@ embedYouTube(id;title) = """
 	<iframe width="400" height="250" src="https://www.youtube.com/embed/$id" 	title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 </div>"""
-
-# ╔═╡ cf5a3df0-5bd2-40a9-8c41-010153a3e418
-HTML(embedYouTube("lUml-Rb1Dp8"; title="Solution (Part 1)"), embedYouTube("2COqHTAxS_o"; title="Solution (Part 2)"))
 
 # ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
 rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
@@ -1061,8 +1716,8 @@ begin
 	anchor1 = 0.5 
 	(p,s)=reimannSum(f,n,a,b;method=lr,plot_it=true)
 	
-	annotate!(p,[(anchor1,f(anchor1)-2,L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12)])
-	annotate!(p,[(anchor1,f(anchor1+0.1),L"$y=%$f(x)$",12)])
+	annotate!(p,[(anchor1,f(anchor1)-2,text(L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12,n > 500 ? :white : :black))])
+	annotate!(p,[(anchor1+0.5,f(anchor1+0.1),text(L"$y=%$f(x)$",12,:black))])
 	
 	md""" 	
 	
@@ -1071,13 +1726,25 @@ begin
 
 end
 
+# ╔═╡ 27e1d120-c3e1-4f3d-a263-d63204034814
+begin
+	left_sum=reimannSum(f,n,a,b;method="l")
+	right_sum=reimannSum(f,n,a,b;method="r")
+	l_sum_txt = L"R_{%$n}= %$right_sum \leq A\leq %$left_sum =L_{%$n}"
+	
+	
+	l_sum_txt
+	
+	
+end
+
 # ╔═╡ cbf534bd-a329-4bc2-9940-f53a22e6d17e
 begin
 	theme(:wong)
 	
 	(p2,s2)=reimannSum(g,n2,a2,b2;method=lr2,color=:blue,plot_it=true)
 	
-	annotate!(p2,[(2,4.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
+	annotate!(p2,[(0.25,0.8,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
 	
 	md""" 	
 	
@@ -1147,6 +1814,7 @@ end
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
 CommonMark = "a80b9123-70ca-4bc0-993e-6e3bcb318db6"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
 HypertextLiteral = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
 ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
@@ -1179,9 +1847,9 @@ SymPy = "~1.1.7"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.0"
 manifest_format = "2.0"
-project_hash = "71e19308914bd4f3996312f49fff8d8f0463036b"
+project_hash = "95293e7478a04fa519b1a0a4f98ce36352297b9f"
 
 [[deps.AbstractFFTs]]
 deps = ["ChainRulesCore", "LinearAlgebra"]
@@ -2167,7 +2835,7 @@ version = "1.7.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.1"
+version = "1.10.0"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
@@ -2462,25 +3130,41 @@ version = "1.4.1+0"
 """
 
 # ╔═╡ Cell order:
+# ╟─69d7b791-2e69-490c-8d10-10fa433f0a72
 # ╟─ad045108-9dca-4a61-ac88-80a3417c95f2
 # ╟─1e9f4829-1f50-47ae-8745-0daa90e7aa42
+# ╟─9ce352ac-f374-4eb1-9a76-524ffd8a7306
+# ╟─254d027d-ab13-4928-89b5-916dbf5f0044
+# ╟─0edc99ec-c39d-4a9e-af0d-c9778c6b4211
+# ╟─164b1c78-9f7b-4f9d-a6a6-fbe754cdb43e
 # ╟─b048a772-05c3-4cd0-97ae-5cf825127584
-# ╟─41603f71-3724-4fcc-8421-1a64f34ff80f
+# ╟─f16cb891-26d7-41c9-9747-f7d6cd054bc7
 # ╠═8ad65bee-9135-11eb-166a-837031c4bc45
 # ╟─e7a87684-49b0-428c-9fef-248cf868cf33
+# ╟─74f6ac5d-f974-4ea6-801c-b88fe3346e55
 # ╟─c894d994-a7fc-4e07-8941-e9f9aa89fef0
-# ╠═d34b4862-9135-11eb-120f-6f82295f0759
+# ╟─d34b4862-9135-11eb-120f-6f82295f0759
+# ╟─27e1d120-c3e1-4f3d-a263-d63204034814
 # ╟─2da325ba-48cc-44b3-be34-e0cb46e33068
 # ╟─8436d1b3-c03e-42e6-bbff-e785738e0f89
+# ╟─d00038ba-98e9-45db-91df-dc75cb8ec101
+# ╟─ef203912-b238-40a7-9d1b-4ed9b86ccbd2
+# ╟─614c0f82-523a-40a6-9b57-d8b16d2b2860
+# ╟─abd37588-b86f-4e99-8728-5a362ce5f34f
 # ╟─1081bd99-7658-4c32-812c-14235bd82596
+# ╟─c97d5915-7f1f-4fd6-80d3-aecb256ea0de
 # ╟─55084c2d-6f81-4e55-946c-703245a6bb86
-# ╟─ba3e664e-8952-4159-bfb7-b24d9e9fb1d2
-# ╟─8e5fcb62-afeb-410d-8cc2-e0b27e052a25
 # ╟─30b561dd-6e6b-4719-abc0-9938099d5487
 # ╠═d854d0ea-c5dd-4efa-9f46-83807339e163
 # ╟─bceda6d4-b93f-4282-8f03-fc44132ea1bb
 # ╟─cbf534bd-a329-4bc2-9940-f53a22e6d17e
+# ╟─7a4f6354-3d0c-4814-8c4c-2d2200568545
 # ╟─94b4f73a-ee55-405a-be50-bb92048f4eb2
+# ╟─9f9345b8-a29a-41fe-a41b-3dcef2e1a366
+# ╟─ae6ea7e0-f6f3-4d82-a45d-2c5ed299b223
+# ╟─fd726227-f911-4383-90a7-aaab504b68ef
+# ╟─d76afcb0-4b38-463d-add1-a58dd6acbbc0
+# ╟─e7ea2eb7-b394-4ce6-b0a9-31d229e69787
 # ╟─0a344b61-a226-49ee-ba19-f618390db269
 # ╟─4d72f4f3-1dbc-49b9-894f-a521a24e2531
 # ╟─e427ab16-9d5a-4200-8d96-8e49ec0da312
@@ -2494,9 +3178,8 @@ version = "1.4.1+0"
 # ╟─784142ee-1416-4ccb-a341-0497422009b6
 # ╟─a42d6141-e2e3-4725-ab00-4183c16461e3
 # ╟─67a805bd-640d-4d88-8d61-8fef8bb23940
-# ╟─039cf09b-67c1-46d0-aecc-97e5633d5e89
 # ╟─843fec4c-3a4a-4cb2-881c-9a4e3df6a5bb
-# ╠═74bfa860-7932-4fed-ad2d-647233b5c45a
+# ╟─09383e0f-2b37-459e-aeb3-b8eb4f194ddd
 # ╟─0cfb00ed-60fe-4ebb-b5e2-6182ace7a719
 # ╟─bfd46851-772d-43d4-8875-7d5c5dfb1155
 # ╟─19b11522-d11c-4fe1-8f74-5dc975d82bc0
@@ -2504,31 +3187,27 @@ version = "1.4.1+0"
 # ╟─1ae29d9c-d055-46d8-9a46-0d35a48cc58a
 # ╠═8d474b8c-7f6f-4ee4-9282-5e8aa0a2f7b0
 # ╠═f9e82107-07b9-4697-88fe-81b019640e6a
-# ╟─4f7c92e6-ac18-45b9-a5ed-1dd6ca6703e0
 # ╟─be9f84d5-3c65-4ceb-8767-3fdc41429e12
-# ╠═4c2f5685-8cfe-4c18-b189-61552cb154f8
 # ╠═cf3bce53-0260-403c-8910-b04b05b558fe
 # ╟─e3d540a3-7da5-4ef6-aa31-e629e752484e
-# ╟─13625b14-ac53-4995-bbcb-205cdf672c2a
-# ╟─cf5a3df0-5bd2-40a9-8c41-010153a3e418
-# ╟─4b23913f-0cc7-4c16-85a5-bbe37c30f4d8
+# ╟─7fb16fd7-feac-4a75-bcf0-cf91ca7b3599
+# ╟─dd5ee5ee-b2a7-46d4-bc43-0b9778eefcc2
+# ╟─4db12c57-014f-4aa0-a5b1-4f12eb3bf834
+# ╟─b592499b-cf96-486e-9067-9c79b5894641
+# ╟─bfbb3b72-dedc-476d-a028-997e98b61ae4
+# ╟─c3650a10-dff3-4fa2-bb56-3a19e1838766
+# ╟─16053a54-d268-479b-bd2e-0634c4a1bb89
 # ╟─3b115e62-8040-4a2c-8d6e-3d03669e7cd8
 # ╟─3c16772c-394d-4472-8749-f5990bb69013
 # ╟─3644e2e8-9b59-433e-9761-58566f0e1329
 # ╟─b9d687cc-9c13-4285-85ac-90ef955f94f3
+# ╟─0ca459b3-36ad-46f0-b49d-af921c57b9df
 # ╟─02ff212e-937d-4e8e-96d2-5f982618b92d
-# ╟─4ce8772c-4c83-4d98-83e8-f18ebf156447
-# ╟─dd32db21-de4d-483b-89f8-2cd808418186
-# ╟─22f2a1f7-41aa-4cd6-9db9-076a6d5ed628
 # ╟─c8d0298f-2336-41b8-a4f4-a5be5db751f3
 # ╟─4d4b41dc-f02f-4404-96c1-bb78376f010b
 # ╟─018998d3-5c21-468c-b3e8-f413a485eedd
 # ╟─638eef4b-d46c-453b-ac40-179ce70cc330
-# ╟─6233eebb-9318-4794-bbdf-23a0b2ddfbd9
-# ╟─8bd4ea7f-95b3-46fc-9278-1f25487f7560
-# ╟─b2afdafa-7179-44d9-bf0b-1ed53fc0ae63
 # ╟─b0fb2fbb-0175-4cce-b90d-3f9fa9b4541e
-# ╟─a06bb557-d664-4e45-80c8-7e6e6eb6a2f5
 # ╟─0fd76efb-6d98-43f8-b714-8cf54fd62e7d
 # ╟─78d480bf-bc4d-48e3-b3aa-100a38d6b4bc
 # ╠═bc42cf6d-44be-4244-85de-a10d03884dfd
@@ -2536,17 +3215,38 @@ version = "1.4.1+0"
 # ╟─7d30f1de-0225-4a1e-a76e-3c305615cbe2
 # ╟─78d284e8-bd29-4ec3-9470-2141574787eb
 # ╟─9b822e05-ad44-4238-9bfe-4b54d6e42628
-# ╟─597cd6c2-1ea4-4c33-a3a7-f6418a8fb186
 # ╟─08e5381c-4cf1-4c70-ba74-26a05b8046fa
+# ╟─f3e2034d-e259-4d0b-bca4-95fd17f69d56
 # ╟─805cf044-8187-410e-833d-f4323ce07380
+# ╟─7549863d-1e44-422f-9ddd-beec2ddcd48d
+# ╟─47d4a0d9-467b-4717-a621-9d37e3870018
+# ╟─afdac3e8-bc84-48fd-8a04-d838e038c16d
 # ╟─497ff4cd-2705-49b3-bde6-671352e9b5a0
+# ╟─3feca2ed-ff05-4c1a-a614-b1fd23674741
 # ╟─297d7fdb-0117-4bd1-adee-8ad640dbf025
-# ╟─f1936990-709d-45a2-a349-b4f3e1eada69
+# ╟─5bca98c2-c6ef-4e95-a2c6-e99dd88b966b
+# ╟─69dc2182-fb24-4db9-9fe6-dc6d9527facd
+# ╟─703db4e5-e64a-4b09-ba22-c2808719fd58
+# ╟─47f63585-6b16-4545-bdf6-5cd7ed470a82
+# ╟─a1a49662-a13b-430b-b1d5-47f8f3e72f65
+# ╟─8ff69555-f7f8-4401-82c6-e27cdf65dff3
+# ╟─9f7d1862-b413-4292-84da-7c1d76530764
+# ╟─d6f0452c-cefa-49ee-87ec-a92811880ed4
+# ╟─da7c0cb8-1d2a-436a-bbb5-b53522dbd755
+# ╟─04ce6f4c-1581-4ae1-9e9c-8d4dc75b01c7
+# ╟─97a73cbe-6874-4641-9ad8-66df1e8c58c1
+# ╟─a1439122-d0e6-4f02-9039-41edc141f64f
+# ╟─e306b52c-0508-4314-9358-a12aca62ea9e
+# ╟─47e805e5-8558-4522-a10c-c3c9ae52b17e
+# ╟─21b53a25-5fef-4ac5-aab0-59232566c5d2
+# ╟─23f24ea9-b33b-4aac-b17d-1f749360bfe7
+# ╟─5a3b6e5c-5e6f-4fcd-be83-325974e42008
+# ╟─894378b1-811d-43ac-a700-71350e88ee40
 # ╟─2460d407-0fff-44c4-90ec-639f32414f49
 # ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-# ╠═ad3dd437-7cfc-4cdc-a951-15949d39cf15
+# ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
 # ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
 # ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
-# ╟─e93c5882-1ef8-43f6-b1ee-ee23c813c91b
+# ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
