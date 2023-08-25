@@ -1513,97 +1513,12 @@ end
 # ╔═╡ 725356c8-c1c7-4fe9-8b31-a54350eb6192
 an(70)
 
-# ╔═╡ f6184770-7282-4418-8935-31c690bd8472
-begin
-	tth=md"""
-If ``f`` has ``n`` derivatives at ``c``, then the polynomial
-
-```math
-P_n(x) = f(c) + f'(c)(x-c) + \frac{f''(c)}{2!}(x-c)^2+\cdots + \frac{f^{(n)}(c)}{n!}(x-c)^n
-```
-is called the __``n``th Taylor polynomial for ``f`` at ``c``__. 
-
-If ``c=0``, then
-
-```math
-P_n(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2+\cdots + \frac{f^{(n)}(0)}{n!}x^n
-```
-is also called the __``n``th Maclaurin polynomial for ``f``__.
-
-"""
-	
-cm"""
-## Taylor and Maclaurin Polynomials
-
-$(beginBlock("Definitions of th Taylor Polynomial and th Maclaurin Polynomial",""))
-
-$(tth)
-$(endBlock())
-"""
-end
-
-# ╔═╡ ad55800e-0a4c-45d0-b163-9d64d4fc4199
-begin
-s97exsp1=md"""
-Find the Taylor polynomials ``P_0``, ``P_1``, ``P_2``, ``P_3``, and ``P_4`` for
-```math
-f(x)=\ln x
-```
-centered at ``c=1``.
-"""
-cm"""
-$(example("Example 3","A Maclaurin Polynomial for e^x"))
-$(example("Example 4","Finding Taylor Polynomials for ln x"))
-
-$s97exsp1
-	"""
-end
-
-# ╔═╡ 09d8ac0a-31d6-4b7a-8822-11e3ebd18072
-begin
-s97exsp2 = md"""
-Find the Maclaurin polynomials ``P_0``, ``P_2``, ``P_4``, and ``P_6`` for ``f(x)=\cos x``. Use ``P_6(x)`` to approximate the value of ``\cos(0.1)``.
-"""
-cm"""
-$(example("Example 5","Finding Maclaurin Polynomials for cos x"))
-
-$s97exsp2
-
-"""
-end
-
 # ╔═╡ 8afca44c-2856-43bc-b14f-7bdebe6a4760
 P6(x)=1-x^2/2 + x^4/factorial(4) - x^6/factorial(6)
 
 # ╔═╡ 860e68e5-a93c-4a87-8464-630cd002c107
 # @edit cos(0.1)
 P6(0.1),cos(0.1)
-
-# ╔═╡ 644eb07c-0c7b-4758-9178-46e263f17a58
-begin
-s97exsp3 = md"""
-Find the third Taylor polynomial ``P_3`` for ``f(x)=\sin x`` at ``c={\pi\over 6}``. 
-"""
-cm"""
-$(example("Example 6","Finding a Taylor Polynomial for sin x"))
-
-$s97exsp3
-
-"""
-end
-
-# ╔═╡ 6cbe46d7-9b91-4e21-8681-496820ca12c3
-begin
-s97exsp4 = md"""
-Use a fourth Maclaurin polynomial to approximate the value of ``\ln (1.1)``.
-"""
-cm"""
-$(example("Example 7","Approximation Using Maclaurin Polynomials"))
-
-$s97exsp4
-
-"""
-end
 
 # ╔═╡ cb98e7c3-62ff-42cf-808f-809fabe2b72b
 md"""
@@ -1709,27 +1624,6 @@ The radii of convergence of the power series in Equations (i) and (ii) are both 
 
 """
 
-# ╔═╡ d5e7df5e-9122-4f38-bc40-b4c8b0a44175
-begin
-	sec98ex1 = md"""
-	```math
-	f(x)= \sum_{n=1}^{\infty}\frac{x^n}{n}
-	```
-	Find the interval of convergence for each of the following
-
-	- ``\int f(x) dx``
-	- ``f(x)``
-	- ``f'(x)``
-
-	"""
-cm"""
-$(example("Example 8","Intervals of Convergence"))
-
-$sec98ex1
-
-"""
-end
-
 # ╔═╡ ac0bd656-3bd3-47fd-9815-078f073d3280
 md"""
 ## 9.9: Representation of Functions by Power Series
@@ -1766,23 +1660,6 @@ f(x)=\frac{1}{x}
 __SOLUTION IN CLASS__
 
 """
-
-# ╔═╡ 43bc70eb-5e09-46e4-925c-2dd65792f676
-begin
-	sec99th=md"""
-	Let ``f(x) = \displaystyle \sum_{n=0}^{\infty} a_n x^n`` and ``g(x) = \displaystyle \sum_{n=0}^{\infty} b_n x^n``. Then
-	1. ``\displaystyle f(kx)=\sum_{n=0}^{\infty} a_n k^nx^n``
-	1. ``\displaystyle f(x^N)=\sum_{n=0}^{\infty} a_n x^{nN}``
-	1. ``\displaystyle f(x)\pm g(x)=\sum_{n=0}^{\infty} (a_n\pm b_n) x^n ``
-	"""
-	cm"""
-	$(beginBlock("Operations with Power Series",""))
-
-	$sec99th
-
-	$(endBlock())
-	"""
-end
 
 # ╔═╡ 0a42b7f1-5795-4327-9710-b18e077ffb72
 md"""
@@ -2147,6 +2024,129 @@ begin
 	"""
 end
 
+
+# ╔═╡ f6184770-7282-4418-8935-31c690bd8472
+begin
+	tth=md"""
+If ``f`` has ``n`` derivatives at ``c``, then the polynomial
+
+```math
+P_n(x) = f(c) + f'(c)(x-c) + \frac{f''(c)}{2!}(x-c)^2+\cdots + \frac{f^{(n)}(c)}{n!}(x-c)^n
+```
+is called the __``n``th Taylor polynomial for ``f`` at ``c``__. 
+
+If ``c=0``, then
+
+```math
+P_n(x) = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2+\cdots + \frac{f^{(n)}(0)}{n!}x^n
+```
+is also called the __``n``th Maclaurin polynomial for ``f``__.
+
+"""
+	
+cm"""
+## Taylor and Maclaurin Polynomials
+
+$(beginBlock("Definitions of th Taylor Polynomial and th Maclaurin Polynomial",""))
+
+$(tth)
+$(endBlock())
+"""
+end
+
+# ╔═╡ ad55800e-0a4c-45d0-b163-9d64d4fc4199
+begin
+s97exsp1=md"""
+Find the Taylor polynomials ``P_0``, ``P_1``, ``P_2``, ``P_3``, and ``P_4`` for
+```math
+f(x)=\ln x
+```
+centered at ``c=1``.
+"""
+cm"""
+$(example("Example 3","A Maclaurin Polynomial for e^x"))
+$(example("Example 4","Finding Taylor Polynomials for ln x"))
+
+$s97exsp1
+	"""
+end
+
+# ╔═╡ 09d8ac0a-31d6-4b7a-8822-11e3ebd18072
+begin
+s97exsp2 = md"""
+Find the Maclaurin polynomials ``P_0``, ``P_2``, ``P_4``, and ``P_6`` for ``f(x)=\cos x``. Use ``P_6(x)`` to approximate the value of ``\cos(0.1)``.
+"""
+cm"""
+$(example("Example 5","Finding Maclaurin Polynomials for cos x"))
+
+$s97exsp2
+
+"""
+end
+
+# ╔═╡ 644eb07c-0c7b-4758-9178-46e263f17a58
+begin
+s97exsp3 = md"""
+Find the third Taylor polynomial ``P_3`` for ``f(x)=\sin x`` at ``c={\pi\over 6}``. 
+"""
+cm"""
+$(example("Example 6","Finding a Taylor Polynomial for sin x"))
+
+$s97exsp3
+
+"""
+end
+
+# ╔═╡ 6cbe46d7-9b91-4e21-8681-496820ca12c3
+begin
+s97exsp4 = md"""
+Use a fourth Maclaurin polynomial to approximate the value of ``\ln (1.1)``.
+"""
+cm"""
+$(example("Example 7","Approximation Using Maclaurin Polynomials"))
+
+$s97exsp4
+
+"""
+end
+
+# ╔═╡ d5e7df5e-9122-4f38-bc40-b4c8b0a44175
+begin
+	sec98ex1 = md"""
+	```math
+	f(x)= \sum_{n=1}^{\infty}\frac{x^n}{n}
+	```
+	Find the interval of convergence for each of the following
+
+	- ``\int f(x) dx``
+	- ``f(x)``
+	- ``f'(x)``
+
+	"""
+cm"""
+$(example("Example 8","Intervals of Convergence"))
+
+$sec98ex1
+
+"""
+end
+
+# ╔═╡ 43bc70eb-5e09-46e4-925c-2dd65792f676
+begin
+	sec99th=md"""
+	Let ``f(x) = \displaystyle \sum_{n=0}^{\infty} a_n x^n`` and ``g(x) = \displaystyle \sum_{n=0}^{\infty} b_n x^n``. Then
+	1. ``\displaystyle f(kx)=\sum_{n=0}^{\infty} a_n k^nx^n``
+	1. ``\displaystyle f(x^N)=\sum_{n=0}^{\infty} a_n x^{nN}``
+	1. ``\displaystyle f(x)\pm g(x)=\sum_{n=0}^{\infty} (a_n\pm b_n) x^n ``
+	"""
+	cm"""
+	$(beginBlock("Operations with Power Series",""))
+
+	$sec99th
+
+	$(endBlock())
+	"""
+end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -3282,10 +3282,10 @@ version = "0.9.1+5"
 """
 
 # ╔═╡ Cell order:
-# ╟─d49029eb-fe4a-493e-b2df-a29ddb3740bf
-# ╟─738772a6-d798-41d6-aa6d-c599d6d65ef7
-# ╟─6906df3e-afaa-4884-9825-abcf8fef2cbb
-# ╟─6019adf1-f462-4e30-beca-ed460822279e
+# ╠═d49029eb-fe4a-493e-b2df-a29ddb3740bf
+# ╠═738772a6-d798-41d6-aa6d-c599d6d65ef7
+# ╠═6906df3e-afaa-4884-9825-abcf8fef2cbb
+# ╠═6019adf1-f462-4e30-beca-ed460822279e
 # ╟─85a3375a-d660-4af3-a1e0-c7d2d6fbc22a
 # ╟─b59b486a-f4ba-447a-9e29-5806254832f2
 # ╟─608e786a-322f-4fab-9536-c06fa33b5ba6
@@ -3392,7 +3392,7 @@ version = "0.9.1+5"
 # ╟─8f838fb6-17b6-4c11-b9f7-8d2e2af930b3
 # ╟─eacbb51c-7a2c-44a4-aec0-a08bc168a635
 # ╟─eaa0cda6-641d-4830-8dd5-e3d844131a57
-# ╟─7a09f760-0ee8-403c-80cf-7715193d62b3
-# ╟─5bf32a96-dad7-11eb-3d06-adc496c7e800
+# ╠═7a09f760-0ee8-403c-80cf-7715193d62b3
+# ╠═5bf32a96-dad7-11eb-3d06-adc496c7e800
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002

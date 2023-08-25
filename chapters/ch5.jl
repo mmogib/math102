@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.19
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -16,31 +16,31 @@ end
 
 # ╔═╡ e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 begin
-	# import Pkg
-	# Pkg.activate(mktempdir())
-	# Pkg.add([
-	# 	Pkg.PackageSpec(name="ImageIO", version="0.5"),
-	# 	Pkg.PackageSpec(name="ImageShow", version="0.3"),
-	# 	Pkg.PackageSpec(name="FileIO", version="1.9"),
-	# 	Pkg.PackageSpec(name="CommonMark", version="0.8"),
-	# 	Pkg.PackageSpec(name="Plots", version="1.16"),
-	# 	Pkg.PackageSpec(name="PlotThemes", version="2.0"),
-	# 	Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
-	# 	Pkg.PackageSpec(name="PlutoUI", version="0.7"),
-	# 	Pkg.PackageSpec(name="Pluto", version="0.14"),
-	# 	Pkg.PackageSpec(name="SymPy", version="1.0"),
-	#   	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
-	# 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
-	# ])
+    # import Pkg
+    # Pkg.activate(mktempdir())
+    # Pkg.add([
+    # 	Pkg.PackageSpec(name="ImageIO", version="0.5"),
+    # 	Pkg.PackageSpec(name="ImageShow", version="0.3"),
+    # 	Pkg.PackageSpec(name="FileIO", version="1.9"),
+    # 	Pkg.PackageSpec(name="CommonMark", version="0.8"),
+    # 	Pkg.PackageSpec(name="Plots", version="1.16"),
+    # 	Pkg.PackageSpec(name="PlotThemes", version="2.0"),
+    # 	Pkg.PackageSpec(name="LaTeXStrings", version="1.2"),
+    # 	Pkg.PackageSpec(name="PlutoUI", version="0.7"),
+    # 	Pkg.PackageSpec(name="Pluto", version="0.14"),
+    # 	Pkg.PackageSpec(name="SymPy", version="1.0"),
+    #   	Pkg.PackageSpec(name="HypertextLiteral", version="0.7"),
+    # 	Pkg.PackageSpec(name="ImageTransformations", version="0.8")
+    # ])
 
-	using CommonMark, ImageIO, FileIO, ImageShow
-	using PlutoUI
-	using Plots, PlotThemes, LaTeXStrings, Random
-	using SymPy
-	using HypertextLiteral
-	using ImageTransformations
-	using Dates
-	using PrettyTables
+    using CommonMark, ImageIO, FileIO, ImageShow
+    using PlutoUI
+    using Plots, PlotThemes, LaTeXStrings, Random
+    using SymPy
+    using HypertextLiteral
+    using ImageTransformations
+    using Dates
+    using PrettyTables
 end
 
 # ╔═╡ 69d7b791-2e69-490c-8d10-10fa433f0a72
@@ -125,44 +125,44 @@ where ``i`` is the __index of summation__, ``a_i`` is the th __``i``th term__ of
 """
 
 # ╔═╡ 0edc99ec-c39d-4a9e-af0d-c9778c6b4211
-begin 
-	hline = html"<hr>"
-md"""
-####  Summation Properties
+begin
+    hline = html"<hr>"
+    md"""
+    ####  Summation Properties
 
-```math
+    ```math
 
-\begin{array}{lcl}
- \displaystyle\sum_{i=1}^n c a_i &=& c\sum_{i=1}^n  a_i \\
-\\
- \displaystyle\sum_{i=1}^n (a_i+b_i) &=& \sum_{i=1}^n  a_i+\sum_{i=1}^n  b_i \\
-\\
-\displaystyle\sum_{i=1}^n (a_i-b_i) &=& \sum_{i=1}^n  a_i-\sum_{i=1}^n  b_i \\
-\\
-\end{array} 
-```
+    \begin{array}{lcl}
+     \displaystyle\sum_{i=1}^n c a_i &=& c\sum_{i=1}^n  a_i \\
+    \\
+     \displaystyle\sum_{i=1}^n (a_i+b_i) &=& \sum_{i=1}^n  a_i+\sum_{i=1}^n  b_i \\
+    \\
+    \displaystyle\sum_{i=1}^n (a_i-b_i) &=& \sum_{i=1}^n  a_i-\sum_{i=1}^n  b_i \\
+    \\
+    \end{array} 
+    ```
 
-#### Summation Formulas
+    #### Summation Formulas
 
-```math
-\displaystyle
-\begin{array}{ll}
-(1) & \displaystyle\sum_{i=1}^n c = cn, \quad c \text{ is a constant} \\
-\\
-(2) & \displaystyle\sum_{i=1}^n i = \frac{n(n+1)}{2} \\
-\\
-(3) &\displaystyle \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
-\\
-(4) & \displaystyle\sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
-\\
-\end{array} 
-```
+    ```math
+    \displaystyle
+    \begin{array}{ll}
+    (1) & \displaystyle\sum_{i=1}^n c = cn, \quad c \text{ is a constant} \\
+    \\
+    (2) & \displaystyle\sum_{i=1}^n i = \frac{n(n+1)}{2} \\
+    \\
+    (3) &\displaystyle \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
+    \\
+    (4) & \displaystyle\sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
+    \\
+    \end{array} 
+    ```
 
 
 
-$hline
+    $hline
 
-"""
+    """
 end
 
 # ╔═╡ 164b1c78-9f7b-4f9d-a6a6-fbe754cdb43e
@@ -203,70 +203,70 @@ and the $x$-axis between $x=0$ and $x=2$.
 """
 
 # ╔═╡ 8ad65bee-9135-11eb-166a-837031c4bc45
-f(x)=5-x^2
+f(x) = 5 - x^2
 
 # ╔═╡ e7a87684-49b0-428c-9fef-248cf868cf33
-begin 
-	ns = @bind n  Slider(2:4000,show_value=true, default=4)
-	as = @bind a  NumberField(0:1)
-	bs = @bind b  NumberField(a+2:10)
-	lrs = @bind lr Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint","rnd"=>"Random"])
-	
-	md"""
-	n = $ns  a = $as  b = $bs method = $lrs
-	
-	"""
+begin
+    ns = @bind n Slider(2:4000, show_value=true, default=4)
+    as = @bind a NumberField(0:1)
+    bs = @bind b NumberField(a+2:10)
+    lrs = @bind lr Select(["l" => "Left", "r" => "Right", "m" => "Midpoint", "rnd" => "Random"])
+
+    md"""
+    n = $ns  a = $as  b = $bs method = $lrs
+
+    """
 end
 
 # ╔═╡ 74f6ac5d-f974-4ea6-801c-b88fe3346e55
 @bind showPlot Radio(["show" => "✅", "hide" => "❌"], default="hide")
 
 # ╔═╡ c894d994-a7fc-4e07-8941-e9f9aa89fef0
-begin 
-	if showPlot=="show"
-	Δx =(b-a)/n
-	xx1 =a:0.1:b
-	
-	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
-	
-	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
-	# pp1=plot(xx1,f.(xx1);legend=nothing)
-	pp1 = plot(xx1, f.(xx1), fillrange = zero, fillalpha = 0.35, c = :blue, framestyle=:origin, label=nothing)
-	anck1 = (b-a)/2
-	anck2 = f(anck1)/2
-	annotate!(pp1,[(anck1,anck2,L"$S$",12)])
-	annotate!(pp1,[(anck1,f(anck1),L"$y=%$f(x)$",12)])
-	end
+begin
+    if showPlot == "show"
+        Δx = (b - a) / n
+        xx1 = a:0.1:b
+
+        # plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
+
+        # recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
+        # pp1=plot(xx1,f.(xx1);legend=nothing)
+        pp1 = plot(xx1, f.(xx1), fillrange=zero, fillalpha=0.35, c=:blue, framestyle=:origin, label=nothing)
+        anck1 = (b - a) / 2
+        anck2 = f(anck1) / 2
+        annotate!(pp1, [(anck1, anck2, L"$S$", 12)])
+        annotate!(pp1, [(anck1, f(anck1), L"$y=%$f(x)$", 12)])
+    end
 end
 
 # ╔═╡ 2da325ba-48cc-44b3-be34-e0cb46e33068
 @bind showConnc Radio(["show" => "✅", "hide" => "❌"], default="hide")
 
 # ╔═╡ 8436d1b3-c03e-42e6-bbff-e785738e0f89
-(showConnc=="show") ? md"""
-$$A=\lim_{n\to \infty} R_n =\lim_{n\to \infty} L_n =\frac{22}{3}$$
-""" : ""
+(showConnc == "show") ? md"""
+  $$A=\lim_{n\to \infty} R_n =\lim_{n\to \infty} L_n =\frac{22}{3}$$
+  """ : ""
 
 # ╔═╡ d00038ba-98e9-45db-91df-dc75cb8ec101
 begin
-	findingAreaP = plot(0.2:0.1:4, x->0.6x^3-(10/3)*x^2+(13/3)*x+1.4, fillrange = zero, fillalpha = 0.35, c = :red, framestyle=:origin, label=nothing,ticks=nothing)
-	plot!(findingAreaP,-0.1:0.1:4.1, x->0.6x^3-(10/3)*x^2+(13/3)*x+1.4,c=:green,label=nothing)
-	annotate!(findingAreaP, [
-			(0.1,4,text(L"y",14)),
-			(4.1,0.1,text(L"x",14)),
-			(0.2,-0.1,text(L"a",14)),
-			(4,-0.1,text(L"b",14)),
-			(3.9,4,text(L"f",14))
-	])
-cm"""
-### Finding Area by the Limit Definition
+    findingAreaP = plot(0.2:0.1:4, x -> 0.6x^3 - (10 / 3) * x^2 + (13 / 3) * x + 1.4, fillrange=zero, fillalpha=0.35, c=:red, framestyle=:origin, label=nothing, ticks=nothing)
+    plot!(findingAreaP, -0.1:0.1:4.1, x -> 0.6x^3 - (10 / 3) * x^2 + (13 / 3) * x + 1.4, c=:green, label=nothing)
+    annotate!(findingAreaP, [
+        (0.1, 4, text(L"y", 14)),
+        (4.1, 0.1, text(L"x", 14)),
+        (0.2, -0.1, text(L"a", 14)),
+        (4, -0.1, text(L"b", 14)),
+        (3.9, 4, text(L"f", 14))
+    ])
+    cm"""
+    ### Finding Area by the Limit Definition
 
-__Find the area of the region is bounded below by the ``x``-axis, and the left and right boundaries of the region are the vertical lines ``x=a`` and ``x=b``.__
+    __Find the area of the region is bounded below by the ``x``-axis, and the left and right boundaries of the region are the vertical lines ``x=a`` and ``x=b``.__
 
-$findingAreaP
+    $findingAreaP
 
-$(Resource("https://www.dropbox.com/s/hnspiptmyybneqn/area_with_lower_and_upper.jpg?raw=1",:width=>400))
-"""
+    $(Resource("https://www.dropbox.com/s/hnspiptmyybneqn/area_with_lower_and_upper.jpg?raw=1",:width=>400))
+    """
 end
 
 # ╔═╡ ef203912-b238-40a7-9d1b-4ed9b86ccbd2
@@ -317,12 +317,12 @@ $(Resource("https://www.dropbox.com/s/a3sjz8m9vspp5ec/area_def.jpg?raw=1"))
 
 # ╔═╡ 1081bd99-7658-4c32-812c-14235bd82596
 begin
-	cm"""
-	__Example__
-	
-	Find the area of the region bounded by the graph of ``f(x)=x^3`` , the ``x``-axis, and the vertical lines ``x=0`` and ``x=1``.
+    cm"""
+    __Example__
 
-	"""
+    Find the area of the region bounded by the graph of ``f(x)=x^3`` , the ``x``-axis, and the vertical lines ``x=0`` and ``x=1``.
+
+    """
 end
 
 # ╔═╡ c97d5915-7f1f-4fd6-80d3-aecb256ea0de
@@ -358,19 +358,19 @@ md""" ## Section 5.3
 """
 
 # ╔═╡ d854d0ea-c5dd-4efa-9f46-83807339e163
-g(x)=√x
+g(x) = √x
 
 # ╔═╡ bceda6d4-b93f-4282-8f03-fc44132ea1bb
-begin 
-	ns2 = @bind n2  Slider(2:2000,show_value=true, default=4)
-	as2 = @bind a2  NumberField(-10:10, default=0)
-	bs2 = @bind b2  NumberField(a+1:10)
-	lrs2 = @bind lr2 Select(["l"=>"Left","r"=>"Right","m"=>"Midpoint", "rnd"=>"Random"])
-	md"""
-	n = $ns2  a = $as2  b = $bs2 method = $lrs2
-	
-	
-	"""
+begin
+    ns2 = @bind n2 Slider(2:2000, show_value=true, default=4)
+    as2 = @bind a2 NumberField(-10:10, default=0)
+    bs2 = @bind b2 NumberField(a+1:10)
+    lrs2 = @bind lr2 Select(["l" => "Left", "r" => "Right", "m" => "Midpoint", "rnd" => "Random"])
+    md"""
+    n = $ns2  a = $as2  b = $bs2 method = $lrs2
+
+
+    """
 end
 
 # ╔═╡ 7a4f6354-3d0c-4814-8c4c-2d2200568545
@@ -492,19 +492,19 @@ md"""
 
 # ╔═╡ e427ab16-9d5a-4200-8d96-8e49ec0da312
 begin
-	f2(x) = sin(x)+2 
-	theme(:wong)
-	x = 1:0.1:5
-	y = f2.(x)
-	p3=plot(x,y, label=nothing)
-	plot!(p3,x,y/2,ribbon=y/2, linestyle=:dot,linealpha=0.1, framestyle=:origin, xticks=(1:5,[:a,"","","",:b]), label=nothing, ylims=(-1,4))
-	annotate!(p3,[(3.5,2.5,L"y=f(x)"),(5.2,0,L"x"),(0.2,4,L"y")])
-	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
-	
-	md""" * If ``f(x)\ge 0``, the integral ``\int_a^b f(x) dx`` is the area under the curve ``y=f(x)`` from ``a`` to ``b``.	
-	
-	$p3
-	"""
+    f2(x) = sin(x) + 2
+    theme(:wong)
+    x = 1:0.1:5
+    y = f2.(x)
+    p3 = plot(x, y, label=nothing)
+    plot!(p3, x, y / 2, ribbon=y / 2, linestyle=:dot, linealpha=0.1, framestyle=:origin, xticks=(1:5, [:a, "", "", "", :b]), label=nothing, ylims=(-1, 4))
+    annotate!(p3, [(3.5, 2.5, L"y=f(x)"), (5.2, 0, L"x"), (0.2, 4, L"y")])
+    # annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
+
+    md""" * If ``f(x)\ge 0``, the integral ``\int_a^b f(x) dx`` is the area under the curve ``y=f(x)`` from ``a`` to ``b``.	
+
+    $p3
+    """
 
 end
 
@@ -515,45 +515,45 @@ $(load(download("https://www.dropbox.com/s/ol9l38j2a53usei/note3.png?raw=1")))
 """
 
 # ╔═╡ 2bef2339-7afe-427d-bdc5-19b9e9b43878
-begin 
-	s52q1Check = @bind s52q1chk Radio(["show"=>"show","hide"=>"hide"],default="hide")
-	q1Img = download("https://www.dropbox.com/s/7esby3czioyzk26/q1.png?dl=0")
-md""" 
-**Question 1:** 
+begin
+    s52q1Check = @bind s52q1chk Radio(["show" => "show", "hide" => "hide"], default="hide")
+    q1Img = download("https://www.dropbox.com/s/7esby3czioyzk26/q1.png?dl=0")
+    md""" 
+    **Question 1:** 
 
-$(load(q1Img))
+    $(load(q1Img))
 
-where each of the regions ``A, B`` and ``C`` has area equal to 5, then the area between the graph and the x-axis from ``x=-4`` to ``x=2`` is
+    where each of the regions ``A, B`` and ``C`` has area equal to 5, then the area between the graph and the x-axis from ``x=-4`` to ``x=2`` is
 
-$(s52q1Check)
-	
-"""
+    $(s52q1Check)
+    	
+    """
 
 end
 
 # ╔═╡ 0f3814d4-6ee7-4242-88ea-5ecc7bf752bf
-md" the nswer is = **$((s52q1chk ==\"show\") ?  15 : \"\")**" 
+md" the nswer is = **$((s52q1chk ==\"show\") ?  15 : \"\")**"
 
 # ╔═╡ 05eb2a4e-2552-4bed-9523-d4f4c8760c94
-begin 
-	s52q1Check1 = @bind s52q1chk1 Radio(["show"=>"show","hide"=>"hide"],default="hide")
-	
-md""" 
-**Question 2:** 
+begin
+    s52q1Check1 = @bind s52q1chk1 Radio(["show" => "show", "hide" => "hide"], default="hide")
 
-$(load(q1Img))
+    md""" 
+    **Question 2:** 
 
-where each of the regions ``A, B`` and ``C`` has area equal to 5, then 
-	``\int_{-4}^2 f(x) dx = `` 
+    $(load(q1Img))
 
-$(s52q1Check1)
-	
-"""
+    where each of the regions ``A, B`` and ``C`` has area equal to 5, then 
+    	``\int_{-4}^2 f(x) dx = `` 
+
+    $(s52q1Check1)
+    	
+    """
 
 end
 
 # ╔═╡ 311050cc-9f52-43e0-afca-66d225c837d2
-md" the nswer is = **$((s52q1chk1 ==\"show\") ?  -5 : \"\")**" 
+md" the nswer is = **$((s52q1chk1 ==\"show\") ?  -5 : \"\")**"
 
 # ╔═╡ f5f43417-abcd-4b20-a9ff-be06157b4a02
 html"<hr>"
@@ -634,25 +634,25 @@ md"""
 """
 
 # ╔═╡ 0cfb00ed-60fe-4ebb-b5e2-6182ace7a719
-begin 
-	xx = symbols("xx",real=true) 
-	sol = integrate(exp(xx),(xx,1,3))
-md"""
-#### 2. Using a Computer Algebra System
+begin
+    xx = symbols("xx", real=true)
+    sol = integrate(exp(xx), (xx, 1, 3))
+    md"""
+    #### 2. Using a Computer Algebra System
 
-**Example:**
+    **Example:**
 
-1. Set up an expression for $\int_1^3 e^x dx$ as a limit of sums. 
-2. Use a computer algebra system to evaluate the expression
-	
-**Solution:**
-1. In class
-"""
+    1. Set up an expression for $\int_1^3 e^x dx$ as a limit of sums. 
+    2. Use a computer algebra system to evaluate the expression
+    	
+    **Solution:**
+    1. In class
+    """
 
 end
 
 # ╔═╡ bfd46851-772d-43d4-8875-7d5c5dfb1155
-integrate(exp(xx),(xx,1,3))
+integrate(exp(xx), (xx, 1, 3))
 
 # ╔═╡ 19b11522-d11c-4fe1-8f74-5dc975d82bc0
 md"""
@@ -670,11 +670,11 @@ Evaluate the following integrals by interpreting each in terms of areas
 
 # ╔═╡ 44c9faca-efb6-493c-b751-9fd69e89ecb4
 begin
-	f1(x)=sqrt(9-x^2)
-	f3(x)=abs(x)
-	theme(:wong)
- 	pp =plot(f1,xlims=[-4,4],ylims=[-4,4], framestyle=:origin, xtick=-4:1:4,yticks=-4:1:4)
-	md"$pp"
+    f1(x) = sqrt(9 - x^2)
+    f3(x) = abs(x)
+    theme(:wong)
+    pp = plot(f1, xlims=[-4, 4], ylims=[-4, 4], framestyle=:origin, xtick=-4:1:4, yticks=-4:1:4)
+    md"$pp"
 end
 
 
@@ -701,10 +701,10 @@ with $n=5$.
 """
 
 # ╔═╡ 8d474b8c-7f6f-4ee4-9282-5e8aa0a2f7b0
-m5 = [0.2*(1/x) for x in 1.1:0.2:1.9] |> sum
+m5 = [0.2 * (1 / x) for x in 1.1:0.2:1.9] |> sum
 
 # ╔═╡ f9e82107-07b9-4697-88fe-81b019640e6a
-integrate(1/xx,(xx,1,2)).n()
+integrate(1 / xx, (xx, 1, 2)).n()
 
 # ╔═╡ be9f84d5-3c65-4ceb-8767-3fdc41429e12
 md""" **Example**
@@ -718,7 +718,7 @@ Estimate
 
 # ╔═╡ cf3bce53-0260-403c-8910-b04b05b558fe
 begin
-	exact = integrate(exp(-xx^2),(xx,0,1)).n()
+    exact = integrate(exp(-xx^2), (xx, 0, 1)).n()
 end
 
 # ╔═╡ e3d540a3-7da5-4ef6-aa31-e629e752484e
@@ -800,47 +800,47 @@ $("  ")
 
 # ╔═╡ b592499b-cf96-486e-9067-9c79b5894641
 begin
-	theme(:wong)
-	s54e3_f(x) = 1/x
-	s54e3_x = 1:0.1:exp(1)
-	s54e3_p=plot(s54e3_x,s54e3_f.(s54e3_x), label=nothing,c=:green)
-	plot!(s54e3_p,s54e3_x,s54e3_f.(s54e3_x)/2,ribbon=s54e3_f.(s54e3_x)/2, linestyle=:dot,linealpha=0.1, framestyle=:origin, xticks=(1:4,[:1,:2,:3]), label=nothing, ylims=(-0.1,1.5),xlims=(-0.1,3))
-	annotate!(s54e3_p,[(2,1,L"y=\frac{1}{x}"),(exp(1),-0.1,L"e")])
-	cm"""
-		
-	__Example__
-	
-	Find the area of the region bounded by the graph of
-	```math
-	y=\frac{1}{x}
-	```
-	the ``x``-axis, and the vertical lines ``x=1`` and ``x=e``.
-	
+    theme(:wong)
+    s54e3_f(x) = 1 / x
+    s54e3_x = 1:0.1:exp(1)
+    s54e3_p = plot(s54e3_x, s54e3_f.(s54e3_x), label=nothing, c=:green)
+    plot!(s54e3_p, s54e3_x, s54e3_f.(s54e3_x) / 2, ribbon=s54e3_f.(s54e3_x) / 2, linestyle=:dot, linealpha=0.1, framestyle=:origin, xticks=(1:4, [:1, :2, :3]), label=nothing, ylims=(-0.1, 1.5), xlims=(-0.1, 3))
+    annotate!(s54e3_p, [(2, 1, L"y=\frac{1}{x}"), (exp(1), -0.1, L"e")])
+    cm"""
+    	
+    __Example__
 
-	$s54e3_p
-	
-	"""
+    Find the area of the region bounded by the graph of
+    ```math
+    y=\frac{1}{x}
+    ```
+    the ``x``-axis, and the vertical lines ``x=1`` and ``x=e``.
+
+
+    $s54e3_p
+
+    """
 end
 
 # ╔═╡ bfbb3b72-dedc-476d-a028-997e98b61ae4
 begin
-	cm"""
-	### The Mean Value Theorem for Integrals
-	
-	__Theorem__ *Mean Value Theorem for Integrals*
-	
-	If ``f`` is continuous on the closed interval ``[a,b]``, then there exists a number ``c`` in the closed interval ``[a,b]`` such that
-	```math
-	\int_a^b f(x) dx =f(c)(b-a).
-	```
-	
-	<div class="img-container">
+    cm"""
+    ### The Mean Value Theorem for Integrals
 
-	$(Resource("https://www.dropbox.com/s/7fnr2kfq082kq0y/mvt.jpg?raw=1",
-	:style=>"display:flex;align-items:center;flex-direction: column;"))
-	</div>
-	
-	"""
+    __Theorem__ *Mean Value Theorem for Integrals*
+
+    If ``f`` is continuous on the closed interval ``[a,b]``, then there exists a number ``c`` in the closed interval ``[a,b]`` such that
+    ```math
+    \int_a^b f(x) dx =f(c)(b-a).
+    ```
+
+    <div class="img-container">
+
+    $(Resource("https://www.dropbox.com/s/7fnr2kfq082kq0y/mvt.jpg?raw=1",
+    :style=>"display:flex;align-items:center;flex-direction: column;"))
+    </div>
+
+    """
 end
 
 # ╔═╡ c3650a10-dff3-4fa2-bb56-3a19e1838766
@@ -887,44 +887,44 @@ where ``f`` is a continuous function on the interval ``[a,b]`` and ``x \in [a,b]
 
 # ╔═╡ 3c16772c-394d-4472-8749-f5990bb69013
 begin
-	Slider4 = @bind slider4 Slider(1:0.1:5, show_value=false)
-	md"x = $Slider4"
+    Slider4 = @bind slider4 Slider(1:0.1:5, show_value=false)
+    md"x = $Slider4"
 end
 
 # ╔═╡ 3644e2e8-9b59-433e-9761-58566f0e1329
 begin
-	f4(x) = sin(x)+2 
-	theme(:wong)
-	x4 = 1:0.1:5
-	y4 = f4.(x4)
-	xVar =1:0.1:slider4
-	yVar =f4.(xVar)/2
-	p4=plot(x4,y4, label=nothing, grid=false)
-	
-	plot!(p4,xVar,yVar,ribbon=yVar, linestyle=:dot,linealpha=0.1, framestyle=:origin, xticks=(1:5,[:a,"","","",:b]), label=nothing, ylims=(-1,4))
-	plot!(p4,xticks=(x4,[:a,["" for i in 2:length(xVar)-1]...,:x,["" for i in length(xVar):length(x4)-2]...,:b]))
-	annotate!(p4,[(3.5,2.5,L"y=f(t)"),(5.2,0,L"t"),(0.2,4,L"y")])
-	slider4>1 && annotate!(p4,[(slider4*0.7,1,(L"$F(x)=\int_a^x f(t) dt$",12))])
-	
-	md"""
-	
-	$p4
-	"""
+    f4(x) = sin(x) + 2
+    theme(:wong)
+    x4 = 1:0.1:5
+    y4 = f4.(x4)
+    xVar = 1:0.1:slider4
+    yVar = f4.(xVar) / 2
+    p4 = plot(x4, y4, label=nothing, grid=false)
+
+    plot!(p4, xVar, yVar, ribbon=yVar, linestyle=:dot, linealpha=0.1, framestyle=:origin, xticks=(1:5, [:a, "", "", "", :b]), label=nothing, ylims=(-1, 4))
+    plot!(p4, xticks=(x4, [:a, ["" for i in 2:length(xVar)-1]..., :x, ["" for i in length(xVar):length(x4)-2]..., :b]))
+    annotate!(p4, [(3.5, 2.5, L"y=f(t)"), (5.2, 0, L"t"), (0.2, 4, L"y")])
+    slider4 > 1 && annotate!(p4, [(slider4 * 0.7, 1, (L"$F(x)=\int_a^x f(t) dt$", 12))])
+
+    md"""
+
+    $p4
+    """
 
 end
 
 # ╔═╡ b9d687cc-9c13-4285-85ac-90ef955f94f3
-begin 
-	img = load("./imgs/5.3/ex1.png") |> im -> imresize(im, ratio=0.7)
-md"""
-**Example** 
-If ``g(x) = \int_0^x f(t) dt``
+begin
+    img = load("./imgs/5.3/ex1.png") |> im -> imresize(im, ratio=0.7)
+    md"""
+    **Example** 
+    If ``g(x) = \int_0^x f(t) dt``
 
-$img
+    $img
 
-Find ``g(2)`` 
+    Find ``g(2)`` 
 
-"""
+    """
 end
 
 # ╔═╡ 0ca459b3-36ad-46f0-b49d-af921c57b9df
@@ -942,23 +942,23 @@ If ``f`` is continuous on an open interval ``I`` containing ``a``, then, for eve
 
 # ╔═╡ 02ff212e-937d-4e8e-96d2-5f982618b92d
 begin
-md"""
+    md"""
 
-##### Remarks
-* ``{\large \frac{d}{dx}\left( \int_a^x f(u) du\right) = f(x)}``
-* ``g(x)`` is an **antiderivative** of ``f``
+    ##### Remarks
+    * ``{\large \frac{d}{dx}\left( \int_a^x f(u) du\right) = f(x)}``
+    * ``g(x)`` is an **antiderivative** of ``f``
 
-##### Examples
-Find the derivative of 	
-	
-(1) ``g_1(x) = \int_0^x \sqrt{1+t} dt``.
+    ##### Examples
+    Find the derivative of 	
+    	
+    (1) ``g_1(x) = \int_0^x \sqrt{1+t} dt``.
 
-(2) ``g_2(x) = \int_x^0 \sqrt{1+t} dt``.
-	
-(3) ``g_3(x) = \int_0^{x^2} \sqrt{1+t} dt``.
-	
-(4) ``g_4(x) = \int_{\sin(x)}^{\cos(x)} \sqrt{1+t} dt``.
-"""
+    (2) ``g_2(x) = \int_x^0 \sqrt{1+t} dt``.
+    	
+    (3) ``g_3(x) = \int_0^{x^2} \sqrt{1+t} dt``.
+    	
+    (4) ``g_4(x) = \int_{\sin(x)}^{\cos(x)} \sqrt{1+t} dt``.
+    """
 end
 
 # ╔═╡ c8d0298f-2336-41b8-a4f4-a5be5db751f3
@@ -979,44 +979,45 @@ Solution: In class
 """
 
 # ╔═╡ 018998d3-5c21-468c-b3e8-f413a485eedd
-begin 
-	pltExmpl = plot(x->2*x-x^2, framestyle=:origin, xlims=(0,2), ylims=(-1,2),fill=(0,0.5,:green), label=nothing)
-	plot!(pltExmpl,x->2*x-x^2, framestyle=:origin, xlims=(-1,3), ylims=(-1,2),label=nothing)
+begin
+    pltExmpl = plot(x -> 2 * x - x^2, framestyle=:origin, xlims=(0, 2), ylims=(-1, 2), fill=(0, 0.5, :green), label=nothing)
+    plot!(pltExmpl, x -> 2 * x - x^2, framestyle=:origin, xlims=(-1, 3), ylims=(-1, 2), label=nothing)
 end
 
 # ╔═╡ 638eef4b-d46c-453b-ac40-179ce70cc330
-ff(x)=2*x-x^2;md""" A=$(integrate(ff(xx),(xx,0,2)))"""
+ff(x) = 2 * x - x^2;
+md""" A=$(integrate(ff(xx),(xx,0,2)))""";
 
 # ╔═╡ b0fb2fbb-0175-4cce-b90d-3f9fa9b4541e
 begin
 
-md"""
-### Table of Indefinite Integrals
+    md"""
+    ### Table of Indefinite Integrals
 
-|  | |  |
-|--------------|--------------|------- |
-| $$\int c f(x) dx =c\int  f(x) dx$$ |    | $\int [f(x)+g(x)] dx =\int  f(x) dx+\int g(x) dx$|
-| | | |
-|$$\int k dx = kx + C$$ | | $$\int x^n dx = \frac{x^{n+1}}{n+1} + C, n\not=-1$$ 
-| | | |
-|$$\int \frac{1}{x} dx = \ln \|x\| + C$$  || $$\int e^x dx = e^x + C$$ 
-| | | |
-|$$\int a^x dx = \frac{a^x}{\ln a}+ C$$  || $$\int \sin x dx = -\cos x + C$$ 
-| | | |
-|$$\int \cos x dx = \sin x + C$$ || $$\int \sec^2 x dx = \tan x + C$$
-| | | |
-|$$\int \csc^2 x dx = -\cot x + C$$ || $$\int \sec x\tan x dx = \sec x + C$$
-| | | |
-|$$\int \frac{1}{x^2+1} dx = \tan^{-1} x + C$$ || $$\int \frac{1}{\sqrt{1-x^2}} dx = \sin^{-1} x + C$$
-| | | |
-|$$\int \sinh x dx = \cosh x + C$$ || $$\int \cosh x dx = \sinh x + C$$
-| | | |
-|$$\int \csc x\cot x dx = -\csc x + C$$ ||
-| | | |
-	
+    |  | |  |
+    |--------------|--------------|------- |
+    | $$\int c f(x) dx =c\int  f(x) dx$$ |    | $\int [f(x)+g(x)] dx =\int  f(x) dx+\int g(x) dx$|
+    | | | |
+    |$$\int k dx = kx + C$$ | | $$\int x^n dx = \frac{x^{n+1}}{n+1} + C, n\not=-1$$ 
+    | | | |
+    |$$\int \frac{1}{x} dx = \ln \|x\| + C$$  || $$\int e^x dx = e^x + C$$ 
+    | | | |
+    |$$\int a^x dx = \frac{a^x}{\ln a}+ C$$  || $$\int \sin x dx = -\cos x + C$$ 
+    | | | |
+    |$$\int \cos x dx = \sin x + C$$ || $$\int \sec^2 x dx = \tan x + C$$
+    | | | |
+    |$$\int \csc^2 x dx = -\cot x + C$$ || $$\int \sec x\tan x dx = \sec x + C$$
+    | | | |
+    |$$\int \frac{1}{x^2+1} dx = \tan^{-1} x + C$$ || $$\int \frac{1}{\sqrt{1-x^2}} dx = \sin^{-1} x + C$$
+    | | | |
+    |$$\int \sinh x dx = \cosh x + C$$ || $$\int \cosh x dx = \sinh x + C$$
+    | | | |
+    |$$\int \csc x\cot x dx = -\csc x + C$$ ||
+    | | | |
+    	
 
 
-"""
+    """
 end
 
 # ╔═╡ 0fd76efb-6d98-43f8-b714-8cf54fd62e7d
@@ -1071,69 +1072,69 @@ v(t)=t^3-10t^2+29t-20,
 """
 
 # ╔═╡ bc42cf6d-44be-4244-85de-a10d03884dfd
-v(t) = t^3-10*t^2+29*t-20
+v(t) = t^3 - 10 * t^2 + 29 * t - 20
 
 # ╔═╡ 78d284e8-bd29-4ec3-9470-2141574787eb
 begin
 
-	u = symbols("u",real=true)
-	v1(t) = v(t)
-	s1(t) = convert(Float64,integrate(v1(u),(u,0,t)).n())
+    u = symbols("u", real=true)
+    v1(t) = v(t)
+    s1(t) = convert(Float64, integrate(v1(u), (u, 0, t)).n())
 
-	theme(:default)
-	a1,b1 = 1, 5
-	t1 = a1:0.1:b1
-	timeLength = length(t1)
-	xxx = s1.(t1)
-	vvv = v1.(t1)
-	myXlims = s1(a1) .+ (0,20)
-	myYlims = vvv |> ff -> (min(ff...)-1,max(ff...)+1)
-	anim =  @animate for i ∈ 1:timeLength
-		pp=plot(;layout = (2,1))
-		scatter!(pp,(xxx[i],0),
-			markersize=5,
-			grids=:none,
-			framestyle=:origin, 
-			showaxis=:x, 
-			yticks=nothing, 
-			ylims=(-0.4,0.4),
-			xlims=myXlims, 
-			label=nothing,
-			xticks=nothing,
-			# xticks=(myXlims[1]:50:myXlims[2],[]),
-			tickfontsize=8,
-			subplot=1
-		)
-		plot!(pp,
-			t1[1:i],
-			vvv[1:i],
-			xlims=(0,myXlims[2]),
-			ylims=myYlims,
-			xticks=(1:5,[:1,:2,:3,:4,:5]),
-			framestyle=:origin,
-			label=nothing,
-			xlabel="x",
-			subplot=2,
-			title="Velocity Graph"
-		)
-		annotate!(pp,[(xxx[i],0.2,"time=$(t1[i])")], subplot=1)
-		# annotate!(pp,[(5,8.2,("velocity graph",10))], subplot=2)
-	end
+    theme(:default)
+    a1, b1 = 1, 5
+    t1 = a1:0.1:b1
+    timeLength = length(t1)
+    xxx = s1.(t1)
+    vvv = v1.(t1)
+    myXlims = s1(a1) .+ (0, 20)
+    myYlims = vvv |> ff -> (min(ff...) - 1, max(ff...) + 1)
+    anim = @animate for i ∈ 1:timeLength
+        pp = plot(; layout=(2, 1))
+        scatter!(pp, (xxx[i], 0),
+            markersize=5,
+            grids=:none,
+            framestyle=:origin,
+            showaxis=:x,
+            yticks=nothing,
+            ylims=(-0.4, 0.4),
+            xlims=myXlims,
+            label=nothing,
+            xticks=nothing,
+            # xticks=(myXlims[1]:50:myXlims[2],[]),
+            tickfontsize=8,
+            subplot=1
+        )
+        plot!(pp,
+            t1[1:i],
+            vvv[1:i],
+            xlims=(0, myXlims[2]),
+            ylims=myYlims,
+            xticks=(1:5, [:1, :2, :3, :4, :5]),
+            framestyle=:origin,
+            label=nothing,
+            xlabel="x",
+            subplot=2,
+            title="Velocity Graph"
+        )
+        annotate!(pp, [(xxx[i], 0.2, "time=$(t1[i])")], subplot=1)
+        # annotate!(pp,[(5,8.2,("velocity graph",10))], subplot=2)
+    end
 
-	html""
-end 
+    html""
+end
 
 # ╔═╡ 9b822e05-ad44-4238-9bfe-4b54d6e42628
-begin 
-	
-	velFun = @bind velfun TextField()
-	md"""
-	Enter the velocity function
-	
-	``v(t)`` = $velFun
-	
-	"""
-	html""
+begin
+
+    velFun = @bind velfun TextField()
+    md"""
+    Enter the velocity function
+
+    ``v(t)`` = $velFun
+
+    """
+    html""
 end
 
 
@@ -1161,41 +1162,41 @@ cm"### Pattern Recognition"
 
 # ╔═╡ 805cf044-8187-410e-833d-f4323ce07380
 begin
-	f155(x) = x/sqrt(1-4*x^2)
-	# ex1_55=plot(-0.49:0.01:0.49,f155.(-0.49:0.01:0.49), framestyle=:origin)
-	cm"""
-	__Theorem__ *Antidifferentiation of a Composite Function*
-	Let ``g`` be a function whose range is an interval ``I``, and let ``f`` be a function that is continuous on ``I``. If ``g`` is differentiable on its domain and  ``F`` is an antiderivative of ``f`` on ``I``, then
-	```math
-	\int f(g(x))g'(x)dx = F(g(x)) + C.
-	```
-	Letting ``u=g(x)`` gives ``du=g'(x)dx`` and
-	```math
-	\int f(u) du = F(u) + C.
-	```
+    f155(x) = x / sqrt(1 - 4 * x^2)
+    # ex1_55=plot(-0.49:0.01:0.49,f155.(-0.49:0.01:0.49), framestyle=:origin)
+    cm"""
+    __Theorem__ *Antidifferentiation of a Composite Function*
+    Let ``g`` be a function whose range is an interval ``I``, and let ``f`` be a function that is continuous on ``I``. If ``g`` is differentiable on its domain and  ``F`` is an antiderivative of ``f`` on ``I``, then
+    ```math
+    \int f(g(x))g'(x)dx = F(g(x)) + C.
+    ```
+    Letting ``u=g(x)`` gives ``du=g'(x)dx`` and
+    ```math
+    \int f(u) du = F(u) + C.
+    ```
 
-	<div class="img-container">
-	
-	$(Resource("https://www.dropbox.com/s/uua8vuahfxnp48c/subs_th.jpg?raw=1"))
-	
-	</div>
-	
-	**Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
-	
-	**Example**
-	Find 
-	```math
-	\begin{array}{ll}
-	(i) & \int \bigl(x^2+1 \bigr)^2 (2x) dx \\ \\
-	(ii) & \int 5e^{5x} dx \\ \\
-	(iii) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
-	(iv) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
-	(v) & \int \tan x dx \\ \\
-	\end{array}
-	```
-	
-	
-	"""
+    <div class="img-container">
+
+    $(Resource("https://www.dropbox.com/s/uua8vuahfxnp48c/subs_th.jpg?raw=1"))
+
+    </div>
+
+    **Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
+
+    **Example**
+    Find 
+    ```math
+    \begin{array}{ll}
+    (i) & \int \bigl(x^2+1 \bigr)^2 (2x) dx \\ \\
+    (ii) & \int 5e^{5x} dx \\ \\
+    (iii) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
+    (iv) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
+    (v) & \int \tan x dx \\ \\
+    \end{array}
+    ```
+
+
+    """
 end
 
 # ╔═╡ 7549863d-1e44-422f-9ddd-beec2ddcd48d
@@ -1248,50 +1249,50 @@ cm"""
 
 # ╔═╡ 497ff4cd-2705-49b3-bde6-671352e9b5a0
 begin
-	ex2fun1(x)=log(x)/x
-	ex2fun2(x)=x
-	ex2x1 = 1:0.1:exp(1)
-	ex2x12 = 0:0.1:1
-	ex2x2 = 0.6:0.1:4
-	ex2x22 = log(0.6):0.1:log(4)
-	
-	ex2y1 =ex2fun1.(ex2x1) 
-	ex2y12 =ex2fun2.(ex2x12) 
-	ex2y2 =ex2fun1.(ex2x2) 
-	ex2y22 =ex2fun2.(ex2x22) 
-	theme(:wong)
-	ex2plt1 = plot(ex2x1,ex2y1, framestyle=:origin, xlims=(0,exp(1)),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red,label=nothing)
-	plot!(ex2plt1,ex2x2,ex2y2,c=:red,label=nothing)
-	xlims!(ex2plt1,-1,4)
-	annotate!(ex2plt1,[(2,0.5,L"y=\frac{\ln x}{x}"),(exp(1),-0.05,text(L"e",12))])
-	plot!(ex2plt1,[exp(1),exp(1)],[0,ex2fun1(exp(1))],c=:red,linewidth=3,label=nothing)
+    ex2fun1(x) = log(x) / x
+    ex2fun2(x) = x
+    ex2x1 = 1:0.1:exp(1)
+    ex2x12 = 0:0.1:1
+    ex2x2 = 0.6:0.1:4
+    ex2x22 = log(0.6):0.1:log(4)
 
-	ex2plt2 = plot(ex2x12,ex2y12, framestyle=:origin, xlims=(0,1),ylims=(-1,1),fillrange =0,fillalpha=0.5,c=:red,label=nothing)
-	plot!(ex2plt2,ex2x22,ex2y22,c=:red,label=nothing)
-	xlims!(ex2plt2,-1,4)
-	annotate!(ex2plt2,[(2,0.5,L"v=u")])
-	# ylims!()
- 	# plot!(ex2plt2,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
-	# xlims!(ex2plt1,-1,2)
-	# plot!(ex2plt1, fill=(0, 0.5, :red), xlims=(1,2))
-	md""" 
-	### Substitution: Definite Integrals
-	**Example:**
-		Evaluate
-	
-	```math
-	\begin{array}{ll}
-	(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} \\ \\
-	(ii) & \int_1^e \frac{\ln x}{x} dx \\ \\ 
-	(iii) & \int_0^1 x(x^2+1)^3 \;dx \\ \\ 
-	(iv) & \int_1^5 \frac{x}{\sqrt{2x-1}}\;dx \\ \\ 
-	\end{array}
-	```
-	$ex2plt1	
+    ex2y1 = ex2fun1.(ex2x1)
+    ex2y12 = ex2fun2.(ex2x12)
+    ex2y2 = ex2fun1.(ex2x2)
+    ex2y22 = ex2fun2.(ex2x22)
+    theme(:wong)
+    ex2plt1 = plot(ex2x1, ex2y1, framestyle=:origin, xlims=(0, exp(1)), ylims=(-1, 1), fillrange=0, fillalpha=0.5, c=:red, label=nothing)
+    plot!(ex2plt1, ex2x2, ex2y2, c=:red, label=nothing)
+    xlims!(ex2plt1, -1, 4)
+    annotate!(ex2plt1, [(2, 0.5, L"y=\frac{\ln x}{x}"), (exp(1), -0.05, text(L"e", 12))])
+    plot!(ex2plt1, [exp(1), exp(1)], [0, ex2fun1(exp(1))], c=:red, linewidth=3, label=nothing)
 
-	$ex2plt2
-	
-	"""
+    ex2plt2 = plot(ex2x12, ex2y12, framestyle=:origin, xlims=(0, 1), ylims=(-1, 1), fillrange=0, fillalpha=0.5, c=:red, label=nothing)
+    plot!(ex2plt2, ex2x22, ex2y22, c=:red, label=nothing)
+    xlims!(ex2plt2, -1, 4)
+    annotate!(ex2plt2, [(2, 0.5, L"v=u")])
+    # ylims!()
+    # plot!(ex2plt2,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
+    # xlims!(ex2plt1,-1,2)
+    # plot!(ex2plt1, fill=(0, 0.5, :red), xlims=(1,2))
+    md""" 
+    ### Substitution: Definite Integrals
+    **Example:**
+    	Evaluate
+
+    ```math
+    \begin{array}{ll}
+    (i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} \\ \\
+    (ii) & \int_1^e \frac{\ln x}{x} dx \\ \\ 
+    (iii) & \int_0^1 x(x^2+1)^3 \;dx \\ \\ 
+    (iv) & \int_1^5 \frac{x}{\sqrt{2x-1}}\;dx \\ \\ 
+    \end{array}
+    ```
+    $ex2plt1	
+
+    $ex2plt2
+
+    """
 end
 
 # ╔═╡ 3feca2ed-ff05-4c1a-a614-b1fd23674741
@@ -1666,90 +1667,90 @@ $(Resource("https://www.dropbox.com/s/yc0305sd3i8yr44/inverse_hyper_graphs.jpg?r
 """
 
 # ╔═╡ 2460d407-0fff-44c4-90ec-639f32414f49
-embedYouTube(id;title) = """
-<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+embedYouTube(id; title) = """
+ <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
 
-<h5>$title </h5>
+ <h5>$title </h5>
 
-<div  notthestyle="position: relative; right: 0; top: 0; z-index: 300;">
-	<iframe width="400" height="250" src="https://www.youtube.com/embed/$id" 	title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-</div>"""
+ <div  notthestyle="position: relative; right: 0; top: 0; z-index: 300;">
+ 	<iframe width="400" height="250" src="https://www.youtube.com/embed/$id" 	title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+ </div>
+ </div>"""
 
 # ╔═╡ ad3dd437-7cfc-4cdc-a951-15949d39cf15
-rect(x,Δx,xs,f)=Shape([(x,0),(x+Δx,0),(x+Δx,f(xs)),(x,f(xs))])
+rect(x, Δx, xs, f) = Shape([(x, 0), (x + Δx, 0), (x + Δx, f(xs)), (x, f(xs))])
 #Shape(x .+ [0,Δx,Δx,0], [0,0,f(xs),f(xs)])
 
 # ╔═╡ a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-function reimannSum(f,n,a,b;method="l",color=:green, plot_it=false)
-	Δx =(b-a)/n
-	x =a:0.1:b
-	# plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
-	
-	(partition,recs) = if method=="r"
-		 parts = (a+Δx):Δx:b
-		 rcs = [rect(p-Δx,Δx,p,f) for p in parts]
-		 (parts,rcs)
-	elseif method=="m"
-		parts = (a+(Δx/2)):Δx:(b-(Δx/2))
-		rcs = [rect(p-Δx/2,Δx,p,f) for p in parts]
-		(parts,rcs)
-	elseif method=="l"
-		parts = a:Δx:(b-Δx)
-		rcs = [rect(p,Δx,p,f) for p in parts]
-		(parts,rcs)
-	else 
-		parts = a:Δx:(b-Δx)
-		rcs = [rect(p,Δx,rand(p:0.1:p+Δx),f) for p in parts]
-		(parts,rcs)
-	end
-	# recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
-	p=plot(x,f.(x);legend=nothing)
-	plot!(p,recs,framestyle=:origin,opacity=.4, color=color)
-	s = round(sum(f.(partition)*Δx),sigdigits=6)
-	return plot_it ? (p,s) : s
+function reimannSum(f, n, a, b; method="l", color=:green, plot_it=false)
+    Δx = (b - a) / n
+    x = a:0.1:b
+    # plot(f;xlim=(-2π,2π), xticks=(-2π:(π/2):2π,["$c π" for c in -2:0.5:2]))
+
+    (partition, recs) = if method == "r"
+        parts = (a+Δx):Δx:b
+        rcs = [rect(p - Δx, Δx, p, f) for p in parts]
+        (parts, rcs)
+    elseif method == "m"
+        parts = (a+(Δx/2)):Δx:(b-(Δx/2))
+        rcs = [rect(p - Δx / 2, Δx, p, f) for p in parts]
+        (parts, rcs)
+    elseif method == "l"
+        parts = a:Δx:(b-Δx)
+        rcs = [rect(p, Δx, p, f) for p in parts]
+        (parts, rcs)
+    else
+        parts = a:Δx:(b-Δx)
+        rcs = [rect(p, Δx, rand(p:0.1:p+Δx), f) for p in parts]
+        (parts, rcs)
+    end
+    # recs= [rect(sample(p,Δx),Δx,p,f) for p in partition]
+    p = plot(x, f.(x); legend=nothing)
+    plot!(p, recs, framestyle=:origin, opacity=0.4, color=color)
+    s = round(sum(f.(partition) * Δx), sigdigits=6)
+    return plot_it ? (p, s) : s
 end
 
 # ╔═╡ d34b4862-9135-11eb-120f-6f82295f0759
 begin
-	theme(:wong)
-	anchor1 = 0.5 
-	(p,s)=reimannSum(f,n,a,b;method=lr,plot_it=true)
-	
-	annotate!(p,[(anchor1,f(anchor1)-2,text(L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$",12,n > 500 ? :white : :black))])
-	annotate!(p,[(anchor1+0.5,f(anchor1+0.1),text(L"$y=%$f(x)$",12,:black))])
-	
-	md""" 	
-	
-	$p
-	"""
+    theme(:wong)
+    anchor1 = 0.5
+    (p, s) = reimannSum(f, n, a, b; method=lr, plot_it=true)
+
+    annotate!(p, [(anchor1, f(anchor1) - 2, text(L"$\sum_{i=1}^{%$n} f (x_{i})\Delta x=%$s$", 12, n > 500 ? :white : :black))])
+    annotate!(p, [(anchor1 + 0.5, f(anchor1 + 0.1), text(L"$y=%$f(x)$", 12, :black))])
+
+    md""" 	
+
+    $p
+    """
 
 end
 
 # ╔═╡ 27e1d120-c3e1-4f3d-a263-d63204034814
 begin
-	left_sum=reimannSum(f,n,a,b;method="l")
-	right_sum=reimannSum(f,n,a,b;method="r")
-	l_sum_txt = L"R_{%$n}= %$right_sum \leq A\leq %$left_sum =L_{%$n}"
-	
-	
-	l_sum_txt
-	
-	
+    left_sum = reimannSum(f, n, a, b; method="l")
+    right_sum = reimannSum(f, n, a, b; method="r")
+    l_sum_txt = L"R_{%$n}= %$right_sum \leq A\leq %$left_sum =L_{%$n}"
+
+
+    l_sum_txt
+
+
 end
 
 # ╔═╡ cbf534bd-a329-4bc2-9940-f53a22e6d17e
 begin
-	theme(:wong)
-	
-	(p2,s2)=reimannSum(g,n2,a2,b2;method=lr2,color=:blue,plot_it=true)
-	
-	annotate!(p2,[(0.25,0.8,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
-	
-	md""" 	
-	
-	$p2
-	"""
+    theme(:wong)
+
+    (p2, s2) = reimannSum(g, n2, a2, b2; method=lr2, color=:blue, plot_it=true)
+
+    annotate!(p2, [(0.25, 0.8, (L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$", 12))])
+
+    md""" 	
+
+    $p2
+    """
 
 end
 
@@ -1792,22 +1793,22 @@ StartPause() = @htl("""
 
 # ╔═╡ 7d30f1de-0225-4a1e-a76e-3c305615cbe2
 if (start_animation)
-	gif(anim, "anim_fps125.gif", fps = 10)
+    gif(anim, "anim_fps125.gif", fps=10)
 end
 
 # ╔═╡ 7f819c41-370f-49b2-9e9b-e3233ac560fd
 begin
-	velfunTr = replace(velfun,"t"=>"tttt")
-	velFun1 = Meta.parse(velfunTr)
-	ex= eval(:velFun1)	
-	isValidVel = Meta.isexpr(ex,:call)
-	function myVel(i)
-		global tttt=i
-		
-		if isValidVel
-			return eval(ex) 
-		end
-	end
+    velfunTr = replace(velfun, "t" => "tttt")
+    velFun1 = Meta.parse(velfunTr)
+    ex = eval(:velFun1)
+    isValidVel = Meta.isexpr(ex, :call)
+    function myVel(i)
+        global tttt = i
+
+        if isValidVel
+            return eval(ex)
+        end
+    end
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -1847,7 +1848,7 @@ SymPy = "~1.1.7"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.0"
+julia_version = "1.8.5"
 manifest_format = "2.0"
 project_hash = "95293e7478a04fa519b1a0a4f98ce36352297b9f"
 
@@ -1975,7 +1976,7 @@ version = "4.2.0"
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "0.5.2+0"
+version = "1.0.1+0"
 
 [[deps.Conda]]
 deps = ["Downloads", "JSON", "VersionParsing"]
@@ -2835,7 +2836,7 @@ version = "1.7.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.0"
+version = "1.10.1"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
@@ -3140,10 +3141,10 @@ version = "1.4.1+0"
 # ╟─b048a772-05c3-4cd0-97ae-5cf825127584
 # ╟─f16cb891-26d7-41c9-9747-f7d6cd054bc7
 # ╠═8ad65bee-9135-11eb-166a-837031c4bc45
-# ╟─e7a87684-49b0-428c-9fef-248cf868cf33
-# ╟─74f6ac5d-f974-4ea6-801c-b88fe3346e55
-# ╟─c894d994-a7fc-4e07-8941-e9f9aa89fef0
-# ╟─d34b4862-9135-11eb-120f-6f82295f0759
+# ╠═e7a87684-49b0-428c-9fef-248cf868cf33
+# ╠═74f6ac5d-f974-4ea6-801c-b88fe3346e55
+# ╠═c894d994-a7fc-4e07-8941-e9f9aa89fef0
+# ╠═d34b4862-9135-11eb-120f-6f82295f0759
 # ╟─27e1d120-c3e1-4f3d-a263-d63204034814
 # ╟─2da325ba-48cc-44b3-be34-e0cb46e33068
 # ╟─8436d1b3-c03e-42e6-bbff-e785738e0f89
@@ -3243,10 +3244,10 @@ version = "1.4.1+0"
 # ╟─5a3b6e5c-5e6f-4fcd-be83-325974e42008
 # ╟─894378b1-811d-43ac-a700-71350e88ee40
 # ╟─2460d407-0fff-44c4-90ec-639f32414f49
-# ╟─a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
-# ╟─ad3dd437-7cfc-4cdc-a951-15949d39cf15
-# ╟─6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
-# ╟─7f819c41-370f-49b2-9e9b-e3233ac560fd
+# ╠═a9d0c669-f6d7-4e5f-8f57-b6bffe1710ba
+# ╠═ad3dd437-7cfc-4cdc-a951-15949d39cf15
+# ╠═6a5d1a86-4b9e-4d65-9bd7-f39ef8b6d9b4
+# ╠═7f819c41-370f-49b2-9e9b-e3233ac560fd
 # ╠═e93c5882-1ef8-43f6-b1ee-ee23c813c91b
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
