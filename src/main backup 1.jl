@@ -16,8 +16,8 @@ end
 
 # ╔═╡ 196f8120-431b-11ee-0ec5-2b6391383266
 begin
-	using SymPy
 	using PlutoUI
+	using SymPy
 	using CommonMark
 	using Plots, PlotThemes, LaTeXStrings
 	using HypertextLiteral
@@ -27,21 +27,9 @@ end
 
 # ╔═╡ 6f06c858-3279-4e3b-9b51-3536910bd161
 @htl("""
-<script src="https://unpkg.com/hyperscript.org@0.9.11"></script>
 <style>
 @import url("https://mmogib.github.io/math102/custom.css");
-
 </style>
-""")
-
-# ╔═╡ 92b5abdd-2336-46ae-8fcb-ebfc4f4eb576
-@htl("""
-
-<button _="on click increment :x then put it into the next <output/>">
-Click Me
-</button>
-<output>--</output>
-
 """)
 
 # ╔═╡ 657f46ac-d024-4853-a793-2d4a2f181936
@@ -74,6 +62,61 @@ __Objectives__
 > 3. Approximate the area of a plane region.
 > 4. Find the area of a plane region using limits.
 ## Sigma Notation
+"""
+
+# ╔═╡ ca146f79-9ed2-46e2-ba90-b27bcf57aec0
+cm"""
+$(beginBlock("Sigma Notation",""))
+
+The sum of ``n`` terms  ``a_1, a_2, \cdots, a_n`` is written as
+```math
+\sum_{i=1}^n a_i = a_1+ a_2+ \cdots+ a_n
+```
+where ``i`` is the __index of summation__, ``a_i`` is the th __``i``th term__ of the sum, and the upper and lower bounds of summation are ``n`` and ``1``.
+$(endBlock())
+"""
+
+# ╔═╡ 7222def6-d1fe-4b23-9f69-a485bd1e2468
+cm"""
+$(beginBlock("Summation Properties",""))
+
+```math
+
+\begin{array}{lcl}
+ \displaystyle\sum_{i=1}^n k a_i &=& \displaystyle k\sum_{i=1}^n  a_i \\
+\\
+ \displaystyle\sum_{i=1}^n (a_i\pm b_i) &=& \displaystyle\sum_{i=1}^n  a_i\pm\sum_{i=1}^n  b_i \\
+\\
+
+\end{array} 
+```
+$(endBlock())
+
+$(beginTheorem("Summation Formulas"))
+```math
+\displaystyle
+\begin{array}{ll}
+(1) & \displaystyle\sum_{i=1}^n c = cn, \quad c \text{ is a constant} \\
+\\
+(2) & \displaystyle\sum_{i=1}^n i = \frac{n(n+1)}{2} \\
+\\
+(3) &\displaystyle \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
+\\
+(4) & \displaystyle\sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
+\\
+\end{array} 
+```
+
+$(endTheorem())
+
+
+"""
+
+
+# ╔═╡ 7f16b45b-3147-412d-9261-33cc9de09d37
+cm"""
+$(example("Example 1","Evaluating a Sum"))
+Evaluate ``\displaystyle \sum_{i=1}^n\frac{i+1}{n}`` for ``n=10, 100, 1000`` and ``10,000``.
 """
 
 # ╔═╡ 52cfed78-4bf4-4596-bf45-7ebca9cdce9b
@@ -204,6 +247,12 @@ s(n) \leq \left(\text{Area of region}\right) \leq S(n).
 ```
 """
 
+# ╔═╡ 83a3909a-67a0-4f37-86c0-dfc9c575a52f
+cm"""
+$(example("Example 4","Finding Upper and Lower Sums for a Region"))
+Find the upper and lower sums for the region bounded by the graph of ``f(x)=x^2`` and the ``x-``axis between ``x=0`` and ``x=2``.
+"""
+
 # ╔═╡ d0460f4d-2162-4a7e-baa4-1971a37c073c
 begin
     ns4 = @bind n4 NumberField(2:4000,  default=5)
@@ -219,6 +268,74 @@ end
 
 # ╔═╡ 6f2239b7-9b87-4fc4-b106-9b8d7c562c73
 f4(x) = x^2
+
+# ╔═╡ b2862683-eac6-4153-92e0-9944693c3ccc
+cm"""
+$(beginTheorem("Limits of the Lower and Upper Sums"))
+
+Let ``f`` be continuous and nonnegative on the interval ``[a,b]``. The limits as ``n\to\infty`` of both the lower and upper sums exist and are equal to each other. That is,
+```math
+\displaystyle \lim_{n\to\infty}s(n)=
+\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(m_i)\Delta x
+=\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(M_i)\Delta x
+=\displaystyle \lim_{n\to\infty}S(n)
+```
+‍
+‍
+where  
+```math
+\Delta x = \frac{b-a}{n}
+```
+and ``f(m_i)`` and ``f(M_i)`` are the minimum and maximum values of ``f`` on the ``i``th subinterval.
+$(endTheorem())
+"""
+
+# ╔═╡ 30d3b82f-5dd0-4524-8136-93b31879ae2c
+cm"""
+$(beginBlock("Definition","Area of a Region in the Plane"))
+
+Let ``f`` be continuous and nonnegative on the interval ``[a,b]``.  The area of the region bounded by the graph of ``f`` , the ``x``-axis, and the vertical lines ``x=a`` and ``y=b`` is 
+```math
+\textrm{Area} = \displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(c_i)\Delta x
+```
+where 
+```math
+x_{i-1}\leq c_i\leq x_i\quad \textrm{and}\quad \Delta x =\frac{b-a}{n}.
+```
+See the grpah
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/a3sjz8m9vspp5ec/area_def.jpg?raw=1"))
+
+</div>
+
+$(endBlock())
+"""
+
+# ╔═╡ a003044f-5d2a-4a07-b240-66fe50ebae32
+cm"""
+$(example("Example 5","Finding Area by the Limit Definition"))
+
+Find the area of the region bounded by the graph of ``f(x)=x^3`` , the ``x``-axis, and the vertical lines ``x=0`` and ``x=1``.
+
+"""
+
+# ╔═╡ e4564cd6-1b68-4d7e-83cc-44d388fec9ed
+cm"""
+$(example("Example 7","A Region Bounded by the <i>y</i>-axis"))
+Find the area of the region bounded by the graph of ``f(y)=y^2`` and the ``y``-axis for ``0\leq y\leq 1``.))
+"""
+
+# ╔═╡ 94d2d514-daa7-42af-92ed-5af176c30e12
+cm"""
+### Midpoint Rule
+```math
+\textrm{Area} \approx \sum_{i=1}^n f\left(\frac{x_{i-1}+x_i}{2}\right)\Delta x.
+```
+$(example("Example 8","Approximating Area with the Midpoint Rule"))
+
+Use the Midpoint Rule with ``n=4`` to approximate the area of the region bounded by the graph of ``f(x)=\sin x`` and the ``x``-axis for ``0\leq x\leq \pi``.
+"""
 
 # ╔═╡ 059f7df0-3c91-408c-91aa-fa513864e817
 x = symbols("x", real=true);
@@ -353,135 +470,6 @@ begin
 	@htl("")
 end
 
-# ╔═╡ ca146f79-9ed2-46e2-ba90-b27bcf57aec0
-cm"""
-$(beginBlock("Sigma Notation",""))
-
-The sum of ``n`` terms  ``a_1, a_2, \cdots, a_n`` is written as
-```math
-\sum_{i=1}^n a_i = a_1+ a_2+ \cdots+ a_n
-```
-where ``i`` is the __index of summation__, ``a_i`` is the th __``i``th term__ of the sum, and the upper and lower bounds of summation are ``n`` and ``1``.
-$(endBlock())
-"""
-
-# ╔═╡ 7222def6-d1fe-4b23-9f69-a485bd1e2468
-cm"""
-$(beginBlock("Summation Properties",""))
-
-```math
-
-\begin{array}{lcl}
- \displaystyle\sum_{i=1}^n k a_i &=& \displaystyle k\sum_{i=1}^n  a_i \\
-\\
- \displaystyle\sum_{i=1}^n (a_i\pm b_i) &=& \displaystyle\sum_{i=1}^n  a_i\pm\sum_{i=1}^n  b_i \\
-\\
-
-\end{array} 
-```
-$(endBlock())
-
-$(beginTheorem("Summation Formulas"))
-```math
-\displaystyle
-\begin{array}{ll}
-(1) & \displaystyle\sum_{i=1}^n c = cn, \quad c \text{ is a constant} \\
-\\
-(2) & \displaystyle\sum_{i=1}^n i = \frac{n(n+1)}{2} \\
-\\
-(3) &\displaystyle \sum_{i=1}^n i^2 =  \frac{n(n+1)(2n+1)}{6} \\
-\\
-(4) & \displaystyle\sum_{i=1}^n i^3 = \left[\frac{n(n+1)}{2}\right]^2 \\
-\\
-\end{array} 
-```
-
-$(endTheorem())
-
-
-"""
-
-
-# ╔═╡ 7f16b45b-3147-412d-9261-33cc9de09d37
-cm"""
-$(example("Example 1","Evaluating a Sum"))
-Evaluate ``\displaystyle \sum_{i=1}^n\frac{i+1}{n}`` for ``n=10, 100, 1000`` and ``10,000``.
-"""
-
-# ╔═╡ 83a3909a-67a0-4f37-86c0-dfc9c575a52f
-cm"""
-$(example("Example 4","Finding Upper and Lower Sums for a Region"))
-Find the upper and lower sums for the region bounded by the graph of ``f(x)=x^2`` and the ``x-``axis between ``x=0`` and ``x=2``.
-"""
-
-# ╔═╡ b2862683-eac6-4153-92e0-9944693c3ccc
-cm"""
-$(beginTheorem("Limits of the Lower and Upper Sums"))
-
-Let ``f`` be continuous and nonnegative on the interval ``[a,b]``. The limits as ``n\to\infty`` of both the lower and upper sums exist and are equal to each other. That is,
-```math
-\displaystyle \lim_{n\to\infty}s(n)=
-\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(m_i)\Delta x
-=\displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(M_i)\Delta x
-=\displaystyle \lim_{n\to\infty}S(n)
-```
-‍
-‍
-where  
-```math
-\Delta x = \frac{b-a}{n}
-```
-and ``f(m_i)`` and ``f(M_i)`` are the minimum and maximum values of ``f`` on the ``i``th subinterval.
-$(endTheorem())
-"""
-
-# ╔═╡ 30d3b82f-5dd0-4524-8136-93b31879ae2c
-cm"""
-$(beginBlock("Definition","Area of a Region in the Plane"))
-
-Let ``f`` be continuous and nonnegative on the interval ``[a,b]``.  The area of the region bounded by the graph of ``f`` , the ``x``-axis, and the vertical lines ``x=a`` and ``y=b`` is 
-```math
-\textrm{Area} = \displaystyle \lim_{n\to\infty}\sum_{i=1}^nf(c_i)\Delta x
-```
-where 
-```math
-x_{i-1}\leq c_i\leq x_i\quad \textrm{and}\quad \Delta x =\frac{b-a}{n}.
-```
-See the grpah
-<div class="img-container">
-
-$(Resource("https://www.dropbox.com/s/a3sjz8m9vspp5ec/area_def.jpg?raw=1"))
-
-</div>
-
-$(endBlock())
-"""
-
-# ╔═╡ a003044f-5d2a-4a07-b240-66fe50ebae32
-cm"""
-$(example("Example 5","Finding Area by the Limit Definition"))
-
-Find the area of the region bounded by the graph of ``f(x)=x^3`` , the ``x``-axis, and the vertical lines ``x=0`` and ``x=1``.
-
-"""
-
-# ╔═╡ e4564cd6-1b68-4d7e-83cc-44d388fec9ed
-cm"""
-$(example("Example 7","A Region Bounded by the <i>y</i>-axis"))
-Find the area of the region bounded by the graph of ``f(y)=y^2`` and the ``y``-axis for ``0\leq y\leq 1``.))
-"""
-
-# ╔═╡ 94d2d514-daa7-42af-92ed-5af176c30e12
-cm"""
-### Midpoint Rule
-```math
-\textrm{Area} \approx \sum_{i=1}^n f\left(\frac{x_{i-1}+x_i}{2}\right)\Delta x.
-```
-$(example("Example 8","Approximating Area with the Midpoint Rule"))
-
-Use the Midpoint Rule with ``n=4`` to approximate the area of the region bounded by the graph of ``f(x)=\sin x`` and the ``x``-axis for ``0\leq x\leq \pi``.
-"""
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -503,16 +491,16 @@ LaTeXStrings = "~1.3.0"
 PlotThemes = "~3.1.0"
 Plots = "~1.38.17"
 PlutoUI = "~0.7.52"
-SymPy = "~1.1.12"
+SymPy = "~1.1.11"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.2"
+julia_version = "1.9.3"
 manifest_format = "2.0"
-project_hash = "af056f48b9cc64c466807937c8c3c71b46593ace"
+project_hash = "bf9f2cfd11fd687bcccfa8ca9b6621de2d0b994a"
 
 [[deps.AbstractPlutoDingetjes]]
 deps = ["Pkg"]
@@ -1271,12 +1259,12 @@ version = "5.10.1+6"
 
 [[deps.SymPy]]
 deps = ["CommonEq", "CommonSolve", "Latexify", "LinearAlgebra", "Markdown", "PyCall", "RecipesBase", "SpecialFunctions"]
-git-tree-sha1 = "ed1605d9415cccb50e614b8fe0035753877b5303"
+git-tree-sha1 = "5addfd027bbbd3b600ccf578395d0d5d7d22a31a"
 uuid = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
-version = "1.1.12"
+version = "1.1.11"
 
     [deps.SymPy.extensions]
-    SymPySymbolicUtilsExt = "SymbolicUtils"
+    SymPyTermSymbolicUtilsExt = "SymbolicUtils"
 
     [deps.SymPy.weakdeps]
     SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
@@ -1599,7 +1587,6 @@ version = "1.4.1+0"
 
 # ╔═╡ Cell order:
 # ╟─6f06c858-3279-4e3b-9b51-3536910bd161
-# ╟─92b5abdd-2336-46ae-8fcb-ebfc4f4eb576
 # ╟─657f46ac-d024-4853-a793-2d4a2f181936
 # ╟─f86a60f7-f8c5-4942-9dad-7c5eb5ca8b00
 # ╟─d72d6d49-c687-41c7-a776-e8abc8db04b0

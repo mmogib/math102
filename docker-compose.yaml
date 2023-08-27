@@ -1,0 +1,12 @@
+version: "3"
+services:
+  juliaapp:
+    container_name: t231math102
+    build:
+      context: .
+      args:
+        - JULIA_VERSION=1.9.3
+    ports:
+      - "2311:1234"
+    volumes:
+      - .:/home/code

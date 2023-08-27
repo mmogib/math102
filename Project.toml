@@ -1,2 +1,4 @@
 [deps]
 Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+PyCall = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
+SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
