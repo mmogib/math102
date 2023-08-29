@@ -222,9 +222,6 @@ md"""# 5.3: Riemann Sums and Definite Integrals
 
 """
 
-# ╔═╡ 9e04d2f4-6136-408b-89b1-bcbbaec5a3c0
-md"## Riemann Sums"
-
 # ╔═╡ e14c9fd5-9d79-493e-9da2-9448ee884667
 g(x) = √x
 
@@ -263,9 +260,6 @@ The width of the largest subinterval of a partition ``\Delta`` is the __norm__ o
 ```
 
 """
-
-# ╔═╡ ab806966-58c1-45c8-a288-421f5dd99e61
-md"## Definite Integrals"
 
 # ╔═╡ 059f7df0-3c91-408c-91aa-fa513864e817
 x = symbols("x", real=true);
@@ -572,48 +566,6 @@ $(endBlock())
 """
 
 
-# ╔═╡ 73a7a8e2-67f6-4c49-9775-c67f6c86dbd9
-cm"""
-$(beginBlock("Definition of Definite Integral",""))
-If ``f`` is defined on the closed interval ``[a,b]`` and the limit of Riemann sums over partitions ``\Delta`` 
-```math
-\lim_{\|\Delta\|\to 0}\sum_{i=1}^nf(c_i)\Delta x_i
-```
-‍
-exists, then ``f`` is said to be __integrable__ on ``[a,b]`` and the limit is denoted by
-```math
-\lim_{\|\Delta\|\to 0}\sum_{i=1}^nf(c_i)\Delta x_i = \int_a^b f(x) dx.
-```
-‍
-‍The limit is called the __definite integral__ of ``f`` from ``a`` to ``b``. The number ``a`` is the __lower limit__ of integration, and the number ``b`` is the __upper limit__ of integration.
-
-$(endBlock())
-"""
-
-# ╔═╡ d8637bcf-0735-4faf-a708-a259c6f88a82
-cm"""
-$(beginTheorem("Continuity Implies Integrability"))
-
-If a function ``f`` is continuous on the closed interval ``[a,b]``, then ``f`` is integrable on ``[a,b]``. That is, 
-
-```math
-\int_a^b f(x) dx \quad \textrm{exists}.
-```
-$(endTheorem())
-"""
-
-# ╔═╡ 35e9fefc-1e71-4413-862b-28cfb690777d
-cm"""
-$(beginTheorem("The Definite Integral as the Area of a Region"))
-
-If ``f`` is continuous and nonnegative on the closed interval ``[a,b]``, then the area of the region bounded by the graph of ``f``, the ``x``-axis, and the vertical lines ``x=a`` and ``x=b`` is
-```math
-\textrm{Area} = \int_a^b f(x) dx
-```
-‍$(endTheorem())
-‍
-"""
-
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -642,7 +594,7 @@ SymPy = "~1.1.12"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.2"
 manifest_format = "2.0"
 project_hash = "af056f48b9cc64c466807937c8c3c71b46593ace"
 
@@ -1759,16 +1711,11 @@ version = "1.4.1+0"
 # ╟─e4564cd6-1b68-4d7e-83cc-44d388fec9ed
 # ╟─94d2d514-daa7-42af-92ed-5af176c30e12
 # ╟─f607f9dc-0e79-44f4-af59-6f5f1f1336c8
-# ╟─9e04d2f4-6136-408b-89b1-bcbbaec5a3c0
 # ╠═e14c9fd5-9d79-493e-9da2-9448ee884667
 # ╟─5cdf321b-e477-4218-90ea-c618c8a3ab48
 # ╟─a034af46-0c78-436a-b368-c977643fa1ff
 # ╟─75777562-49ab-47a3-bb8e-b70150f85023
 # ╟─11de9bf9-63cb-43a7-afcf-e520d22fbc9f
-# ╟─ab806966-58c1-45c8-a288-421f5dd99e61
-# ╟─73a7a8e2-67f6-4c49-9775-c67f6c86dbd9
-# ╟─d8637bcf-0735-4faf-a708-a259c6f88a82
-# ╟─35e9fefc-1e71-4413-862b-28cfb690777d
 # ╟─059f7df0-3c91-408c-91aa-fa513864e817
 # ╟─121748ad-633e-4057-aed1-fe55a3aaab06
 # ╟─2845f715-b032-493f-a979-782fb70b700e
