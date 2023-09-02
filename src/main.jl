@@ -212,6 +212,13 @@ end
 # ╔═╡ 6f2239b7-9b87-4fc4-b106-9b8d7c562c73
 f4(x) = x^2
 
+# ╔═╡ 5d4e233e-97f6-4953-982b-b0eebce8e08d
+begin
+	f8(x)=sin(x)
+	Δx28 = π/4
+	A = Δx28*(f8(π/8)+f8(3π/8)+f8(5π/8)+f8(7π/8))
+end
+
 # ╔═╡ f607f9dc-0e79-44f4-af59-6f5f1f1336c8
 md"""# 5.3: Riemann Sums and Definite Integrals
 
@@ -266,6 +273,21 @@ The width of the largest subinterval of a partition ``\Delta`` is the __norm__ o
 
 # ╔═╡ ab806966-58c1-45c8-a288-421f5dd99e61
 md"## Definite Integrals"
+
+# ╔═╡ 1f78f70a-15cd-4ff1-9425-a43636f95c76
+md"## Properties of Definite Integrals"
+
+# ╔═╡ 23671b7f-9a5f-433d-94ba-ea6600cbc122
+md"""
+# 5.4: The Fundamental Theorem of Calculus
+> __Objectives__
+> 1. Evaluate a definite integral using the Fundamental Theorem of Calculus.
+> 2. Understand and use the Mean Value Theorem for Integrals.
+> 3. Find the average value of a function over a closed interval.
+> 4. Understand and use the Second Fundamental Theorem of Calculus.
+> 5. Understand and use the Net Change Theorem.
+
+"""
 
 # ╔═╡ 059f7df0-3c91-408c-91aa-fa513864e817
 x = symbols("x", real=true);
@@ -612,6 +634,100 @@ If ``f`` is continuous and nonnegative on the closed interval ``[a,b]``, then th
 ```
 ‍$(endTheorem())
 ‍
+"""
+
+# ╔═╡ 9f24cb36-7067-433c-8cb1-eeed7cd20a91
+cm"""
+$(example("Example 3", "Areas of Common Geometric Figures"))
+
+Evaluate each integral using a geometric formula.
+- ``\displaystyle\int_1^3 4 dx``
+- ``\displaystyle\int_0^3 (x+2) dx``
+- ``\displaystyle\int_{-2}^2 \sqrt{4-x^2} dx``
+"""
+
+# ╔═╡ 71726e74-dc4f-432b-8860-8da68721a44f
+begin
+	f2(x) = sin(x) + 2
+    theme(:wong)
+    x521 = 1:0.1:5
+    y = f2.(x521)
+    p3 = plot(x521, y, label=nothing)
+    plot!(p3, x521, y / 2, ribbon=y / 2, linestyle=:dot, linealpha=0.1, framestyle=:origin, xticks=(1:5, [:a, "", "", "", :b]), label=nothing, ylims=(-1, 4))
+    annotate!(p3, [(3.5, 2.5, L"y=f(x)"), (5.2, 0, L"x"), (0.2, 4, L"y")])
+cm"""
+$(beginBlock("Remark","The definite integral  is a **number**"))
+- It does not depend on ``x``. In fact, we could use any letter in place of ``x`` without changing the value of the integral:
+
+```math
+\int_a^b f(x) dx = \int_a^b f(y) dy =\int_a^b f(w) dw =\int_a^b f(😀) d😀 
+```
+- If ``f(x)\ge 0``, the integral ``\int_a^b f(x) dx`` is the area under the curve ``y=f(x)`` from ``a`` to ``b``.	
+
+    $p3
+
+- ``\int_a^b f(x) dx`` is the net area
+<div class="img-container" >
+
+$(Resource("https://www.dropbox.com/s/ol9l38j2a53usei/note3.png?raw=1"))
+</div>
+
+$(endBlock())
+"""
+end
+
+# ╔═╡ f63868f3-2b63-4b37-9d3e-a88869df3266
+cm"""
+$(beginBlock("Definitions","Two Special Definite Integrals"))
+- If ``f``  is defined at ``x=a``, then ``\displaystyle \int_a^a f(x) dx =0``.
+- If ``f``  is integrable on ``[a,b]``, then ``\displaystyle \int_b^a f(x) dx =- \int_a^b f(x) dx``.
+$(endBlock())
+"""
+
+# ╔═╡ f7b3d05b-dc54-4589-99cf-d6cb5bb9988c
+cm"""
+$(beginTheorem("Additive Interval Property"))
+If ``f`` is integrable on the three closed intervals determined by ``a, b`` and ``c``, then
+```math
+\int_a^b f(x) dx = \int_a^c f(x) dx + \int_c^b f(x) dx.
+```
+$(endTheorem())
+"""
+
+# ╔═╡ 3f4dd200-084f-4c84-be5d-4181c06ba6fb
+cm"""
+
+$(beginTheorem("Properties of Definite Integrals"))
+- If ``f``  and ``g`` are integrable on ``[a,b]`` and ``k`` is a constant, then the functions ``kf`` and ``f\pm g`` are integrable on ``[a,b]``, and
+ 	1. ``\displaystyle \int_a^b kf(x) dx = k \int_a^b f(x) dx``.
+	2. ``\displaystyle \int_a^b \left[f(x)\pm g(x)\right] dx = \int_a^b f(x) dx\pm \int_a^b g(x) dx``.
+$(endTheorem())
+"""
+
+# ╔═╡ a6d576ad-6a3a-4be5-aece-ec5d1337b529
+cm"""
+$(beginTheorem("Preservation of Inequality"))
+- If ``f`` is integrable and nonnegative on the closed interval ``[a,b]``, then
+```math
+0\leq \int_a^b f(x) dx.
+```
+- If ``f`` and ``g`` are integrable on the closed interval ``[a,b]`` and ``f(x)\leq g(x)`` for every ``x`` in ``[a,b]`` , then
+```math
+\int_a^b f(x) dx \leq \int_a^b g(x) dx.
+```
+$(endTheorem())
+
+"""
+
+# ╔═╡ 16065d17-56b1-4ec3-837c-47e11131eefa
+cm"""
+$(example("Examples",""))
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/cat9ots4ausfzyc/qrcode_itempool.com_kfupm.png?raw=1",:width=>300))
+
+</div>
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -1758,6 +1874,7 @@ version = "1.4.1+0"
 # ╟─a003044f-5d2a-4a07-b240-66fe50ebae32
 # ╟─e4564cd6-1b68-4d7e-83cc-44d388fec9ed
 # ╟─94d2d514-daa7-42af-92ed-5af176c30e12
+# ╠═5d4e233e-97f6-4953-982b-b0eebce8e08d
 # ╟─f607f9dc-0e79-44f4-af59-6f5f1f1336c8
 # ╟─9e04d2f4-6136-408b-89b1-bcbbaec5a3c0
 # ╠═e14c9fd5-9d79-493e-9da2-9448ee884667
@@ -1769,6 +1886,15 @@ version = "1.4.1+0"
 # ╟─73a7a8e2-67f6-4c49-9775-c67f6c86dbd9
 # ╟─d8637bcf-0735-4faf-a708-a259c6f88a82
 # ╟─35e9fefc-1e71-4413-862b-28cfb690777d
+# ╟─9f24cb36-7067-433c-8cb1-eeed7cd20a91
+# ╟─71726e74-dc4f-432b-8860-8da68721a44f
+# ╟─1f78f70a-15cd-4ff1-9425-a43636f95c76
+# ╟─f63868f3-2b63-4b37-9d3e-a88869df3266
+# ╟─f7b3d05b-dc54-4589-99cf-d6cb5bb9988c
+# ╟─3f4dd200-084f-4c84-be5d-4181c06ba6fb
+# ╟─a6d576ad-6a3a-4be5-aece-ec5d1337b529
+# ╟─16065d17-56b1-4ec3-837c-47e11131eefa
+# ╟─23671b7f-9a5f-433d-94ba-ea6600cbc122
 # ╟─059f7df0-3c91-408c-91aa-fa513864e817
 # ╟─121748ad-633e-4057-aed1-fe55a3aaab06
 # ╟─2845f715-b032-493f-a979-782fb70b700e
