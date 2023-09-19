@@ -424,8 +424,236 @@ Evaluate ``\large \int_{-3}^6 \frac{1}{x}dx``
 # ╔═╡ 1058bdbb-969f-405a-9578-c467286cae33
 md"## Net Change Theorem"
 
+# ╔═╡ 5e181bc0-db9a-4ac5-853c-72cd1ed597b7
+cm"""
+- There are many applications, we will focus on one
+
+If an object moves along a straight line with position function ``s(t)``, then its velocity is ``v(t)=s'(t)``, so
+```math
+\int_{t_1}^{t_2}v(t) dt = s(t_2)-s(t_1) 
+```
+
+- **Remarks**
+```math
+\begin{array}{rcl}
+\text{displacement} &=& \displaystyle \int_{t_1}^{t_2}v(t) dt\\
+\\
+\text{total distance traveled} &=& \displaystyle \int_{t_1}^{t_2}|v(t)| dt \\ \\
+\end{array}
+```
+- The acceleration of the object is ``a(t)=v'(t)``, so
+```math
+\int_{t_1}^{t_2}a(t) dt = v(t_2)-v(t_1) \quad \text { is the change in velocity from time  to time .}
+```
+"""
+
+# ╔═╡ 4e76fbcc-27e8-46d8-9bd0-a339c5ac7508
+v(t) = t^3 - 10 * t^2 + 29 * t - 20
+
+# ╔═╡ dbfc14da-c752-46e7-ad24-938d5ea06d61
+begin
+
+    u = symbols("u", real=true)
+    v1(t) = v(t)
+    s1(t) = convert(Float64, integrate(v1(u), (u, 0, t)).n())
+
+    theme(:default)
+    a1, b1 = 1, 5
+    t1 = a1:0.1:b1
+    timeLength = length(t1)
+    xxx = s1.(t1)
+    vvv = v1.(t1)
+    myXlims = s1(a1) .+ (0, 20)
+    myYlims = vvv |> ff -> (min(ff...) - 1, max(ff...) + 1)
+    anim = @animate for i ∈ 1:timeLength
+        pp = plot(; layout=(2, 1))
+        scatter!(pp, (xxx[i], 0),
+            markersize=5,
+            grids=:none,
+            framestyle=:origin,
+            showaxis=:x,
+            yticks=nothing,
+            ylims=(-0.4, 0.4),
+            xlims=myXlims,
+            label=nothing,
+            xticks=nothing,
+            # xticks=(myXlims[1]:50:myXlims[2],[]),
+            tickfontsize=8,
+            subplot=1
+        )
+        plot!(pp,
+            t1[1:i],
+            vvv[1:i],
+            xlims=(0, myXlims[2]),
+            ylims=myYlims,
+            xticks=(1:5, [:1, :2, :3, :4, :5]),
+            framestyle=:origin,
+            label=nothing,
+            xlabel="x",
+            subplot=2,
+            title="Velocity Graph"
+        )
+        annotate!(pp, [(xxx[i], 0.2, "time=$(t1[i])")], subplot=1)
+        # annotate!(pp,[(5,8.2,("velocity graph",10))], subplot=2)
+    end
+	
+	gif(anim, "example_fps15.gif", fps = 10)
+end
+
+# ╔═╡ a448117a-921f-42b7-9a25-eedb13db685c
+md"""
+# 5.5: The Substitution Rule
+> __Objectives__
+> 1. Use pattern recognition to find an indefinite integral.
+> 2. Use a change of variables to find an indefinite integral.
+> 3. Use the General Power Rule for Integration to find an indefinite integral.
+> 4. Use a change of variables to evaluate a definite integral.
+> 5. Evaluate a definite integral involving an even or odd function.
+
+
+||||
+|------|------|-------|
+||solve|||
+|$$\int 2x \sqrt{1+x^2} \;\; dx$$|  | $$\int \sqrt{u} \;\; du$$|
+
+"""
+
+# ╔═╡ 06b9474d-da67-491d-8ea0-1af4c237a349
+md"## Pattern Recognition"
+
+# ╔═╡ fb811f14-8f2c-481d-927a-8670aba7112c
+cm"""
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/cat9ots4ausfzyc/qrcode_itempool.com_kfupm.png?raw=1",:width=>300))
+
+</div>
+"""
+
+# ╔═╡ 2a88724c-0f4c-48a2-83a1-e51a2c10a0c7
+md"""
+## Change of Variables for Indefinite Integrals
+__Example__: Find
+```math
+	\begin{array}{ll}
+	(i) & \int \sqrt{2x-1} dx \\ \\
+	(ii) & \int x\sqrt{2x-1} dx \\ \\
+	(iii) & \int \sin^23x\cos3x dx \\ \\
+	\end{array}
+```
+	
+"""
+
+# ╔═╡ 2fc3d33f-bb28-4e4c-a372-21d9006ad4df
+md"""
+## The General Power Rule for Integration
+"""
+
+# ╔═╡ 8868e231-cf0b-4de3-b7d3-350ec62be835
+cm"""
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/cat9ots4ausfzyc/qrcode_itempool.com_kfupm.png?raw=1",:width=>300))
+
+</div>
+"""
+
 # ╔═╡ 059f7df0-3c91-408c-91aa-fa513864e817
 x = symbols("x", real=true);
+
+# ╔═╡ b4adbb37-dbc9-4d43-b5c1-7550b8f8dfd3
+md"""
+## Change of Variables for Definite Integrals
+"""
+
+# ╔═╡ f2f54f8e-125b-4e0c-bb67-444b001400d0
+begin
+    ex2fun1(x) = log(x) / x
+    ex2fun2(x) = x
+    ex2x1 = 1:0.1:exp(1)
+    ex2x12 = 0:0.1:1
+    ex2x2 = 0.6:0.1:4
+    ex2x22 = log(0.6):0.1:log(4)
+
+    ex2y1 = ex2fun1.(ex2x1)
+    ex2y12 = ex2fun2.(ex2x12)
+    ex2y2 = ex2fun1.(ex2x2)
+    ex2y22 = ex2fun2.(ex2x22)
+    theme(:wong)
+    ex2plt1 = plot(ex2x1, ex2y1, framestyle=:origin, xlims=(0, exp(1)), ylims=(-1, 1), fillrange=0, fillalpha=0.5, c=:red, label=nothing)
+    plot!(ex2plt1, ex2x2, ex2y2, c=:red, label=nothing)
+    xlims!(ex2plt1, -1, 4)
+    annotate!(ex2plt1, [(2, 0.5, L"y=\frac{\ln x}{x}"), (exp(1), -0.05, text(L"e", 12))])
+    plot!(ex2plt1, [exp(1), exp(1)], [0, ex2fun1(exp(1))], c=:red, linewidth=3, label=nothing)
+
+    ex2plt2 = plot(ex2x12, ex2y12, framestyle=:origin, xlims=(0, 1), ylims=(-1, 1), fillrange=0, fillalpha=0.5, c=:red, label=nothing)
+    plot!(ex2plt2, ex2x22, ex2y22, c=:red, label=nothing)
+    xlims!(ex2plt2, -1, 4)
+    annotate!(ex2plt2, [(2, 0.5, L"v=u")])
+    # ylims!()
+    # plot!(ex2plt2,ex2x,ex2y, framestyle=:origin, xlims=(1,exp(1)), fillrange =0,fillalpha=0.5,c=:red)
+    # xlims!(ex2plt1,-1,2)
+    # plot!(ex2plt1, fill=(0, 0.5, :red), xlims=(1,2))
+    md""" 
+    ### Substitution: Definite Integrals
+    **Example:**
+    	Evaluate
+
+    ```math
+    \int_1^e \frac{\ln x}{x} dx  
+    ```
+    $ex2plt1	
+
+    $ex2plt2
+
+    """
+end
+
+# ╔═╡ 58c794e3-b35a-4e81-a136-2865e9bc53b4
+cm"""
+**Example:**
+	Evaluate
+
+```math
+\begin{array}{ll}
+(i) & \int_1^2 \frac{dx}{\left(3-5x\right)^2} \\ \\
+(iii) & \int_0^1 x(x^2+1)^3 \;dx \\ \\ 
+(iv) & \int_1^5 \frac{x}{\sqrt{2x-1}}\;dx \\ \\ 
+\end{array}
+```
+"""
+
+# ╔═╡ 2ec7cbb4-58c6-439b-9989-d45890d5bde0
+md"""
+## Integration of Even and Odd Functions
+"""
+
+# ╔═╡ 3464f171-a986-4e68-b0fc-63bb37d3186a
+md"""# 5.7: The Natural Logarithmic Function: Integration
+> __Objectives__
+> 1. Use the Log Rule for Integration to integrate a rational function.
+> 2. Integrate trigonometric functions.
+
+## Log Rule for Integration
+"""
+
+# ╔═╡ cab15078-1283-4a7f-8447-1996dedf988c
+cm"""
+__Examples__ Find
+```math
+	\begin{array}{llll}
+	\textrm{(i) }& \displaystyle \int \frac{1}{4x-1} dx   \\ \\
+	\textrm{(ii) }& \displaystyle \int \frac{3x^2+1}{x^3+x} dx   \\ \\
+	\textrm{(iii) }& \displaystyle \int \frac{\sec^2x}{\tan x} dx   \\ \\
+	\textrm{(iv) }& \displaystyle \int \frac{x^2+x+1}{x^2+1} dx   \\ \\
+	\textrm{(v) }& \displaystyle \int \frac{2x}{(x+1)^2} dx   \\ \\
+	\end{array}
+```
+"""
 
 # ╔═╡ 121748ad-633e-4057-aed1-fe55a3aaab06
 begin
@@ -505,8 +733,142 @@ begin
 	pp12
 end
 
+# ╔═╡ 12b91dea-100a-4932-8607-e8e65fff62a6
+md"""
+## Integrals of Trigonometric Functions
+"""
+
+# ╔═╡ 7bee0ddc-a560-4404-95c4-6afff2ee2cde
+md"""# 5.8:Inverse Trigonometric Functions: Integration
+> __Objectives__
+> 1. Integrate functions whose antiderivatives involve inverse trigonometric functions.
+> 2. Use the method of completing the square to integrate a function.
+> 3. Review the basic integration rules involving elementary functions.
+## Integrals Involving Inverse Trigonometric Functions
+"""
+
+# ╔═╡ f5d277d1-66ea-41b4-80a8-396b8f3dd476
+cm"""
+
+__Examples__
+Find
+```math
+\begin{array}{lllll}
+\textrm{➡} & \displaystyle \int\frac{dx}{\sqrt{4-x^2}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{2+9x^2}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{x\sqrt{4x^2-9}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{dx}{\sqrt{e^{2x}-1}}, \\ \\
+\textrm{➡} & \displaystyle \int\frac{x+2}{\sqrt{4-x^2}}dx. \\ \\
+\end{array}
+```
+"""
+
+# ╔═╡ 8c9895fb-a48b-4466-8abf-8ad0d353ac23
+md" ## Completing the Square"
+
+# ╔═╡ 1b43f966-72bd-4706-8e2a-7acf993bd5d9
+md"""
+# 5.9: Hyperbolic Functions
+
+> __Objectives__
+> 1. Develop properties of hyperbolic functions (MATH101).
+> 2. Differentiate (MATH101) and integrate hyperbolic functions.
+> 3. Develop properties of inverse hyperbolic functions (Reading only).
+> 4. Differentiate and integrate functions involving inverse hyperbolic functions. (Reading only).
+"""
+
+# ╔═╡ a81742ca-d194-4b63-87a2-136580b6c67f
+cm"""
+__Circle__: ``x^2+y^2=1``
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/c53yvdcyul4vvlz/circle.jpg?raw=1"))
+
+</div>
+
+__Hyperbola__: ``-x^2+y^2=1``
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/iy6fw024c6r50f8/hyperbola.jpg?raw=1"))
+
+</div>
+
+
+"""
+
+# ╔═╡ 5a7927a7-65d3-445b-a0a6-fa9901414b54
+cm"""
+__Definitions of the Hyperbolic Functions__
+```math
+\begin{array}{lllllll}
+\sinh x &=& \displaystyle \frac{e^x-e^{-x}}{2} &\qquad& 
+\text{csch}\; x &=& \displaystyle \frac{1}{\sinh x},\; x\neq 0\\ \\
+\cosh x &=& \displaystyle \frac{e^x+e^{-x}}{2} &\qquad& 
+\text{sech}\; x &=& \displaystyle \frac{1}{\cosh x}\\ \\
+\tanh x &=& \displaystyle \frac{\sinh x}{\cosh x} &\qquad& 
+\text{coth}\; x &=& \displaystyle \frac{1}{\tanh x},\; x\neq 0\\ \\
+\end{array}
+```
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/0q1vcqb77u0ft1t/hyper_graphs.jpg?raw=1"))
+
+</div>
+"""
+
+# ╔═╡ 09f2eebb-bd91-44ad-9a04-5441dc24a3d9
+cm"""
+__Hyperbolic Identities__
+```math
+\begin{array}{rllllll}
+\cosh^2 x - \sinh^2 x &=& 1, &\qquad& 
+\sinh (x+y)\;  &=& \sinh x\cosh y +\cosh x\sinh y\\ \\
+
+\tanh^2 x + \text{sech}^2 x &=& 1, &\qquad& 
+\sinh (x-y)\;  &=& \sinh x\cosh y -\cosh x\sinh y\\ \\
+
+
+\coth^2 x - \text{csch}^2 x &=& 1, &\qquad& 
+\cosh (x+y)\;  &=& \cosh x\cosh y +\sinh x\sinh y\\ \\
+
+ &&  &\qquad& 
+\cosh (x-y)\;  &=& \cosh x\cosh y -\sinh x\sinh y\\ \\
+
+\sinh^2 x &=& \displaystyle\frac{\cosh 2x -1}{2}, &\qquad& 
+\cosh^2 x\;  &=& \displaystyle\frac{\cosh 2x +1}{2}\\ \\
+
+
+\sin 2x &=& 2\sinh x\cosh x, &\qquad& 
+\cosh 2x\;  &=& \cosh^2 x +\sinh^2 x\\ \\
+
+
+\end{array}
+```
+"""
+
 # ╔═╡ 2845f715-b032-493f-a979-782fb70b700e
 begin
+	function poolcode()
+		cm"""
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/cat9ots4ausfzyc/qrcode_itempool.com_kfupm.png?raw=1",:width=>300))
+
+</div>"""
+	end
+	function bbl(t,s)
+		beginBlock(t,s)
+	end
+	ebl()=endBlock()
+	function bth(s)
+		beginTheorem(s)
+	end
+	eth()=endTheorem()
+	ex(n::Int;s::String="")=ex("Example $n",s)
+	ex(t,s)=example(t,s)
 	function beginBlock(title,subtitle)
 		"""<div style="box-sizing: border-box;">
 		<div style="display: flex;flex-direction: column;border: 6px solid rgba(200,200,200,0.5);box-sizing: border-box;">
@@ -1001,6 +1363,251 @@ If ``F'(x)`` is the rate of change of a quantity ``F(x)`` , then the definite in
 $(endTheorem())
 """
 
+# ╔═╡ d83e79d3-86fa-41e3-b453-c59bedb94520
+cm"""
+$(example("Example 10","Solving a Particle Motion Problem"))
+A particle is moving along aline. Its velocity function (in ``m/s^2``) is given by
+```math
+v(t)=t^3-10t^2+29t-20,
+```
+<ul style="list-style-type: lower-alpha;">
+
+<li> What is the <b>displacement</b> of the particle on the time interval 1≤ t≤ 5?</li>
+<li>What is the <b>total distance</b> traveled by the particle on the time interval 1≤ t≤ 5?</li>
+
+</ul>
+"""
+
+# ╔═╡ 021c3697-be87-4011-9fde-a09b569a09d3
+# f155(x) = x / sqrt(1 - 4 * x^2)
+# ex1_55=plot(-0.49:0.01:0.49,f155.(-0.49:0.01:0.49), framestyle=:origin)
+cm"""
+$(beginTheorem("Antidifferentiation of a Composite Function"))
+Let ``g`` be a function whose range is an interval ``I``, and let ``f`` be a function that is continuous on ``I``. If ``g`` is differentiable on its domain and  ``F`` is an antiderivative of ``f`` on ``I``, then
+```math
+\int f(g(x))g'(x)dx = F(g(x)) + C.
+```
+Letting ``u=g(x)`` gives ``du=g'(x)dx`` and
+```math
+\int f(u) du = F(u) + C.
+```
+$(endTheorem())
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/uua8vuahfxnp48c/subs_th.jpg?raw=1"))
+
+</div>
+
+**Substitution Rule says:** It is permissible to operate with ``dx`` and ``du`` after integral signs as if they were differentials.
+
+**Example**
+Find 
+```math
+\begin{array}{ll}
+(i) & \int \bigl(x^2+1 \bigr)^2 (2x) dx \\ \\
+(ii) & \int 5e^{5x} dx \\ \\
+(iii) & \int \frac{x}{\sqrt{1-4x^2}} dx \\ \\
+(iv) & \int \sqrt{1+x^2} \;\; x^5 dx \\ \\ 
+(v) & \int \tan x dx \\ \\
+\end{array}
+```
+
+"""
+
+
+# ╔═╡ eb8cb9bd-04d4-416c-aa11-24a3238d6185
+cm"""
+$(beginTheorem("The General Power Rule for Integration"))
+If ``g`` is a differentiable function of ``x``, then
+```math
+\int\bigl[g(x)\bigr]^ng'(x) dx = \frac{\bigl[g(x)\bigr]^{n+1}}{n+1} + C, \quad n\neq -1.
+```
+‍Equivalently, if ``u=g(x)``, then
+```math
+\int u^n du = \frac{u^{n+1}}{n+1} + C, \quad n\neq -1.
+```
+$(endTheorem())
+‍
+__Example__: Find
+```math
+	\begin{array}{ll}
+	(i) & \int 3(3x-1)^4 dx \\ \\
+	(ii) & \int (e^x+1)(e^x+x) dx \\ \\
+	(iii) & \int 3x^2\sqrt{x^3-2} \;dx \\ \\
+	(iv) & \displaystyle \int \frac{-4x}{(1-2x^2)^2}\; dx \\ \\
+	(v) & \int \cos^2 x\sin x \;dx \\ \\
+	\end{array}
+```
+	
+
+"""
+
+# ╔═╡ 9b865f48-d71a-4d69-9ce5-e941a8d26df9
+cm"""
+$(beginTheorem("Integration of Even and Odd Functions"))
+Let ``f`` be integrable on **``[-a,a]``**.
+
+* If ``f`` is **even** ``\left[f(-x)=f(x)\right]``, then 
+```math
+\int_{-a}^a f(x) dx = 2\int_0^a f(x) dx
+```
+
+* If ``f`` is **odd** ``\left[f(-x)=-f(x)\right]``, then 
+```math
+\int_{-a}^a f(x) dx = 0
+```
+$(endTheorem())
+
+**Example**
+Find 
+```math
+\int_{-1}^1 \frac{\tan x}{1+x^2+x^4} dx 
+```
+
+"""
+
+# ╔═╡ 3afeb15b-1f61-483a-b9e7-513e31b8b2d0
+cm"""
+$(bth("Log Rule for Integration"))
+
+Let ``u``  be a differentiable function of ``x``.
+```math
+	\begin{array}{llll}
+	\textrm{(i) }& \displaystyle \int \frac{1}{x} dx &=& \ln|x| + C  \\ \\
+	\textrm{(ii) }& \displaystyle \int \frac{1}{u} du &=& \ln|u| + C  \\ \\
+	\end{array}
+```
+$(eth())
+
+$(bbl("Remark",""))
+
+```math
+ \displaystyle \int \frac{u'}{u} dx = \ln|u| + C
+```
+
+$(ebl())
+"""
+
+# ╔═╡ 7935b0f9-ab43-4d64-bb60-262cf8af71bd
+cm"""
+$(ex(1,s="Using the Log Rule for Integration"))
+```math
+\int \frac{2}{x}dx
+```
+$(ex(3,s="Finding Area with the Log Rule"))
+Find the area of the region bounded by the graph of
+```math
+y = \frac{x}{x^2+1}
+```
+the ``x``-axis, and the line ``x=3``.
+
+<hr>
+
+$(ex(5,s="Using Long Division Before Integrating"))
+```math
+\int \frac{x^2+x+1}{x^2+1}dx
+```
+$(poolcode())
+"""
+
+# ╔═╡ 496deea6-4854-4e25-8803-c291765892e5
+cm"""
+$(ex(7,s="Solve the differential equation"))
+Solve 
+```math
+\frac{dy}{dx}=\frac{1}{x\ln x}
+```
+
+"""
+
+# ╔═╡ 3e81f117-a31f-41f3-9cb8-7e7f5371bf9d
+cm"""
+$(ex(8,s="Using a Trigonometric Identity"))
+
+```math
+\int \tan x dx
+```
+
+$(ex(9,s="Derivation of the Secant Formula"))
+
+```math
+\int \sec x dx
+```
+"""
+
+# ╔═╡ 1ba2cd48-1f1e-46b9-9bc0-ec90a4bb3161
+cm"""
+$(bth("Integrals Involving Inverse Trigonometric Functions"))
+
+Let ``u`` be a differential function of ``x``, and let ``a>0``.
+```math
+\begin{array}{lllll}
+\textrm{1.} & \displaystyle \int\frac{du}{\sqrt{a^2-u^2}} &=&\arcsin\frac{u}{a} + C \\ \\
+
+\textrm{2.} & \displaystyle \int\frac{du}{a^2+u^2} &=&\frac{1}{a}\arctan\frac{u}{a} + C \\ \\
+
+\textrm{3.} & \displaystyle \int\frac{du}{u\sqrt{u^2-a^2}} &=&\frac{1}{a}\text{arcsec}\frac{|u|}{a} + C \\ \\
+\end{array}
+```
+$(eth())
+"""
+
+# ╔═╡ 90a7cfa3-0c17-49e3-a0f7-5de745888863
+cm"""
+$(ex(5,s="Completing the Square"))
+Find
+```math
+\int\frac{dx}{x^2-4x+7}.
+```
+$(ex(6, s="Completing the Square"))
+Find the area of the region bounded by the graph of
+```math
+f(x) = \frac{1}{\sqrt{3x-x^2}}
+```
+the ``x``-axis, and the lines ``x=\frac{3}{2}`` and ``x=\frac{9}{4}``.
+
+"""
+
+# ╔═╡ 2f9c1c00-c765-4d95-9c52-d9b397498f80
+cm"""
+$(bth("Differentiation and Integration of Hyperbolic Functions"))
+
+__Theorem__ Let ``u`` be a differentiable function of ``x``.
+```math
+\begin{array}{rllllll}
+\displaystyle \frac{d}{dx}\left(\sinh u\right) &=& \left(\cosh u\right)u', &\qquad& 
+\displaystyle \int \cosh u du  &=& \sinh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\cosh u\right) &=& \left(\sinh u\right)u', &\qquad& 
+\displaystyle \int \sinh u du  &=& \cosh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\tanh u\right) &=& \left(\text{sech}^2 u\right)u', &\qquad& 
+\displaystyle \int \text{sech}^2 u du  &=& \tanh u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\coth u\right) &=& -\left(\text{csch}^2 u\right)u', &\qquad& 
+\displaystyle \int \text{csch}^2 u du  &=& -\coth u \; +\; C\\ \\
+
+\displaystyle \frac{d}{dx}\left(\text{sech} u\right) &=& -\left(\text{sech }u \tanh u\right)u', &\qquad& 
+\displaystyle \int \text{sech } u\tanh u du  &=& -\text{sech } u \; +\; C\\ \\
+
+
+\displaystyle \frac{d}{dx}\left(\text{csch} u\right) &=& -\left(\text{csch }u \coth u\right)u', &\qquad& 
+\displaystyle \int \text{csch } u\coth u du  &=& -\text{csch } u \; +\; C\\ \\
+
+\end{array}
+```
+$(eth())
+"""
+
+# ╔═╡ 6a763c24-f0cd-4442-9e7a-bf6a024b9a38
+cm"""
+$(ex(4,s="Integrating a Hyperbolic Function"))
+Find
+```math
+\int \cosh 2x \sinh^2 2x dx
+```
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -1037,7 +1644,7 @@ SymPy = "~1.1.12"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.2"
+julia_version = "1.9.3"
 manifest_format = "2.0"
 project_hash = "0dfc044350e3544ed06633bd47b08a9a26f92a3d"
 
@@ -2496,8 +3103,43 @@ version = "1.4.1+0"
 # ╟─fb700f45-2789-4085-a080-6d1e3d3ec3d1
 # ╟─1058bdbb-969f-405a-9578-c467286cae33
 # ╟─b8a5ff39-9800-4556-8715-2a556a5c628f
+# ╟─5e181bc0-db9a-4ac5-853c-72cd1ed597b7
+# ╟─d83e79d3-86fa-41e3-b453-c59bedb94520
+# ╠═4e76fbcc-27e8-46d8-9bd0-a339c5ac7508
+# ╟─dbfc14da-c752-46e7-ad24-938d5ea06d61
+# ╟─a448117a-921f-42b7-9a25-eedb13db685c
+# ╟─06b9474d-da67-491d-8ea0-1af4c237a349
+# ╟─021c3697-be87-4011-9fde-a09b569a09d3
+# ╟─fb811f14-8f2c-481d-927a-8670aba7112c
+# ╟─2a88724c-0f4c-48a2-83a1-e51a2c10a0c7
+# ╟─2fc3d33f-bb28-4e4c-a372-21d9006ad4df
+# ╟─eb8cb9bd-04d4-416c-aa11-24a3238d6185
+# ╟─8868e231-cf0b-4de3-b7d3-350ec62be835
 # ╟─059f7df0-3c91-408c-91aa-fa513864e817
+# ╟─b4adbb37-dbc9-4d43-b5c1-7550b8f8dfd3
+# ╟─f2f54f8e-125b-4e0c-bb67-444b001400d0
+# ╟─58c794e3-b35a-4e81-a136-2865e9bc53b4
+# ╟─2ec7cbb4-58c6-439b-9989-d45890d5bde0
+# ╟─9b865f48-d71a-4d69-9ce5-e941a8d26df9
+# ╟─3464f171-a986-4e68-b0fc-63bb37d3186a
+# ╟─3afeb15b-1f61-483a-b9e7-513e31b8b2d0
+# ╟─7935b0f9-ab43-4d64-bb60-262cf8af71bd
+# ╟─cab15078-1283-4a7f-8447-1996dedf988c
 # ╟─121748ad-633e-4057-aed1-fe55a3aaab06
+# ╟─496deea6-4854-4e25-8803-c291765892e5
+# ╟─12b91dea-100a-4932-8607-e8e65fff62a6
+# ╟─3e81f117-a31f-41f3-9cb8-7e7f5371bf9d
+# ╟─7bee0ddc-a560-4404-95c4-6afff2ee2cde
+# ╟─1ba2cd48-1f1e-46b9-9bc0-ec90a4bb3161
+# ╟─f5d277d1-66ea-41b4-80a8-396b8f3dd476
+# ╟─8c9895fb-a48b-4466-8abf-8ad0d353ac23
+# ╟─90a7cfa3-0c17-49e3-a0f7-5de745888863
+# ╟─1b43f966-72bd-4706-8e2a-7acf993bd5d9
+# ╟─a81742ca-d194-4b63-87a2-136580b6c67f
+# ╟─5a7927a7-65d3-445b-a0a6-fa9901414b54
+# ╟─09f2eebb-bd91-44ad-9a04-5441dc24a3d9
+# ╟─2f9c1c00-c765-4d95-9c52-d9b397498f80
+# ╟─6a763c24-f0cd-4442-9e7a-bf6a024b9a38
 # ╟─2845f715-b032-493f-a979-782fb70b700e
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001
