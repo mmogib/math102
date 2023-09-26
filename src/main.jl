@@ -849,6 +849,331 @@ __Hyperbolic Identities__
 ```
 """
 
+# ╔═╡ 6319d77c-c025-4caa-aea2-d34d3fa6fe9a
+md"""# 7.1: Area of a Region Between Two Curves
+
+__Objectives__
+> 1. Find the area of a region between two curves using integration.
+> 2. Find the area of a region between intersecting curves using integration.
+> 3. Describe integration as an accumulation process.
+
+"""
+
+# ╔═╡ f9d65649-3d39-42c0-9ad7-8dbf8601ea1a
+begin 
+	struct PlotData
+		x::StepRangeLen
+		fun::Function
+		lb::Union{Integer,Vector{Float64}}
+	end
+	PlotData(x,f)=PlotData(x,f,0)	
+	@recipe function f(t::PlotData; customcolor = :green, fillit=true)
+		x, fun, lb = t.x, t.fun, t.lb
+		xrotation --> 45
+		zrotation --> 6, :quiet
+		aspect_ratio --> 1
+		framestyle --> :origin
+		label-->nothing
+		fill --> (fillit ? (lb,0.5,customcolor) : nothing)
+		x, fun.(x)
+	end
+	# x, y = symbols("x,y", real=true)
+	p1Opt = (framestyle=:origin, aspectration=1)
+	function plot_implicit(F, c=0;
+			xrng=(-5,5), yrng=xrng, zrng=xrng,
+			nlevels=6,         # number of levels in a direction
+			slices=Dict(:x => :blue,
+				:y => :red,
+				:z => :green), # which directions and color
+			kwargs...          # passed to initial `plot` call
+		)
+
+		_linspace(rng, n=150) = range(rng[1], stop=rng[2], length=n)
+
+		X1, Y1, Z1 = _linspace(xrng), _linspace(yrng), _linspace(zrng)
+
+		p = Plots.plot(;legend=false,kwargs...)
+
+		if :x ∈ keys(slices)
+			for x in _linspace(xrng, nlevels)
+				local X1 = [F(x,y,z) for y in Y1, z in Z1]
+				cnt = contours(Y1,Z1,X1, [c])
+				for line in lines(levels(cnt)[1])
+					ys, zs = coordinates(line) # coordinates of this line segment
+					plot!(p, x .+ 0 * ys, ys, zs, color=slices[:x])
+				end
+			end
+		end
+
+		if :y ∈ keys(slices)
+			for y in _linspace(yrng, nlevels)
+				local Y1 = [F(x,y,z) for x in X1, z in Z1]
+				cnt = contours(Z1,X1,Y1, [c])
+				for line in lines(levels(cnt)[1])
+					xs, zs = coordinates(line) # coordinates of this line segment
+					plot!(p, xs, y .+ 0 * xs, zs, color=slices[:y])
+				end
+			end
+		end
+
+		if :z ∈ keys(slices)
+			for z in _linspace(zrng, nlevels)
+				local Z1 = [F(x, y, z) for x in X1, y in Y1]
+				cnt = contours(X1, Y1, Z1, [c])
+				for line in lines(levels(cnt)[1])
+					xs, ys = coordinates(line) # coordinates of this line segment
+					plot!(p, xs, ys, z .+ 0 * xs, color=slices[:z])
+				end
+			end
+		end
+
+
+		p
+	end
+	html"......"
+end
+
+# ╔═╡ 256aa7fa-07a0-4a5c-8e0d-899f7358d63b
+md"## Area of a Region Between Two Curves"
+
+# ╔═╡ c0309f25-d405-439d-b6ab-964bd3852f52
+begin
+	cnstSlider = @bind cnstslider Slider(-2:1:2, default=0)
+	n1Slider = @bind n1slider Slider(1:200, default=1,show_value=true)
+	md"""
+	| | |
+	|---|---|
+	|move $cnstSlider| ``n`` = $n1Slider|
+	|||
+	"""
+end
+
+
+
+# ╔═╡ 89f6aa3f-c4e0-4c40-ac65-9522bc8c4b77
+begin
+	f71(x) = sin(x)+3+cnstslider
+	f72(x) = cos(2x)+1+cnstslider
+	f73(x) = cos(2x)+4+cnstslider
+	poi1=solve(f71(x)-f73(x),x) .|> p -> p.n()
+	theme(:wong)
+	a71,b71 = 1, 5
+	Δx1 = (b71-a71)/n1slider
+	x1Rect =a71:Δx1:b71
+	x1 = a71:0.1:b71
+	y1 = f71.(x1)
+	y2 = f72.(x1)
+	y3 = f73.(x1)
+	
+	p1=plot(x1,y1, fill=(y2,0.25,:green), label=nothing,c=:red)
+	p2=plot(x1,y1, fill=(y3,0.25,:green), label=nothing,c=:red)
+	
+	plot!(p1,x1,y2,label=nothing)
+	plot!(p2,x1,y3,label=nothing)
+	annotate!(p1,[
+				(3.5,3.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(3.2,1+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	annotate!(p2,[
+				(1.2,4.5+cnstslider,L"y=f(x)",:red),
+				(5.9,0,L"x"),
+				(0.2,6,L"y"),
+				(4,5+cnstslider,L"y=g(x)",:blue)
+				]
+			)
+	
+	plot!(p1; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	recs =[
+			Shape([(xi,f72(xi)),(xi+Δx1,f72(xi)),(xi+Δx1,f71(xi+Δx1)),(xi,f71(xi+Δx1))]) 			 for xi in x1Rect[1:end-1]
+		  ]
+	n1slider>2 && plot!(p1,recs, label=nothing,c=:green)
+	plot!(p2; p1Opt...,ylims=(-3,6),xlims=(-1,6))
+	scatter!(p2,(poi1[1],f73(poi1[1])), label="Point of instersection",legend=:bottomright)
+	# save("./imgs/6.1/sec6.1p2.png",p2)
+	# annotate!(p2,[(4,0.51,(L"$\sum_{i=1}^{%$n2} f (x^*_{i})\Delta x=%$s2$",12))])
+	
+	md""" **How can we find the area between the two curves?**
+	
+$p1
+	
+```math
+Area = \int_a^b \left[{\color{red}f(x)} - {\color{blue}g(x)}\right] dx
+```
+"""
+
+end
+
+
+
+# ╔═╡ b6525a2a-ba92-426d-8145-ec1637b94bbe
+begin
+	ex1x=0:0.01:1
+	ex1y=exp.(ex1x)
+	ex1plt=plot(ex1x,ex1y,label=nothing,fill=(0,0.5,:red))
+	plot!(ex1plt,ex1x,ex1x,fill=(0,0,:white),label=nothing)
+	plot!(;p1Opt...,xlims=(-0.4,1.5),ylims=(-0.4,3.5),label=nothing,xticks=[0,0,1])
+	ex1Rect = Shape([(0.5,0.55),(0.55,0.55),(0.55,exp(0.55)),(0.5,exp(0.55))])
+	plot!(ex1Rect,label=nothing)
+	annotate!([	(0.77,0.6,L"y=x")
+			  ,	(0.7,exp(0.7)+0.2,L"y=e^x")
+			  , (1.1,1.7,L"x=1")
+			  , (-0.1,0.5,L"x=0")
+			  , (0.54,0.44,text(L"\Delta x",10))
+			  ])
+	md"""
+	**Solution**
+	
+	$ex1plt
+	"""
+end
+
+
+
+# ╔═╡ d135dec8-4f04-4636-8959-826b80da3054
+md"""## Area of a Region Between Intersecting Curves
+
+In geberal,
+
+$p2
+	
+```math
+Area = \int_a^b \left|f(x) - g(x)\right| dx
+```
+
+"""
+
+
+
+# ╔═╡ 7f24e7d9-b4a3-47d7-be46-0cb0489b6126
+begin
+	img1 = load(download("https://www.dropbox.com/s/r39ny15umqafmls/wrty.png?raw=1"))
+	img1 = imresize(img1,ratio=1.5)
+	md"""
+	__Integrating with Respect to ``y``__
+	
+	$img1
+	
+	"""
+	
+end
+
+
+
+# ╔═╡ 41e00300-a42e-4370-a771-dabd789929b7
+md"""# 7.2: Volume: The Disk Method
+> __Objectives__
+> - Find the volume of a solid of revolution using the disk method.
+> - Find the volume of a solid of revolution using the washer method.
+> - Find the volume of a solid with known cross sections.
+
+## The Disk Method
+
+
+"""
+
+# ╔═╡ 8692fe90-8a37-411d-81c7-7a5217190ab1
+cm"""
+**Solids of Revolution**
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/z2k777veuxiaorq/solids_of_revs.png?raw=1"))
+</div>
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/ik73cokibh1fuj6/disk_volume.png?raw=1"))
+
+__Volume of a disk__
+```math
+V = \pi R^2 w
+```
+</div>
+
+<div class="img-container">
+
+__Disk Method__
+
+$(Resource("https://www.dropbox.com/s/odttq795nrpcznw/disk_method.png?raw=1"))
+</div>
+
+```math
+\begin{array}{lcl}
+\textrm{Volume of solid} & \approx &\displaystyle \sum_{i=1}^n\pi\bigl[R(x_i)\bigr]^2 \Delta x \\
+	& = &\displaystyle \pi\sum_{i=1}^n\bigl[R(x_i)\bigr]^2 \Delta x
+\end{array}
+```
+Taking the limit ``\|\Delta\|\to 0 (n\to \infty)``, we get
+
+
+```math
+\begin{array}{lcl}
+\textrm{Volume of solid} & = &\displaystyle\lim_{\|\Delta\|\to 0}\pi \sum_{i=1}^n\bigl[R(x_i)\bigr]^2 \Delta x \end{array} = \pi \int_{a}^{b}\bigl[R(x)\bigr]^2 dx.
+```
+
+<div class="img-container">
+
+__Disk Method__
+
+__To find the volume of a solid of revolution with the disk method, use one of the formulas below__
+
+$(Resource("https://www.dropbox.com/s/9kpj2dcrwj5y5h8/disk_volume_v_h.png?raw=1"))
+</div>
+
+"""
+
+# ╔═╡ b80374f0-0f17-473e-8aa1-501065ec611f
+md"## The Washer Method"
+
+# ╔═╡ 95d66bca-8ba9-4e4d-b86d-302f8a869d50
+cm"""
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/ajra8g5fr8ssewe/washer_volume.png?raw=1"))
+
+```math
+\textrm{Volume of washer} = \pi(R^2-r^2)w
+```
+</div>
+
+__Washer Method__
+
+
+<div class="img-container">
+
+$(Resource("https://www.dropbox.com/s/hvwa3707bftjir0/washer_method.png?raw=1"))
+
+```math
+V = \pi\int_a^b \bigl[\left(R[x]\right)^2-\left(r[x]\right)^2) dx
+```
+</div>
+"""
+
+# ╔═╡ b80a56ee-6679-462c-890e-b70bef86f9de
+md"## Solids with Known Cross Sections"
+
+# ╔═╡ fa2a6253-258e-4b03-a46f-dd19a20f4316
+cm"""
+**Exercise**
+Find the volume of the solid obtained by rotating the region bounded by ``y=x^3``, ``y=8`` , and ``x=0`` about the ``y``-axis.
+
+**Exercise** The region ``\mathcal{R}`` enclosed by the curves ``y=x`` and ``y=x^2`` is rotated about the ``x``-axis. Find the volume of the resulting solid.
+
+**Exercise** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``y=2``.
+
+**Exercise** Find the volume of the solid obtained by rotating the region in the previous Example about the line ``x=-1``.
+
+"""
+
+# ╔═╡ 33cf7304-6211-4141-a695-a82066e54f6d
+md"""
+**Exercise** Figure below shows a solid with a circular base of radius ``1``. Parallel cross-sections perpendicular to the base are equilateral triangles. Find the volume of the solid.
+$(load(download("https://www.dropbox.com/s/bbxedang718jvvp/img4.png?dl=0")))
+"""
+
 # ╔═╡ 2845f715-b032-493f-a979-782fb70b700e
 begin
 	function poolcode()
@@ -1607,6 +1932,130 @@ Find
 \int \cosh 2x \sinh^2 2x dx
 ```
 """
+
+# ╔═╡ ebe40dc4-5052-4abc-baf3-720cec4da2b3
+cm"""
+
+**Remark**
+- Area = ``y_{top}-y_{bottom}``.
+
+$(ex(1,s="Finding the Area of a Region Between Two Curves"))
+
+Find the area of the region bounded above by ``y=e^x``, bounded below by ``y=x``, bounded on the sides by ``x=0`` and ``x=1``.
+
+---
+"""
+
+
+
+# ╔═╡ 79009edb-ce5c-4559-af1d-5f3e868b55ad
+cm"""
+$(ex(2,s="A Region Lying Between Two Intersecting Graphs"))
+
+Find the area of the region enclosed by the graphs of ``f(x)=2-x^2`` and ``g(x)=x``.
+
+*Solution in class*
+
+---
+"""
+
+
+
+# ╔═╡ 69015687-860b-45fc-a09b-683c0a71dcbc
+cm"""
+$(ex(3,s="A Region Lying Between Two Intersecting Graphs"))
+
+Find the area of the region bounded by the curves 
+
+```math 
+y=\cos(x), \;\; y=\sin(x), \;\; x=0, \;\; x=\frac{\pi}{2}
+```
+
+
+---
+"""
+
+
+
+# ╔═╡ 272b1195-9e7a-43c3-81ea-dbf493a1120c
+cm"""
+$(ex(4,s="Curves That Intersect at More than Two Points"))
+Find the area of the region between the graphs of
+```math
+f(x) = 3x^3-x^2 -10x, \qquad g(x)=-x^2+2x.
+```
+"""
+
+# ╔═╡ b4d3f89a-62a4-454a-b15e-c6e9c2cc5b41
+cm"""
+$(ex(5,s="Horizontal Representative Rectangles"))
+Find the area of the region bounded by the graphs of ``x=3-y^2`` and ``x=y+1``.
+"""
+
+# ╔═╡ e73977c4-d5a9-46ae-bc71-8b4b2e6b37ba
+cm"""
+$(ex(1,s="Using the Disk Method"))
+Find the volume of the solid formed by revolving the region bounded by the graph of
+```math
+f(x) = \sqrt{\sin x}
+```
+and the ``x``-axis (``0\leq x\leq \pi``) about the ``x``-axis
+"""
+
+# ╔═╡ cf9b982a-77e0-4c4d-8543-d216fa7e8470
+cm"""
+$(ex(2,s="Using a Line That Is Not a Coordinate Axis"))
+Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+f(x)=2-x^2
+```
+and ``g(x)=1``  about the line ``y=1``.
+"""
+
+# ╔═╡ af02099b-229a-446f-bc6d-f83e56429e7c
+cm"""
+$(ex(3,s="Using the Washer Method"))
+Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+y=\sqrt{x} \qquad \textrm{and}\qquad  y = x^2
+```
+about the ``x``-axis.
+"""
+
+# ╔═╡ b6562828-b81a-41b2-a1f0-0e679866192c
+cm"""
+$(ex(4,s="Integrating with Respect to `y`: Two-Integral Case")) 
+Find the volume of the solid formed by revolving the region bounded by the graphs of
+```math
+y=x^2+1, \quad y=0, \quad x=0, \quad \textrm{and}\quad x=1
+```
+about the ``y``-axis
+"""
+
+# ╔═╡ 40c1a6a7-65c1-4ef6-bee8-2eb454dcf83a
+cm"""
+
+[Example 1](https://www.geogebra.org/m/XFgMaKTy) | [Example 2](https://www.geogebra.org/m/XArpgR3A)
+
+$(bbl("Volumes of Solids with Known Cross Sections",""))
+1. For cross sections of area ``A(x)`` taken perpendicular to the ``x``-axis,
+```math
+V = \int_a^b A(x) dx
+```
+2. For cross sections of area ``A(y)`` taken perpendicular to the ``y``-axis,
+```math
+V = \int_c^d A(y) dy
+```
+$(ebl())
+
+$(ex(6,s="Triangular Cross Sections"))
+The base of a solid is the region bounded by the lines
+```math
+f(x)=1-\frac{x}{2},\quad g(x)=-1+\frac{x}{2}\quad \textrm{and}\quad x=0.
+```
+The cross sections perpendicular to the ``x``-axis are equilateral triangles.
+"""
+
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -3140,6 +3589,31 @@ version = "1.4.1+0"
 # ╟─09f2eebb-bd91-44ad-9a04-5441dc24a3d9
 # ╟─2f9c1c00-c765-4d95-9c52-d9b397498f80
 # ╟─6a763c24-f0cd-4442-9e7a-bf6a024b9a38
+# ╟─6319d77c-c025-4caa-aea2-d34d3fa6fe9a
+# ╟─f9d65649-3d39-42c0-9ad7-8dbf8601ea1a
+# ╟─256aa7fa-07a0-4a5c-8e0d-899f7358d63b
+# ╟─c0309f25-d405-439d-b6ab-964bd3852f52
+# ╟─89f6aa3f-c4e0-4c40-ac65-9522bc8c4b77
+# ╟─ebe40dc4-5052-4abc-baf3-720cec4da2b3
+# ╟─b6525a2a-ba92-426d-8145-ec1637b94bbe
+# ╟─d135dec8-4f04-4636-8959-826b80da3054
+# ╟─79009edb-ce5c-4559-af1d-5f3e868b55ad
+# ╟─69015687-860b-45fc-a09b-683c0a71dcbc
+# ╟─272b1195-9e7a-43c3-81ea-dbf493a1120c
+# ╟─7f24e7d9-b4a3-47d7-be46-0cb0489b6126
+# ╟─b4d3f89a-62a4-454a-b15e-c6e9c2cc5b41
+# ╟─41e00300-a42e-4370-a771-dabd789929b7
+# ╟─8692fe90-8a37-411d-81c7-7a5217190ab1
+# ╟─e73977c4-d5a9-46ae-bc71-8b4b2e6b37ba
+# ╟─cf9b982a-77e0-4c4d-8543-d216fa7e8470
+# ╟─b80374f0-0f17-473e-8aa1-501065ec611f
+# ╟─95d66bca-8ba9-4e4d-b86d-302f8a869d50
+# ╟─af02099b-229a-446f-bc6d-f83e56429e7c
+# ╟─b6562828-b81a-41b2-a1f0-0e679866192c
+# ╠═b80a56ee-6679-462c-890e-b70bef86f9de
+# ╟─40c1a6a7-65c1-4ef6-bee8-2eb454dcf83a
+# ╟─fa2a6253-258e-4b03-a46f-dd19a20f4316
+# ╟─33cf7304-6211-4141-a695-a82066e54f6d
 # ╟─2845f715-b032-493f-a979-782fb70b700e
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001

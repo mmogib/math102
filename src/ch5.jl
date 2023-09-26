@@ -1599,7 +1599,7 @@ f(x) = (x-1)\cosh x \; -\; \sinh x.
 
 __Example__ Find
 ```math
-\int \cosh 2x \sinh^2 2x dx
+\displaystyle \int_{5/3}^2 \csch(3x-4)\coth(3x-4) dx
 ```
 """
 
