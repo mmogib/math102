@@ -1472,6 +1472,304 @@ md"""
 # ╔═╡ 76810624-6ffc-457e-8562-05491e2528aa
 md"## Integrals Involving Sine-Cosine Products"
 
+# ╔═╡ 9a266cbc-a292-4f68-8afa-00479060489d
+md"""
+# 8.4: Trigonometric Substitution
+> __Objectives__
+> 1. Use trigonometric substitution to find an integral.
+> 2. Use integrals to model and solve real-life applications.
+"""
+
+# ╔═╡ d1fcddac-b706-4271-9f0f-6fc816876ac9
+md"""
+## Trigonometric Substitution
+"""
+
+# ╔═╡ 72664d64-11bc-4184-b149-fe897fa628b2
+cm"""
+We use __trigonometric substitution__ to find integrals involving the radicals
+```math
+\sqrt{a^2-u^2},\quad \sqrt{a^2+u^2},\quad \sqrt{u^2-a^2}.
+```
+"""
+
+# ╔═╡ 7381759c-5ad1-4948-84dc-1311b5345b55
+md"## Applications"
+
+# ╔═╡ 9d865d41-d46a-4c23-b760-7ceee6b62936
+md"""
+# 8.5: Partial Fractions
+> __Objectives__
+> 1. Understand the concept of partial fraction decomposition.
+> 2. Use partial fraction decomposition with linear factors to integrate rational functions.
+> 3. Use partial fraction decomposition with quadratic factors to integrate rational functions.
+
+## Partial Fractions
+
+We learn how to integrate rational function: quotient of polunomial.
+```math
+ f(x) =\frac{P(x)}{Q(x)}, \qquad P, Q \text{ are polynomials}
+```
+ 
+**How?**
+
+◾ __STEP 0__ : if degree of ``P`` is greater than or equal to degree of ``Q`` goto
+__STEP 1__, else GOTO __STEP 2__.
+
+◾ __STEP 1__ : Peform long division of ``P`` by ``Q`` to get 
+```math
+ \frac{P(x)}{Q(x)} = S(x) + \frac{R(x)}{Q(x)}
+```
+and apply __STEP 2__ on  ``\frac{R(x)}{Q(x)}``.
+
+◾ __STEP 2__ : Write the __partial fractions decomposition__  
+
+◾ __STEP 3__ : Integrate
+ 
+"""
+
+# ╔═╡ c040cf3d-5bce-4b59-9274-04e745f43c61
+md"""
+__Partial Fractions Decomposition__
+
+We need to write ``\frac{R(x)}{Q(x)}`` as sum of __partial fractions__ by __factor__ ``Q(x)``. Based on the factors, we write the decomposition accoding to the following cases
+
+__case 1__: ``Q(x)`` is a product of distinct linear factors.
+we write 
+```math
+Q(x)=(a_1x+b_1)(a_2x+b_2)\cdots (a_kx+b_k)
+```
+then there exist constants ``A_1, A_2, \cdots, A_k`` such that
+```math
+\frac{R(x)}{Q(x)}= \frac{A_1}{a_1x+b_1}+\frac{A_2}{a_2x+b_2}+\cdots +\frac{A_k}{a_kx+b_k}
+```
+
+__case 2__: ``Q(x)`` is a product of linear factors, some of which are repeated.
+say first one 
+```math
+Q(x)=(a_1x+b_1)^r(a_2x+b_2)\cdots (a_kx+b_k)
+```
+then there exist constants ``B_1, B_2, \cdots B_r, A_2, \cdots, A_k`` such that
+```math
+\frac{R(x)}{Q(x)}= \left[\frac{B_1}{a_1x+b_1}+\frac{B_2}{(a_1x+b_1)^2}+\cdots \frac{B_r}{(a_1x+b_1)^r}\right]+ \frac{A_2}{a_2x+b_2}+\cdots +\frac{A_k}{a_kx+b_k}
+```
+
+
+__case 3__: ``Q(x)`` contains irreducible quadratic factors, none of which is repeated.
+say we have (Note: the quadratic factor ``ax^2+bx+c`` is irreducible if ``b^2-4ac<0``). For eaxmple if
+```math
+Q(x)=(ax^2+bx+c)(a_1x+b_1)
+```
+then there exist constants ``A, B,`` and ``C`` such that
+```math
+\frac{R(x)}{Q(x)}= \frac{Ax+B}{ax^2+bx+c}+\frac{C}{a_1x+b_1}
+```
+
+__case 4__: ``Q(x)`` contains irreducible quadratic factors, some of which are repeated. For example if
+```math
+Q(x)=(ax^2+bx+c)^r(a_1x+b_1)
+```
+then there exist constants ``A_1, B_1, A_2, B_2, \cdots A_r, B_r `` and ``C`` such that
+```math
+\frac{R(x)}{Q(x)}= \left[\frac{A_1x+B_1}{ax^2+bx+c}+\frac{A_2x+B_2}{(ax^2+bx+c)^2}+\cdots+\frac{A_rx+B_r}{(ax^2+bx+c)^r}\right]+\frac{C}{a_1x+b_1}
+```
+
+
+
+"""
+
+# ╔═╡ 94380cb1-ec66-4a52-93e0-2911e2e75b9f
+md"""
+**More Examples**
+
+Find
+```math
+\begin{array}{lll}
+\text{(1)} & \displaystyle \int \frac{1}{x^2-5x+6}dx. \\
+\text{(2)} &\displaystyle \int  \frac{5x^2+20x+6}{x^3+2x^2+x}dx. \\
+\text{(3)} &\displaystyle \int  \frac{2x^3-4x-8}{(x^2-x)(x^2+4)}dx. \\
+\text{(4)} &\displaystyle \int  \frac{8x^3+13x}{(x^2+2)^2}dx. \\
+\text{(5)} &\displaystyle \int  \frac{x^3+x}{x-1}dx. \\
+\text{(6)} &\displaystyle \int  \frac{x^2+2x-1}{2x^3+3x^2-2x}dx. \\
+\text{(7)} &\displaystyle \int  \frac{dx}{x^2-a^2}, \text{  where } a\not = 0 \\
+\text{(8)} &\displaystyle \int  \frac{x^4-2x^2+4x+1}{x^3-x^2-x+1}dx \\
+\text{(9)} &\displaystyle \int  \frac{2x^2-x+4}{x^3+4x}dx \\
+\text{(10)} &\displaystyle \int   \frac{4x^2-3x+2}{4x^2-4x+3}dx \\
+\text{(11)} &\displaystyle \int   \frac{1-x+2x^2-x^3}{x(x^2+1)^2}dx \\
+\end{array}
+```
+
+"""
+
+# ╔═╡ 8cc6f38f-c6c9-4ad2-adb6-ba252a98e06c
+md"""
+**Remarks**
+```math
+\int \frac{dx}{x^2-a^2} = \frac{1}{2a}\ln\left|\frac{x-a}{x+a}\right|
+```
+
+```math
+\int \frac{dx}{x^2+a^2} = \frac{1}{a}\tan^{-1}\left(\frac{x}{a}\right)
+```
+"""
+
+# ╔═╡ b7f80565-cf9b-4c4d-ab06-aade08bfc0f9
+md"""
+__Rationalizing Substitutions__
+Find
+```math
+\begin{array}{lll}
+\text{(1)} & \int \frac{\sqrt{x+4}}{x}dx. \\
+\text{(2)} & \int \frac{dx}{2\sqrt{x+3}+\;x}. \\
+\end{array}
+```
+"""
+
+# ╔═╡ a095f3d2-d61d-4ec5-a3fc-4ac7d3893ec1
+md"""
+# 8.7: Rational Functions of Sine & Cosine 
+
+
+
+Special Substitution (``u = \tan \left(\frac{x}{2}\right), \quad -\pi < x < \pi``)
+**(for rational functions of ``\sin x`` and ``\cos x``)**
+```math
+\begin{array}{lll}
+dx=\frac{2}{1+u^2}du, & \cos{x}=\frac{1-u^2}{1+u^2}, &  \sin{x}=\frac{2u}{1+u^2} \\
+\end{array}
+```
+```math
+\begin{array}{lll}
+\text{(1)} & \displaystyle\int \frac{dx}{3\sin x - 4 \cos x}. \\
+\text{(2)} & \displaystyle\int_0^{\pi\over 2} \frac{\sin 2x \;dx}{2+\cos x}. \\
+\end{array}
+```
+
+"""
+
+# ╔═╡ 926201c3-50c7-40a8-bd21-d9b1684046b7
+md"""
+# 8.8: Improper Integrals
+> __Objectives__
+> - Evaluate an improper integral that has an infinite limit of integration.
+> - Evaluate an improper integral that has an infinite discontinuity.
+*__Do you know how to evaluate the following?__*
+```math
+
+\begin{array}{llr}
+\text{(1)} & \int_1^{\infty} \frac{1}{x^2} dx & (\text{Type 1}) \\ \\
+\text{(2)} & \int_0^{2} \frac{1}{x-1} dx & (\text{Type 2}) \\ \\
+\end{array}
+```
+"""
+
+# ╔═╡ 41284787-6dca-4e73-88c5-2699300d0951
+md"## Improper Integrals with Infinite Limits of Integration"
+
+# ╔═╡ 953e09f8-b986-4a82-86c8-533438cb88ad
+md"""
+**Example:** Determine whether the following integrals  are convergent or divergent.
+
+```math
+\begin{array}{ll}
+\text{(1)} & \displaystyle \int_1^{\infty} \frac{1}{x^2} dx \\ \\
+\text{(2)} & \displaystyle\int_1^{\infty} \frac{1}{x} dx \\ \\
+\text{(3)} & \displaystyle\int_{0}^{\infty} e^{-x} dx\\ \\
+\text{(4)} & \displaystyle\int_{-\infty}^{\infty} \frac{1}{1+x^2} dx\\ \\
+\end{array}
+```
+"""
+
+# ╔═╡ 146fb901-25d6-4dfb-b272-5562e83eaba8
+begin
+	tSlider = @bind tslider Slider(1:10000,show_value=true)
+	md"""
+	
+	-------------
+	
+
+	t = $tSlider
+	
+	"""
+end
+
+# ╔═╡ 312afe0f-55bf-472b-be7e-84079c32c47d
+begin
+	pd1 = PlotData(1:0.1:10,x->1/x)
+	pd2 = PlotData(1:0.1:10,x->1/x^2)
+	int1 = round(integrate(1/x,(x,1,tslider)).n(),digits=3)
+	int2 = round(integrate(1/x^2,(x,1,tslider)).n(),digits=3)
+	pt1=tslider
+	pt1=L"\int_1^{%$tslider} \frac{1}{x}dx = %$int1"
+	pt2=L"\int_1^{%$tslider} \frac{1}{x^2}dx = %$int2"
+	p881 = plot(pd1,annotation=[(3.5,4.5,pt1,12)],ylims=(-1,6))
+	p882 = plot(pd2,annotation=[(3.5,4.5,pt2,12)],ylims=(-1,6))
+	plot(p881,p882,layout=@layout([a b]))
+	
+end
+
+# ╔═╡ 990bc451-2065-4e14-88bb-886eadd8535a
+begin
+	ttSlider = @bind ttslider Slider(1:1000,show_value=true)
+	pSlider = @bind pslider NumberField(-10:0.1:10,default=1)
+	md"""
+	
+	-------------
+	
+	|||
+	|---|---|
+	|||
+	|p = $pSlider | 
+	|||
+	
+	"""
+end
+
+# ╔═╡ 89eb38dc-7226-478f-9196-ddc278a3d135
+begin
+	tt,pp=ttslider, pslider
+	ptxt = pslider==1 ? "x" : "x^{$pslider}"
+	fn3(p) = p>0 ? 1/x^p : p==0 ? x : x^abs(p) 
+	int3(p,t) = integrate(fn3(p),(x,1,oo))
+	pt3(t)= t<1000 ? L"\int_1^{\infty} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))" : L"\int_1^{\infty} \frac{1}{%$ptxt}dx = %$(int3(pslider,ttslider))"
+	p883=plot(-1:3;annotations=[(3,4,pt3(tt),14)], showaxis=:hide,ticks=[],label=:none,
+		c=:white,ylims=(3,5),size=(600,100))
+	md"""
+	
+	-------------
+	
+	$p883
+	
+	"""
+end
+
+# ╔═╡ 61af1772-e210-4523-9587-5105bb859020
+cm"""
+**Remark**
+
+```math
+\int_1^{\infty} \frac{1}{x^p}dx \quad \text{ is convergent if } p > 1 \text{ and divergent if } p\leq 1.
+```
+
+"""
+
+# ╔═╡ b006a96a-6ebc-4e44-a2da-f202fd150005
+md"## Improper Integrals with Infinite Discontinuities"
+
+# ╔═╡ 53f18531-404b-4b46-a452-1429d145544e
+cm"""
+**Example:** 
+```math
+\begin{array}{ll}
+\text{(1)} & \int_2^5 \frac{1}{\sqrt{x-2}} dx \\ \\
+\text{(2)} & \int_0^{3} \frac{1}{1-x} dx \\ \\
+\text{(3)} & \int_{0}^{1} \ln x dx\\ \\
+\end{array}
+```
+
+
+"""
+
 # ╔═╡ 2845f715-b032-493f-a979-782fb70b700e
 begin
 	function poolcode()
@@ -2562,6 +2860,107 @@ Find ``\displaystyle \int \frac{\sec x}{\sqrt{\tan^2 x}} dx``.
 cm"""
 $(ex(8,s="Using a Product-to-Sum Formula"))
 Find ``\displaystyle \int \sin 5x \cos 4x dx``.
+"""
+
+# ╔═╡ b4c7bc3c-be86-494a-92b7-da2fe1dbb03b
+cm"""
+$(ex(1,s="Trigonometric Substitution"))
+Find ``\displaystyle \int \frac{dx}{x^2\sqrt{9-x^2}}``.
+
+$(ex(2,s="Trigonometric Substitution"))
+Find ``\displaystyle \int \frac{dx}{\sqrt{4x^2+1}}``.
+
+
+$(ex(3,s="Trigonometric Substitution: Rational Powers"))
+Find ``\displaystyle \int \frac{dx}{(x^2+1)^{3/2}}``.
+
+
+$(ex(4,s="Converting the Limits of Integration"))
+Find ``\displaystyle \int_{\sqrt{3}}^{2} \frac{\sqrt{x^2-3}}{x}dx``.
+"""
+
+# ╔═╡ e039ddb5-000f-4289-9a0c-9fc02b401dbf
+cm"""
+$(ex(5,s="Finding Arc Length"))
+Find the arc length of the graph of ``f(x)=\frac{1}{2}x^2`` from ``x=0`` to ``x=1``.
+
+
+"""
+
+# ╔═╡ fda5809c-cd1e-4be1-8091-c927efa44bed
+cm"""
+$(example("Example","Partial Fractions")) 
+Write out the form of the partial fractions decomposition of the function
+```math
+\frac{x^3+x+1}{x(x-1)(x+1)^2(x^2+x+1)(x^2+4)^2}
+```
+"""
+
+# ╔═╡ 9bb81d90-4ec1-4669-aaf8-571428fd1c43
+cm"""
+$(bbl("Definition of an Improper Integral of Type 1",""))
+
+**(a)** If ``\int_a^t f(x) dx`` exists for every number ``t\ge a``, then
+```math
+\int_a^{\infty} f(x) dx = \lim_{t\to \infty} \int_a^t f(x) dx
+```
+provided this limit exists (as a finite number).
+
+
+**(b)** If ``\int_t^b f(x) dx`` exists for every number ``t\le b``, then
+```math
+\int_{-\infty}^b f(x) dx = \lim_{t\to -\infty} \int_t^b f(x) dx
+```
+provided this limit exists (as a finite number).
+
+The improper integrals ``\int_a^{\infty} f(x) dx`` and ``\int_{-\infty}^b f(x) dx`` are called *__convergent__* if the corresponding limit exists and *__divergent__* if the limit does not exist.
+
+**(c)** If both ``\int_a^{\infty} f(x) dx`` and ``\int_{-\infty}^b f(x) dx`` are convergent, then we define
+```math
+\int_{-\infty}^{\infty} f(x) dx =  \int_{-\infty}^a f(x) dx +\int_a^{\infty} f(x) dx
+```
+
+In part (c) any real number  can be used
+$(ebl())
+"""
+
+
+# ╔═╡ f36c8419-9fc0-40b3-8c35-302694ae02c7
+cm"""
+$(bbl("Definition of an Improper Integral of Type 2",""))
+
+**(a)** If ``f`` is continuous on ``[a,b)`` and is discontinuous at ``b``, then
+
+```math
+\int_a^b f(x) dx = \lim_{t\to b^-} \int_a^t f(x) dx
+```
+
+provided this limit exists (as a finite number).
+
+
+**(b)** If ``f`` is continuous on ``(a,b]`` and is discontinuous at ``a``, then
+```math
+\int_a^b f(x) dx = \lim_{t\to a^{+}} \int_t^b f(x) dx
+```
+provided this limit exists (as a finite number).
+
+
+The improper integral ``\int_a^b f(x) dx`` is called **convergent** if the corresponding limit exists and **divergent** if the limit does not exist.
+
+**(c)** If ``f`` has a discontinuity at ``c``, where ``a < c < b``, and both ``\int_a^c f(x) dx`` and ``\int_c^b f(x) dx`` are convergent, then we define
+
+```math
+\int_{a}^{b} f(x) dx =  \int_{a}^c f(x) dx +\int_c^b f(x) dx
+```
+
+$(ebl())
+
+"""
+
+# ╔═╡ c226414b-a365-448d-b063-b51107dc9af8
+cm"""
+$(ex(9,s="Doubly Improper Integral"))
+Evaluate ``\displaystyle \int_0^{\infty}\frac{dx}{\sqrt{x}(x+1)}``
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -4169,6 +4568,32 @@ version = "1.4.1+0"
 # ╟─758f54b6-9643-4d66-a22e-d3fc432bb3b7
 # ╟─76810624-6ffc-457e-8562-05491e2528aa
 # ╟─8abaf091-1709-40af-ab35-454429c7befd
+# ╟─9a266cbc-a292-4f68-8afa-00479060489d
+# ╟─d1fcddac-b706-4271-9f0f-6fc816876ac9
+# ╟─72664d64-11bc-4184-b149-fe897fa628b2
+# ╟─b4c7bc3c-be86-494a-92b7-da2fe1dbb03b
+# ╟─7381759c-5ad1-4948-84dc-1311b5345b55
+# ╟─e039ddb5-000f-4289-9a0c-9fc02b401dbf
+# ╟─9d865d41-d46a-4c23-b760-7ceee6b62936
+# ╟─c040cf3d-5bce-4b59-9274-04e745f43c61
+# ╟─fda5809c-cd1e-4be1-8091-c927efa44bed
+# ╟─94380cb1-ec66-4a52-93e0-2911e2e75b9f
+# ╟─8cc6f38f-c6c9-4ad2-adb6-ba252a98e06c
+# ╟─b7f80565-cf9b-4c4d-ab06-aade08bfc0f9
+# ╟─a095f3d2-d61d-4ec5-a3fc-4ac7d3893ec1
+# ╟─926201c3-50c7-40a8-bd21-d9b1684046b7
+# ╟─41284787-6dca-4e73-88c5-2699300d0951
+# ╟─9bb81d90-4ec1-4669-aaf8-571428fd1c43
+# ╟─953e09f8-b986-4a82-86c8-533438cb88ad
+# ╟─146fb901-25d6-4dfb-b272-5562e83eaba8
+# ╟─312afe0f-55bf-472b-be7e-84079c32c47d
+# ╟─990bc451-2065-4e14-88bb-886eadd8535a
+# ╟─89eb38dc-7226-478f-9196-ddc278a3d135
+# ╟─61af1772-e210-4523-9587-5105bb859020
+# ╟─b006a96a-6ebc-4e44-a2da-f202fd150005
+# ╟─f36c8419-9fc0-40b3-8c35-302694ae02c7
+# ╟─53f18531-404b-4b46-a452-1429d145544e
+# ╟─c226414b-a365-448d-b063-b51107dc9af8
 # ╟─2845f715-b032-493f-a979-782fb70b700e
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001
