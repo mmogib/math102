@@ -1770,6 +1770,998 @@ cm"""
 
 """
 
+# ╔═╡ fe887af5-a9a4-462f-8fa9-30baae002131
+md"""
+# 9.1: Sequences
+> Objectives
+> * Write the terms of a sequence.
+> * Determine whether a sequence converges or diverges.
+> * Write a formula for the th term of a sequence.
+> * Use properties of monotonic sequences and bounded sequences.
+
+__Sequence__: A sequence can be thought of as a list of numbers written in a definite order:
+```math
+a_1, a_2, a_3, \cdots, a_n, \cdots 
+```
+
+- ``a_1``: first term,
+- ``a_2``: second term,
+- ``a_3``: third term,
+- ``\vdots``
+- ``a_n``: ``\text{n}^\text{th}`` term,
+
+
+---
+
+__For example__: 
+* ``1, 2, 3, \cdots``
+* ``1, 1/2, 1/3, \cdots``
+* ``-1, 1, -1, \cdots``
+
+---
+
+__Notation:__
+- ``\{a_1, a_2, a_3, \cdots, a_n, \cdots\} = \{a_n\}`` or
+- ``\{a_1, a_2, a_3, \cdots, a_n, \cdots \}= \left\{a_n\right\}_{n=1}^{\infty}``
+
+"""
+
+# ╔═╡ 967b72bb-d439-46c3-b449-4fe9c8fa5490
+md"""
+__More examples__
+
+- ``\left\{\frac{n}{n+1}\right\}``
+- ``\left\{\frac{(-1)^n(n+1)}{5^n}\right\}``
+- ``\left\{\sqrt{n-4}\right\}_{n=4}^{\infty}``
+- ``a_1=1$, $a_2=1$ , $a_n=a_{n-1}+a_{n-2}``         (__Fibonacci sequence__)
+"""
+
+# ╔═╡ efd4f9db-2c4c-48d5-9473-34099c71e4ee
+n91Slider = @bind n91slider  NumberField(1:1000);md"n = $n91Slider"
+
+# ╔═╡ a9d506a8-dc18-4ffd-a0e7-94ee912d2a90
+begin
+	a91(n) = n/(n+1)
+	d91=1:n91slider
+	plt91 = scatter(a91.(d91), zeros(10),
+		frame_style=:origin, 
+		ylimits=(-0.1,1),
+		xlimits=(0.2,1.2),
+		yaxis=nothing,
+		label=L"a_n=\frac{n}{n+1}",
+		showaxis=:x,
+		legend=:topleft,
+		title_location=:left,
+		grid=:none,
+		title="Example 1"
+	)
+	annotate!(plt91,[(0.4,0.5,L"a_{%$n91slider}=\frac{%$n91slider}{%$(1+n91slider)}=%$(round(a91(n91slider),digits=6))")])
+	if (n91slider>=99)
+		
+		lens!(plt91,[0.99, 1.001], [-0.1,1.1], inset = (1, bbox(0.6, 0.0, 0.4, 0.5)),
+				yaxis=nothing,
+				frame_style=:origin, 
+				showaxis=:x,
+			grid=:none,
+			annotations=[(0.998,0.3,"Zoom",7)]
+		)
+	end
+	md"""
+	$plt91
+	"""
+		
+end
+
+# ╔═╡ 0a3e8db6-aa43-44b0-a462-850fc28e6da2
+md"""
+__Visualization__
+
+1. On a number line (as above)
+2. By plotting graph
+
+"""
+
+# ╔═╡ 2e8b9671-6e4a-4b97-9b3d-04dc9ca1437c
+n92Slider = @bind n92slider  NumberField(1:1000);md"n = $n92Slider"
+
+# ╔═╡ 49efb8aa-772b-4e82-ae95-c40003183c5b
+begin
+	d92=1:n92slider
+	plt92 = scatter(d92, a91.(d92),
+		frame_style=:origin, 
+		ylimits=(-0.1,1.6),
+		xlimits=(-0.1,200),
+		label=L"a_n=\frac{n}{n+1}",
+		legend=:topleft,
+		title_location=:left,
+		title="Example 1 (Graph)"
+	)
+	annotate!(plt92,[(100,0.5,L"a_{%$n92slider}=\frac{%$n92slider}{%$(1+n92slider)}=%$(round(a91(n92slider),digits=6))")])
+# 	if (n92slider>=10)
+		
+# 		lens!(plt92,[n92slider-20.1, n92slider+20.1], [0.9,1.01], 
+# 			inset = (1, bbox(0.6, -0.1, 0.4, 0.4)),
+# 			grid=:none,
+			
+# 		)
+	# end
+	md"""
+	$plt92
+	"""	
+end
+
+# ╔═╡ e9055611-c65d-4bcb-bc4c-9994d7b6df7f
+n93Slider = @bind n93slider  NumberField(1:1000);md"n = $n93Slider"
+
+# ╔═╡ 1e60f9fc-b2d3-4219-8f93-72d546d9d5c8
+begin
+	a93(n)= (-1)^n * (n+1)/5^n
+	d93=1:n93slider
+	plt93 = scatter(d93, a93.(d93),
+		frame_style=:origin, 
+		ylimits=(-1,1),
+		xlimits=(-0.1,200),
+		label=L"a_n=\frac{(-1)^n\cdot(n+1)}{5^n}",
+		legend=:topleft,
+		title_location=:left,
+		title="Example 2 (Graph)"
+	)
+	annotate!(plt93,[(100,0.5,L"a_{%$n93slider}=\frac{%$((-1)^n93slider) \cdot %$(1+n93slider)}{5^{%$(n93slider)}}=%$(round(a93(n93slider),digits=6))")])
+# 	if (n2slider>=10)
+		
+# 		lens!(plt2,[n2slider-20.1, n2slider+20.1], [0.9,1.01], 
+# 			inset = (1, bbox(0.6, -0.1, 0.4, 0.4)),
+# 			grid=:none,
+			
+# 		)
+	# end
+	md"""
+	$plt93
+	"""	
+end
+
+# ╔═╡ 8fa2360c-7a35-4d4f-8b42-873d9ce4491c
+n94Slider = @bind n94slider  NumberField(4:1000);md"n = $n94Slider"
+
+# ╔═╡ 9fa571ac-b9dd-47fb-82a4-f1133b365b9d
+begin
+	a94(n)= sqrt(n-4)
+	d94=4:n94slider
+	plt94 = scatter(d94, a94.(d94),
+		frame_style=:origin, 
+		ylimits=(-1,100),
+		
+		label=L"a_n=\frac{n-4}",
+		legend=:topleft,
+		title_location=:left,
+		title="Example 3 (Graph)"
+	)
+	
+	if (n94slider<100)
+		xlims!(plt94,-0.1,100),
+		annotate!(plt94,
+			[(50,50,
+			L"a_{%$n94slider}=\sqrt{%$(n94slider-4)}=%$(round(a94(n94slider),digits=6))")
+			]
+		)	
+	elseif (n94slider>100 && n94slider<=500)
+		xlims!(plt94,-0.1,500),
+		annotate!(plt94,
+			[(250,50,
+			L"a_{%$n94slider}=\sqrt{%$(n94slider-4)}=%$(round(a94(n94slider),digits=6))")
+			]
+		)
+	else
+		xlims!(plt94,-0.1,1000),
+		annotate!(plt94,
+			[(500,50,
+			L"a_{%$n94slider}=\sqrt{%$(n94slider-4)}=%$(round(a94(n94slider),digits=6))")
+			]
+		)
+	end
+	md"""
+	$plt94
+	"""	
+end
+
+# ╔═╡ 680376c6-46e5-4469-8099-2052c8bbb557
+md"""
+#### What are trying to study?
+
+* __convergence__ (what happended when $n$ gets larger and larger $n\to \infty$)
+
+For **_Example 1_**: ``a_n=\frac{n}{n+1}``, it is fair to say and write
+```math
+\lim_{n\to \infty}\frac{n}{n+1} =1
+```
+"""
+
+# ╔═╡ 3331a35d-d79e-4392-8121-76c851cfc244
+begin
+	n95Slider = @bind n95slider  NumberField(1:1000)
+	epsSlider = @bind epsslider  NumberField(0:0.01:1, default=1)
+	
+	md"""
+	
+	----
+	
+	|||
+	|---|---|
+	|``\epsilon`` =$epsSlider |	n = $n95Slider |
+	
+	----
+	"""
+end
+
+# ╔═╡ 63e253cd-f11b-4f65-beb6-5a7887ddd3da
+begin
+	d95=1:n95slider
+	plt95 = scatter(d95, a91.(d95),
+		frame_style=:origin, 
+		ylimits=(-0.1,3),
+		xlimits=(-0.1,100),
+		label=L"a_n=\frac{n}{n+1}",
+		legend=:topleft,
+		title_location=:left,
+		title="Example 1 (Graph)"
+	)
+	annotate!(plt95,
+		[
+		 (50,0.5,
+L"a_{%$n95slider}=\frac{%$n95slider}{%$(1+n95slider)}=%$(round(a91(n95slider),digits=6))"
+		 )
+		,(20,1+epsslider+0.1, L"L+\epsilon")  	
+		,(20,1-epsslider-0.1, L"L-\epsilon")  	
+		]
+	)
+	plot!(plt95,
+		[x->1,x->1-epsslider,x->1+epsslider],
+		labels=:none
+	)
+
+	md"""
+	$plt95
+	"""	
+end
+
+# ╔═╡ 7dfaa48a-8d2a-4728-b341-693327fe6232
+md"""
+**Example** 
+
+```math
+\{(-1)^n\} = \{-1, 1, -1, 1, -1, 1, \cdots\}
+```
+"""
+
+# ╔═╡ 0bbe4f11-24b7-4e62-9855-f4db3dcd281a
+begin
+	n96Slider = @bind n96slider  NumberField(1:100)
+	eps2Slider = @bind eps2slider  NumberField(0:0.01:2, default=0)
+	limitSlider = @bind limitslider NumberField(-2:0.1:2, default=0)
+	md"""
+	
+	----
+	
+	|||
+	|---|---|
+	|``\epsilon`` =$eps2Slider |	n = $n96Slider |
+	|``L =`` $limitSlider | |
+	
+	----
+	"""
+end
+
+# ╔═╡ a0f07b8a-bb65-461a-b72d-3a7b133319ea
+begin
+	a96(n)=iseven(n) ? 1 : -1
+	d96=1:n96slider
+	plt96 = scatter(d96, a96.(d96),
+		frame_style=:origin, 
+		ylimits=(-2,2),
+		xlimits=(-0.1,100),
+		label=L"a_n=(-1)^n",
+		legend=:topleft,
+		title_location=:left,
+		title="Example "
+	)
+	annotate!(plt96,
+		[
+			(50,
+			 1.5,
+	L"a_{%$n96slider}=%$(a96(n96slider))"
+				)
+		,(20,limitslider+eps2slider+0.1, L"L+\epsilon")  	
+		,(20,limitslider-eps2slider-0.1, L"L-\epsilon")  
+		]
+	)
+	plot!(plt96,
+		[x->limitslider,x->limitslider-eps2slider,x->limitslider+eps2slider],
+		labels=:none
+	)
+
+	md"""
+	$plt96
+	"""	
+end
+
+# ╔═╡ 9a46095b-a7e0-4fb4-9c18-1d13caa55c2a
+md"""
+**Remark**: 
+
+```math
+\lim_{n\to \infty}(-1)^n \quad \text{DNE}
+```
+
+"""
+
+# ╔═╡ e05f081c-642b-4815-a64b-f3a3cd6a7609
+md"## Limit of a Sequence"
+
+# ╔═╡ 6bf6d15e-7bf1-4770-99c0-4ca44f79143e
+md"""
+**_Limit Laws for Sequences_** 
+Suppose that ``\{a_n\}`` and ``\{b_n\}`` are convergent sequences and ``c`` is a constant. Then
+
+1. **Sum Law** 
+```math
+\lim_{n\to\infty} \left(a_n+b_n\right)=\lim_{n\to\infty} a_n+\lim_{n\to\infty}b_n
+```
+
+2. **Difference Law**
+```math
+\lim_{n\to\infty} \left(a_n-b_n\right)=\lim_{n\to\infty} a_n-\lim_{n\to\infty}b_n
+```
+
+3. **Constant Multiple Law**
+```math
+\lim_{n\to\infty} c a_n=c\lim_{n\to\infty} a_n
+```
+
+4. **Product Law**
+```math
+\lim_{n\to\infty} \left(a_nb_n\right)=\lim_{n\to\infty} a_n\cdot\lim_{n\to\infty}b_n
+```
+
+5. **Quotient Law**
+
+```math
+\lim_{n\to\infty} \frac{a_n}{b_n}=\frac{\lim_{n\to\infty} a_n}{\lim_{n\to\infty}b_n}, \quad \text{if  } \lim_{n\to\infty}b_n\not=0
+```
+
+"""
+
+# ╔═╡ c399893d-e2d7-4115-a51d-1c1b3289be53
+md"""
+**Power Law**
+```math
+\lim_{n\to\infty}  a^p_n=\left[\lim_{n\to\infty} a_n\right]^p
+```
+**Squeeze Theorem for Sequences** 
+
+If ``a_n\leq b_n\leq c_n`` for ``n\geq n_0`` and ``\lim_{n\to\infty}a_n=\lim_{n\to\infty}c_n=L``, then 
+```math
+\lim_{n\to\infty}b_n=L.
+```
+
+**_Theorem_**
+
+If 
+```math
+\lim_{n\to\infty}|a_n|=0,
+``` 
+then 
+```math
+\lim_{n\to\infty}a_n=0.
+```
+"""
+
+# ╔═╡ 10d7aa3b-e125-45ef-bf2f-5c16513f3eab
+md"""
+**_Theorem_**
+
+If  ``\lim_{n\to\infty}a_n=L`` and the function ``f`` is continuous at ``L``, then
+```math
+\lim_{n\to\infty}f(a_n)=f(L).
+```
+
+"""
+
+# ╔═╡ cefb7ca5-1f35-476c-8740-9099bdc684d6
+md"""
+**Remark**
+
+The sequence ``\{r^n\}`` is convergent if ``-1<r\leq 1``  and divergent for all other values of ``r``.
+```math
+\lim_{n\to\infty}r^n=\left\{\begin{array}{lll}
+0 & \text{if} & -1<r<1,\\ \\
+1 &  \text{if} & r=1
+\end{array}
+\right.
+```
+
+"""
+
+# ╔═╡ de0066c2-bf7d-4403-a77e-894bf0feed2b
+md"""
+**Examples**
+
+Find 
+1. ``\lim_{n\to \infty}\left(1+\frac{1}{n}\right)^n.``
+1. ``\lim_{n\to \infty}\frac{n^2}{2^n-1}.``
+1. ``\lim_{n\to \infty}\frac{n}{n+1}.``
+2. ``\lim_{n\to \infty}\frac{n}{\sqrt{n+1}}.``
+3. ``\lim_{n\to \infty}\frac{\ln n}{n}.``
+4. ``\lim_{n\to \infty}\frac{(-1)^n}{n}.``
+5. ``\lim_{n\to \infty}\sin\left(\pi/n\right).``
+6. ``\lim_{n\to \infty}\frac{n!}{n^n}.``
+6. ``\lim_{n\to \infty}\frac{(-1)^n}{n!}.``
+
+
+**Exercise**
+
+```math
+\lim_{n\to \infty}\frac{n^n}{n!}.
+```
+"""
+
+# ╔═╡ cfafdd24-2f3e-4497-ace7-f65ce7093b24
+md"""
+## Pattern Recognition for Sequences
+
+__Example__
+
+Find a sequence ``\{a_n\}`` whose first five terms are
+```math
+\frac{2}{1},\frac{4}{3},\frac{8}{5},\frac{16}{7},\frac{32}{9},\cdots
+```
+and then determine whether the sequence you have chosen converges or diverges.
+
+
+__Example__
+
+Find a sequence ``\{a_n\}`` whose first five terms are
+```math
+-\frac{2}{1},\frac{8}{2},-\frac{26}{6},\frac{80}{24},-\frac{242}{120},\cdots
+```
+and then determine whether the sequence you have chosen converges or diverges.
+
+"""
+
+# ╔═╡ 3989fe41-0f2f-4984-9fc4-0e18bfe02238
+md"""
+## Monotonic and Bounded Sequences
+
+**_Definition_**
+
+* A sequence ``\{a_n\}`` is called **increasing** if ``a_n<a_{n+1}`` for all ``n\geq 1``, that is,``a_1<a_2<a_3<\cdots`` . 
+* It is called **decreasing** if ``a_n>a_{n+1}`` for all ``n\geq 1``.
+* A sequence is called **monotonic** if it is either increasing or decreasing.
+"""
+
+# ╔═╡ bba7a77e-acfa-4bf5-9aa1-0caffa595d52
+md"""
+**Examples**
+
+Is the following increasing or decreasing?
+1. ``\left\{\frac{3}{n+5}\right\}``.
+2. ``\left\{\frac{n}{n^2+1}\right\}``.
+"""
+
+# ╔═╡ 64b6ca9c-6857-4080-998e-4b36a21c69c9
+md"""
+**Definition**
+
+A sequence ``\{a_n\}``  is **bounded above** if there is a number ``M`` such that
+
+```math
+a_n\leq M\quad \text{for all } n\geq 1
+```
+
+A sequence is **bounded below** if there is a number ``m`` such that
+
+```math
+m\leq a_n\quad \text{for all } n\geq 1
+```
+
+If a sequence is bounded above and below, then it is called a **bounded sequence**.
+
+---
+
+**_Monotonic Sequence Theorem_**
+
+Every bounded, monotonic sequence is convergent.
+
+In particular, a sequence that is increasing and bounded above converges, and a sequence that is decreasing and bounded below converges.
+"""
+
+
+# ╔═╡ 744e2a96-aa6c-4ebb-aaca-861828dc0f0d
+md"""
+**Example**
+
+```math
+a_1 =2 , \quad a_{n+1}={1\over 2}\left(a_n+6\right), \quad \text{for }n=1,2,3, \cdots
+```
+
+"""
+
+# ╔═╡ d251cca5-d846-4bc4-b43d-2114f88800b2
+md"""
+# 9.2: Series and Convergence
+> __Objectives__
+> - Understand the definition of a convergent infinite series.
+> - Use properties of infinite geometric series.
+> - Use the th-Term Test for Divergence of an infinite series.
+"""
+
+# ╔═╡ 8a4db3f3-adc4-422e-afe2-ce74f455cb34
+# begin
+# 	n98Slider = @bind n98slider  Slider(1:1000,show_value=true)
+# 	md"""
+	
+# 	----
+	
+# 	||
+# 	|---|
+# 	|n = $n98Slider |
+	
+# 	----
+# 	"""
+# end
+
+# ╔═╡ ebc708b9-ad01-4473-b97f-4698a86cbdc4
+md"## Infinite Series"
+
+# ╔═╡ 37f454b7-4e75-4295-95c6-0e79db7874a8
+md"""
+
+Consider the sequence ``\left\{a_n\right\}_{n=1}^{\infty}``. The expression 
+```math
+a_1 + a_2 + a_3 +\cdots 
+```
+is called an __infinite series__ (or simply __series__) and we use the notation
+
+```math
+\sum_{n=1}^{\infty}a_n \qquad \text{or} \qquad \sum a_n
+```
+
+To make sense of this sum, we define a related __sequence__ called the sequence of __partial sums__ ``\left\{s_n\right\}_{n=1}^{\infty}`` as
+```math
+\begin{array}{lll}
+s_1 & = & a_1 \\
+s_2 & = & a_1 + a_2 \\
+s_3 & = & a_1 + a_2 + a_3\\
+\vdots \\
+s_n & = & a_1 + a_2 + \cdots + a_n =\sum_{i=1}^n a_i \\
+\vdots
+\end{array}
+```
+and give the following definition
+"""
+
+# ╔═╡ e94c302e-40e3-4191-a3c4-80d941f6ec01
+md"""
+**Definition**
+
+Given a series ``\sum_{n=1}^{\infty}a_n=a_1+a_2+a_3+\cdots`` , let ``s_n``denote its ``n``th partial sum:
+```math
+s_n=\sum_{i=1}^{n}a_i = a_1+a_2+\cdots + a_n
+```
+If the sequence ``\{s_n\}`` is convergent and ``\lim_{n\to \infty}s_n=s`` exists as a real number, then the ``\sum a_n``series is called __convergent__ and we write
+```math
+\sum_{n=1}^{\infty}a_n=a_1+a_2+a_3+\cdots =s
+```
+
+The number ``s`` is called the __sum__ of the series.
+
+If the sequence ``\{s_n\}`` is divergent, then the series is called __divergent__.
+
+**Remark**
+```math
+\sum_{n=1}^{\infty}a_n=\lim_{n\to\infty}s_n=\lim_{n\to\infty}\sum_{i=1}^{n}a_i
+```
+
+"""
+
+# ╔═╡ 4873c192-525b-43a2-ab48-ade173ed4a63
+md"""
+**Exercise**
+Assume that ``\left\{a_n\right\}_{n=1}^{\infty}`` is a sequence.
+1. Find 
+```math
+\sum_{n=1}^{\infty} a_n \quad \text{ if }\quad s_n = \sum_{i=1}^{n} a_i = \frac{n+2}{3n-5}
+```
+2. Can you find ``a_n``?
+
+"""
+
+# ╔═╡ b98685af-c363-4dc0-b2da-a3f9c6edd8bb
+md"""
+__Solution__ 
+
+1. We find first 
+```math
+\lim_{n\to \infty}s_n =\lim_{n\to \infty}\frac{n+2}{3n - 5} = \frac{1}{3}
+```
+since the sequence ``\{s_n\}`` converges to ``1 \over 3``, then the series converges and its sum is
+```math
+\sum_{n=1}^{\infty} a_n = \frac{1}{3}
+```
+
+2. Note that 
+```math
+\begin{array}{lll}
+a_n &=& s_n - s_{n-1} = \frac{n+2}{3n - 5} - \frac{(n-1)+2}{3(n-1) - 5}\\
+&=&\frac{n+2}{3n - 5}- \frac{n+1}{3n - 8} \\
+&=& \frac{(n+2)(3n-8)- (n+1)(3n - 5)}{(3n - 5)(3n-8)}
+\end{array}
+```
+so,
+```math
+a_n = \frac{-11}{(3n - 5)(3n-8)}
+```
+"""
+
+# ╔═╡ 9ea80853-2666-4bd6-8b8b-74512955cbf1
+md"""
+### Telescoping sum
+Find the sum of the following series
+```math
+\sum_{n=1}^{\infty} \frac{1}{n(n+1)}
+```
+__Solution in class__
+
+---
+"""
+
+# ╔═╡ 1af379da-ab4a-4a25-84ff-fc02f2a12eeb
+md"""
+**Recall**
+
+```math
+\lim_{n\to \infty} r^n =\left\{\begin{array}{lll}
+    0 & \text{if} & |r|<1 (-1<r<1),\\
+    1 & \text{if} & r=1 ,\\
+\end{array}\right.
+```
+
+So ``\{r^n\}`` converges if ``r\in (-1,1]`` and diverges otherwise
+
+"""
+
+# ╔═╡ 333bae8c-c2e5-4460-b75e-6befc39c4295
+md"""
+## Geometric Series
+The series 
+```math
+a + a r + a r^2 + \cdots =\sum_{n=1}^{\infty}ar^{n-1}, \qquad a\not = 0
+```
+is called the __geometric series__ with __common ration__ ``r``
+
+It is convergent if ``|r|< 1`` and its sum is 
+```math
+\sum_{n=1}^{\infty}ar^{n-1} =\frac{a}{1-r}, \qquad |r|<1
+```
+and divergent if ``|r|\geq 1``.
+
+**Remark**
+In words: the sum of a convergent geometric series is
+```math
+\frac{\text{first term}}{1-\text{common ratio}}
+```
+
+"""
+
+# ╔═╡ 3c259ccc-ff27-4cfd-9ca1-49eb0fcf37fc
+md"""
+**_Examples_**
+1. Find the sum of the geomtric series 
+```math
+4 - 3 + {9\over 4} - {27 \over 16} + \cdots
+```
+2. Is the series 
+```math
+\sum_{n=1}^{\infty} 2^{2n}\; 3^{1-n} \quad \text{convergent or divergent?}
+```
+3. Write ``2.\bar{7}`` as rational number (ratio of integers).
+4. Find the sum of the series 
+```math
+\sum_{n=0}^{\infty} x^n \quad \text{where}\quad |x|<1.
+```
+
+"""
+
+# ╔═╡ 0bc2f276-a8ac-49dc-874a-17c51ae34209
+md"""
+## Test for Divergence
+**Example**
+Show that the harmonic series
+```math
+\sum_{n=1}^{\infty}\frac{1}{n} = 1 + \frac{1}{2}+ \frac{1}{3}+ \frac{1}{4}+\cdots
+```
+is divergent.
+
+"""
+
+# ╔═╡ 1dca9c92-d15b-4079-bc5c-678e1498a0ae
+md"""
+**_Theorem_**
+If the series 
+```math
+\sum_{n=1}^{\infty}a_n
+```
+converges, then
+```math
+\lim_{n\to \infty}a_n = 0.
+```
+
+__Proof__ 
+
+```math
+a_n = s_n - s_{n-1}
+```
+
+--- 
+
+**_Divergence Test_**
+```math
+\text{If }\lim_{n\to \infty}a_n \not= 0 \quad \text{or } \lim_{n\to \infty}a_n \text{ DNE}\quad \text{   then the series }\quad
+\sum_{n=1}^{\infty}a_n \text{ is divergenet} 
+```
+
+---
+
+**_Example_**
+
+```math
+\text{The series }\quad \sum_{n=1}^{\infty}\frac{n^2+1}{2n^2+5} \quad \text{is divergent.}
+```
+---
+
+"""
+
+# ╔═╡ 0308be88-8c68-4ea6-861d-f6a216299aa5
+md"""
+### Properties of Convergent Series
+
+**_Theorem_**
+If ``\sum a_n`` and ``\sum b_n`` are convergent series, then so are the series ``\sum ca_n`` (where ``c`` is a constant), ``\sum (a_n+b_n)``, and ``\sum (a_n-b_n)``, and
+
+```math
+\begin{array}{llcl}
+\text{(i)} & \sum_{n=1}^{\infty} c a_n &=& c\sum_{n=1}^{\infty} a_n \\ \\ 
+\text{(ii)} & \sum_{n=1}^{\infty} \left(a_n+b_n\right) &=& \sum_{n=1}^{\infty} a_n+\sum_{n=1}^{\infty} b_n \\ \\ 
+\text{(iii)} & \sum_{n=1}^{\infty} \left(a_n-b_n\right) &=& \sum_{n=1}^{\infty} a_n-\sum_{n=1}^{\infty} b_n \\ \\ \end{array}
+```
+"""
+
+# ╔═╡ f5d01c74-be75-43ab-bbb5-b4984854a324
+md"""
+---
+
+**_Remark_**
+
+If it can be shown that  
+```math
+\sum_{n=100}^{\infty}a_n
+```
+is convergent. Then 
+```math
+\sum_{n=1}^{\infty}a_n
+```
+is convergent.
+
+"""
+
+# ╔═╡ f4628bf9-d130-4882-a634-443ed1c5f4ef
+md"""
+# 9.3: The Integral Test and $p$-Series
+> __Objectives__
+> - Use the Integral Test to determine whether an infinite series converges or diverges.
+> - Use properties of -series and harmonic series.
+
+**The Integral Test and Estimates of Sums**
+
+Suppose ``f`` a function that is 
+1. continuous on ``[1, \infty)``,
+2. positive on ``[1, \infty)``,
+3. decreasing on ``[1, \infty)``
+
+and let ``a_n=f(n)``. Then the series 
+```math
+\sum_{n=1}^{\infty}a_n
+```
+is convergent if and only if the improper integral 
+```math
+\int_1^\infty f(x) dx
+```
+is convergent. In other words:
+1. If ``\displaystyle\int_1^\infty f(x) dx`` is convergent, then is ``\displaystyle\sum_{n=1}^{\infty}a_n`` convergent.
+2. If ``\displaystyle\int_1^\infty f(x) dx`` is divergent, then is ``\displaystyle\sum_{n=1}^{\infty}a_n`` divergent.
+
+**_Examples_**
+
+Test for convergence 
+```math
+\sum_{n=1}^{\infty}\frac{1}{n^2}, \qquad \sum_{n=1}^{\infty}\frac{1}{n}
+```
+__Solution in class__ 
+
+"""
+
+# ╔═╡ 57c1a8b8-b489-4121-905c-a6cdafe42d4f
+md"""
+**_Remark_**
+```math
+\text{The series } \sum_{n=1}^{\infty}\frac{1}{n^2} \text{ is convergent but }
+\sum_{n=1}^{\infty}\frac{1}{n^2}\not=1.
+```
+```math
+\text{It sum is actually equal to }
+\sum_{n=1}^{\infty}\frac{1}{n^2}=\frac{\pi^2}{6}
+```
+
+"""
+
+# ╔═╡ 7cd0ace0-8af3-4932-ad3b-7406c6200f04
+md"""
+## P-series and the Harmonic Series
+```math
+\text{The } p-\text{series}\quad \sum_{n=1}^{\infty}\frac{1}{n^p}
+\quad \text{is convergent if } p>1 \text{ and is divergent if } p\leq 1.
+```
+
+---
+1. ``\sum_{n=1}^{\infty}\frac{1}{n^{1\over 3}}`` is divergent; because it is a ``p-``series with ``p={1\over 3}<1``.
+2. ``\sum_{n=1}^{\infty}\frac{1}{n^{3}}`` is convergent; because it is a ``p-``series with ``p={3}>1``.
+
+**_Example_**
+
+Show that 
+```math
+\sum_{n=1}^{\infty}\frac{\ln n}{n}
+```
+is divergent.
+"""
+
+# ╔═╡ de0c96d2-af55-4858-9287-f497963b22ef
+md"""
+## Estimating the Sum of a Series
+Suppose that the __integral test__ is used to show that
+```math
+\sum_{n=1}^{\infty}a_n
+```
+is __convergent__. So its sequenc of partial sums ``\left\{s_n=\sum_{i=1}^n a_i\right\}`` is convergent; that is
+```math
+\lim_{n\to\infty}s_n=s.
+```
+So we can write
+```math
+\underset{s}{\underbrace{\sum_{n=1}^{\infty}a_n}} = 
+\underset{s_n}{\underbrace{\sum_{i=1}^{n}a_i}} + \underset{R_n}{\underbrace{\sum_{i=n+1}^{\infty}a_i}}
+```
+``R_n`` is the __Remainder__ or the error when ``s_n`` is used to approximate ``s``.
+"""
+
+
+# ╔═╡ f5220cd2-d75e-44f2-b80f-ee9577735b1e
+begin
+	estF(x) = (sqrt(x)/x+1)
+	estR=0:0.1:10
+	estPltstr=(
+		label=:none,
+		annotations=[(1,4,L"y=f(x)")],
+		xlims=(-1,10), 
+		aspect_ratio=1,
+		frame_style=:origin,
+		xticks=(1:10,[L"n",[L"n+{%$i}" for i in 1:10]...])
+	)
+
+	gvmePlt(x,y,o)=plot(x,y;o...)
+	estP=gvmePlt(estR,estF.(estR),estPltstr)
+	rct(i) =Shape([(i,0),(i+1,0),(i+1,estF(i+1)),(i,estF(i+1))])
+	rct2(i) =Shape([(i,0),(i+1,0),(i+1,estF(i)),(i,estF(i))])
+	estP1= plot!(estP,[rct(i) for i in 1:10],c=palette(:BuGn_7)[3], label=:none)
+	estP2=gvmePlt(estR,estF.(estR),estPltstr)
+	plot!(estP2,[rct2(i) for i in 2:10],c=palette(:BuGn_7)[3], label=:none)
+	annotate!(estP,[(i+0.5,0.8,L"a_{n+%$i}",10) for i in 1:9])
+	annotate!(estP2,[(i+0.5,0.8,L"a_{n+%$(i-1)}",10) for i in 2:9])
+	# palette([:purple, :green], 7)[1]
+	md"""
+	$estP1
+	```math
+	R_n = a_{n+1}+a_{n+2}+a_{n+3}+\cdots \leq \int_n^{\infty} f(x) dx
+	```
+	$estP2
+	```math
+	R_n = a_{n+1}+a_{n+2}+a_{n+3}+\cdots \geq \int_{n+1}^{\infty} f(x) dx
+	```
+	"""
+end
+
+# ╔═╡ 53d12832-df52-488f-a9f0-4b5809c626fd
+1/200, 1/242
+
+# ╔═╡ e8e33cc8-09ab-4ebe-b507-ffabb215d4bd
+md"""
+**_Remainder Estimate for the Integral Test_**
+Suppose ``f(k)=a_k``, where ``f`` is a continuous, positive, decreasing function for  ``x\geq n`` and ``\sum a_n``  is convergent. If ``R_n=s-s_n``, then
+
+```math
+	\int_{n+1}^{\infty} f(x) dx \leq R_n  \leq \int_n^{\infty} f(x) dx
+```
+
+"""
+
+# ╔═╡ 918ebe8d-2872-4baa-ba4b-0970fdd02457
+md"""
+# 9.4: Comparisons of Series
+> __Objectives__
+> - Use the Direct Comparison Test to determine whether a series converges or diverges.
+> - Use the Limit Comparison Test to determine whether a series converges or diverges.
+
+**The Comparison Tests**
+
+### The Direct Comparison Test
+
+Suppose that ``\sum a_n`` and ``\sum b_n`` are series with positive terms.
+
+* If ``\sum b_n`` is convergent and ``a_n\leq b_n`` for all ``n``, then ``\sum a_n`` is also convergent.
+* If ``\sum b_n`` is divergent and ``a_n\geq b_n`` for all ``n`` , then is ``\sum a_n`` also divergent
+
+
+---
+
+**_Remarks_**
+* Most of the time we use one of these series: 
+    - ``p-``series ``\sum \frac{1}{n^p}``
+    - geometric series.
+
+
+
+"""
+
+# ╔═╡ 079a24f1-52a7-4f2b-af4e-5853eb2f67a1
+md"""
+**_Examples_**
+Test for convegence 
+```math
+\begin{array}{lrrr}
+\text{(1)} & \sum_{n=1}^{\infty}\frac{5}{2n^2+4n+3}\\ \\
+\text{(2)} & \sum_{n=1}^{\infty}\frac{\ln n}{n}\\
+\end{array}
+```
+
+"""
+
+# ╔═╡ f15e4057-a44c-4220-a164-6ce19b34d411
+md"""
+## The Limit Comparison Test
+
+Suppose ``\sum a_n`` that and ``\sum b_n`` are series with positive terms. If
+```math
+\lim_{n\to\infty}\frac{a_n}{b_n} = c
+```
+where ``c`` is a finite number and ``c>0``, then either both series converge or both diverge.
+
+**_Remark_**
+
+Exercises `40` and `41` deal with the cases ``c=0`` and ``c=\infty`` .
+
+"""
+
+# ╔═╡ dd22655b-c111-4b7f-95f2-eb32c60908fc
+md"""
+**_Examples_**
+Test for convegence 
+```math
+\begin{array}{llrr}
+\text{(3)} & \sum_{n=1}^{\infty}\frac{1}{2^n-1}\\ \\
+\text{(4)} & \sum_{n=1}^{\infty}\frac{2n^2+3n}{\sqrt{5+n^5}}\\
+\end{array}
+```
+"""
+
 # ╔═╡ 2845f715-b032-493f-a979-782fb70b700e
 begin
 	function poolcode()
@@ -2963,6 +3955,49 @@ $(ex(9,s="Doubly Improper Integral"))
 Evaluate ``\displaystyle \int_0^{\infty}\frac{dx}{\sqrt{x}(x+1)}``
 """
 
+# ╔═╡ 66b5302a-2646-495f-a408-8963b7530949
+cm"""
+$(bbl("Definition of the Limit of a Sequence",""))
+
+Let ``L`` be a real number. The __limit__ of a sequence ``\{a_n\} is ``L``, written as
+```math
+\lim_{n\to\infty} a_n = L
+```
+if for each ``\epsilon >0``, there exists ``M>0`` such that ``|a_n-L|<\epsilon`` whenever ``n>M``. If the limit ``L`` of a sequence exists, then the sequence __converges__ to ``L``. If the limit of a sequence does not exist, then the sequence __diverges__.
+
+$(ebl())
+"""
+
+# ╔═╡ d7bfd01a-e1c6-4abb-a58f-bd35bacc0a2d
+cm"""
+$(bth("Limit of a Sequence"))
+If 
+```math
+\lim_{x\to\infty}f(x)=L \quad \text{and}\quad f(n)=a_n \quad \text{when} \; n \text{ is an integer}, 
+```
+then 
+```math
+\lim_{n\to\infty}a_n=L.
+```
+$(eth())
+* **Remark**
+```math
+\lim_{n\to\infty} \frac{1}{n^r} = 0 \quad \text{if} \quad r>0
+"""
+
+# ╔═╡ d0af669e-bce0-4aa8-a897-9f887bd27d1c
+md"""
+**_Exercises_**
+
+Test for convegence 
+```math
+\begin{array}{llrr}
+\text{(5)} & \sum_{n=1}^{\infty}\frac{n+3^n}{n+2^n}\\ \\
+\text{(6)} & \sum_{n=1}^{\infty}\frac{1}{n^{1+{1\over n}}}\\
+\end{array}
+```
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -2999,7 +4034,7 @@ SymPy = "~1.1.12"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.2"
 manifest_format = "2.0"
 project_hash = "0dfc044350e3544ed06633bd47b08a9a26f92a3d"
 
@@ -4594,7 +5629,65 @@ version = "1.4.1+0"
 # ╟─f36c8419-9fc0-40b3-8c35-302694ae02c7
 # ╟─53f18531-404b-4b46-a452-1429d145544e
 # ╟─c226414b-a365-448d-b063-b51107dc9af8
+# ╟─fe887af5-a9a4-462f-8fa9-30baae002131
+# ╟─967b72bb-d439-46c3-b449-4fe9c8fa5490
+# ╟─efd4f9db-2c4c-48d5-9473-34099c71e4ee
+# ╟─a9d506a8-dc18-4ffd-a0e7-94ee912d2a90
+# ╟─0a3e8db6-aa43-44b0-a462-850fc28e6da2
+# ╟─2e8b9671-6e4a-4b97-9b3d-04dc9ca1437c
+# ╟─49efb8aa-772b-4e82-ae95-c40003183c5b
+# ╟─e9055611-c65d-4bcb-bc4c-9994d7b6df7f
+# ╟─1e60f9fc-b2d3-4219-8f93-72d546d9d5c8
+# ╟─8fa2360c-7a35-4d4f-8b42-873d9ce4491c
+# ╟─9fa571ac-b9dd-47fb-82a4-f1133b365b9d
+# ╟─680376c6-46e5-4469-8099-2052c8bbb557
+# ╟─3331a35d-d79e-4392-8121-76c851cfc244
+# ╟─63e253cd-f11b-4f65-beb6-5a7887ddd3da
+# ╟─7dfaa48a-8d2a-4728-b341-693327fe6232
+# ╟─0bbe4f11-24b7-4e62-9855-f4db3dcd281a
+# ╟─a0f07b8a-bb65-461a-b72d-3a7b133319ea
+# ╟─9a46095b-a7e0-4fb4-9c18-1d13caa55c2a
+# ╟─e05f081c-642b-4815-a64b-f3a3cd6a7609
+# ╟─66b5302a-2646-495f-a408-8963b7530949
+# ╟─d7bfd01a-e1c6-4abb-a58f-bd35bacc0a2d
+# ╟─6bf6d15e-7bf1-4770-99c0-4ca44f79143e
+# ╟─c399893d-e2d7-4115-a51d-1c1b3289be53
+# ╟─10d7aa3b-e125-45ef-bf2f-5c16513f3eab
+# ╟─cefb7ca5-1f35-476c-8740-9099bdc684d6
+# ╟─de0066c2-bf7d-4403-a77e-894bf0feed2b
+# ╟─cfafdd24-2f3e-4497-ace7-f65ce7093b24
+# ╟─3989fe41-0f2f-4984-9fc4-0e18bfe02238
+# ╟─bba7a77e-acfa-4bf5-9aa1-0caffa595d52
+# ╟─64b6ca9c-6857-4080-998e-4b36a21c69c9
+# ╟─744e2a96-aa6c-4ebb-aaca-861828dc0f0d
+# ╟─d251cca5-d846-4bc4-b43d-2114f88800b2
+# ╟─8a4db3f3-adc4-422e-afe2-ce74f455cb34
+# ╟─ebc708b9-ad01-4473-b97f-4698a86cbdc4
+# ╟─37f454b7-4e75-4295-95c6-0e79db7874a8
+# ╟─e94c302e-40e3-4191-a3c4-80d941f6ec01
+# ╟─4873c192-525b-43a2-ab48-ade173ed4a63
+# ╟─b98685af-c363-4dc0-b2da-a3f9c6edd8bb
+# ╟─9ea80853-2666-4bd6-8b8b-74512955cbf1
+# ╟─1af379da-ab4a-4a25-84ff-fc02f2a12eeb
+# ╟─333bae8c-c2e5-4460-b75e-6befc39c4295
+# ╟─3c259ccc-ff27-4cfd-9ca1-49eb0fcf37fc
+# ╟─0bc2f276-a8ac-49dc-874a-17c51ae34209
+# ╟─1dca9c92-d15b-4079-bc5c-678e1498a0ae
+# ╟─0308be88-8c68-4ea6-861d-f6a216299aa5
+# ╟─f5d01c74-be75-43ab-bbb5-b4984854a324
+# ╟─f4628bf9-d130-4882-a634-443ed1c5f4ef
+# ╟─57c1a8b8-b489-4121-905c-a6cdafe42d4f
+# ╟─7cd0ace0-8af3-4932-ad3b-7406c6200f04
+# ╟─de0c96d2-af55-4858-9287-f497963b22ef
+# ╟─f5220cd2-d75e-44f2-b80f-ee9577735b1e
+# ╠═53d12832-df52-488f-a9f0-4b5809c626fd
+# ╟─e8e33cc8-09ab-4ebe-b507-ffabb215d4bd
+# ╟─918ebe8d-2872-4baa-ba4b-0970fdd02457
+# ╟─079a24f1-52a7-4f2b-af4e-5853eb2f67a1
+# ╟─f15e4057-a44c-4220-a164-6ce19b34d411
+# ╟─dd22655b-c111-4b7f-95f2-eb32c60908fc
 # ╟─2845f715-b032-493f-a979-782fb70b700e
+# ╟─d0af669e-bce0-4aa8-a897-9f887bd27d1c
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
