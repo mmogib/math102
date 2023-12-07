@@ -3998,6 +3998,336 @@ Test for convegence
 ```
 """
 
+# ╔═╡ 704cc640-acc1-4c21-9673-3092a45d1377
+md"""
+# 9.5: Alternating Series
+> **objectives**
+> - Use the Alternating Series Test to determine whether an infinite series converges.
+> - Use the Alternating Series Remainder to approximate the sum of an alternating series.
+> - Classify a convergent series as absolutely or conditionally convergent.
+> - Rearrange an infinite series to obtain a different sum. 
+
+
+An __alternating series__ is a series whose terms are alternately __positive__ and __negative__. For examples:
+
+```math
+1-\frac{1}{2}+\frac{1}{3}-\frac{1}{4}+\frac{1}{5}-\frac{1}{6}+\cdots = \sum_{n=1}^{\infty}(-1)^{(n-1)}\frac{1}{n}
+```
+
+```math
+-\frac{1}{2}+\frac{2}{3}-\frac{3}{4}+\frac{4}{5}-\frac{5}{6}+\frac{6}{7}-\cdots = \sum_{n=1}^{\infty}(-1)^{n}\frac{n}{n+1}
+```
+
+```math
+\text{alternating series}\quad \sum_{n=1}^{\infty}a_n = \sum_{n=1}^{\infty}(-1)^{n-1}b_n
+```
+
+**_Alternating Series Test_**
+
+If the alternating series
+```math
+\sum_{n=1}^{\infty}(-1)^{n-1}b_n = b_1-b_2+b_3-b_4+b_5-b_6+\cdots \quad (b_n>0)
+```
+satisfies the conditions
+```math
+\begin{array}{cll}
+\text{(i)}& b_{n+1}\leq b_n & \text{for all } n \\ \\
+\text{(ii)}& \lim_{n\to\infty}b_n=0
+\end{array}
+```
+then the series is convergent.
+
+"""
+
+# ╔═╡ ccef397a-98e7-4d27-82e2-228e5154d63a
+n9Slider = @bind n9slider  Slider(1:1000,show_value=true);md"n = $n9Slider"
+
+
+# ╔═╡ 959825de-2ae7-4212-893d-f8a66f91b39c
+begin
+	a9(n) = ((-1)^(n))/(n)
+	d9=2:(1+n9slider)
+	bs92 = (n9slider>9) ? "\\sum_{i=1}^{$n9slider}(-1)^{n-1}b_i" : (join([(i==n9slider) ?  "b_{$i}" :  
+				iseven(i) ? "b_{$i}+" : "b_{$i}-" for i in 1:n9slider]))
+	
+	plt9 = scatter(a9.(d9), zeros(10),
+		frame_style=:origin, 
+		ylimits=(-0.1,1),
+		xlimits=(-0.36,0.55),
+		yaxis=nothing,
+		label=:none,
+		showaxis=:x,
+		ticks=[],
+		legend=:topleft,
+		title_location=:left,
+		grid=:none,
+		title=L"\textrm{Proof}",
+		annotations=[(0.2,0.8,L"s_{%$n9slider}=%$bs92")]
+	)
+	annotate!(plt9,[(a9(d9[i]),0.04,L"s_{%$i}",8) for i in 1:n9slider])
+	
+	md"""
+	$plt9
+	"""
+		
+end
+
+# ╔═╡ cc66678d-7ddc-47db-86e0-5ee50bb58af6
+md"""
+**_Example_**
+Test for convegrnce 
+```math
+\begin{array}{cl}
+\text{(1)} &  \sum_{n=1}^\infty \frac{(-1)^{n-1}}{n} \\ \\
+
+\text{(2)} & \sum_{n=1}^\infty (-1)^{n}\frac{3n}{4n-1}\\ \\
+
+\text{(3)} & \sum_{n=1}^\infty (-1)^{n+1}\frac{n^2}{n^3+1}
+\end{array}
+```
+"""
+
+# ╔═╡ 5abe72af-e1d9-4002-84ef-954329dc23c6
+md"""
+### Estimating Sums of Alternating Series
+If ``s=\sum (-1)^{n-1}b_n``, where ``b_n>0``, is the sum of an alternating series that satisfies
+```math
+\begin{array}{cl}
+\text{(i)} & b_{n+1}\leq b_n \quad \text{and} \\ \\
+\text{(ii)} & \lim_{n\to\infty}b_n =0
+\end{array}
+```
+then
+```math
+\left|R_n\right|=\left|s-s_n\right|\leq b_{n+1}
+
+```
+
+"""
+
+# ╔═╡ efadc950-2f26-4e5e-bc8b-36862bd8cca8
+md"""
+**_Example_**
+How many terms of the series 
+```math
+\sum_{n=1}^{\infty}{\frac{(-1)^{n+1}}{{n^6}}}
+```
+do we need to add in order to find the sum accurate with $|error|< 0.000001$?
+
+"""
+
+# ╔═╡ 35e833fa-4ec5-4c95-9e50-1fc99ea1e09f
+# n10Slider = @bind n10slider NumberField(1:20);md"n = $n10Slider"
+
+# ╔═╡ f154ffb1-c488-4fca-9631-b5e56f286f3a
+md"""
+### Absolute Convergence and Conditional Convergence
+* A series ``\sum a_n`` is called __absolutely convergent__ if the series of absolute values ``\sum |a_n|`` is convergent.
+* A series ``\sum a_n`` is called __conditionally convergent__ if it is convergent but not absolutely convergent; that is, ``\sum a_n`` if converges but ``\sum |a_n|``  diverges.
+
+---
+
+**_Theorem_**
+
+If a series ``\sum a_n`` is absolutely convergent, then it is convergent.
+
+"""
+
+# ╔═╡ 9a6aad50-069e-4264-90d0-2fa508769e70
+md"""
+**_Examples_**
+Determine whether the series is absolutely convergent, conditionally convergent, or divergent
+```math
+\begin{array}{lcl}
+\text{(i)} & &\sum^{\infty}_{n=1}\frac{(-1)^n}{n}  \\ \\
+\text{(ii)} & &\sum^{\infty}_{n=1}\frac{(-1)^n}{n^2}  \\ \\
+\text{(iii)} & &\sum^{\infty}_{n=1}\frac{(-1)^n}{\sqrt[3]{n}}  \\ \\
+\text{(v)} & &\sum^{\infty}_{n=1}(-1)^n\frac{n}{2n+1}  \\ \\
+\end{array}
+```
+"""
+
+# ╔═╡ df5b6e45-37cb-4a2d-9427-946a57794960
+md"""
+# 9.6: The Ratio and Root Tests
+> __Objectives__
+> - Use the Ratio Test to determine whether a series converges or diverges.
+> - Use the Root Test to determine whether a series converges or diverges.
+> - Review the tests for convergence and divergence of an infinite series. 
+
+## The Ratio Test
+```math
+\begin{array}{ll}
+\text{(i)} &\text{If } \lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=L<1,\text{ then the series is absolutely convergent} \\
+& \text{(and therefore convergent).} \\ \\
+
+\text{(ii)} &\text{If } \lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=L>1 \text{ or }\lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=\infty,\\
+& \text{ then the series is divergent} \\ \\
+
+\text{(iii)} & If \lim_{n\to\infty}\left|\frac{a_{n+1}}{a_n}\right|=1,
+\text{ the Ratio Test is inconclusive;} \\
+& \text{that is, no conclusion can be drawn about}\\
+& \text{the convergence or divergence of} \sum a_n.
+\end{array}
+```
+"""
+
+# ╔═╡ c9c85ae9-2b27-4f54-a470-49a8bf28a82d
+md"""
+## The Root Test
+```math
+\begin{array}{ll}
+\text{(i)} &\text{If } \lim_{n\to\infty}\sqrt[n]{\left|a_n\right|}=L<1,\text{ then the series is absolutely convergent} \\
+& \text{(and therefore convergent).} \\ \\
+
+\text{(ii)} &\text{If } \lim_{n\to\infty}\sqrt[n]{\left|a_n\right|}=L>1 \text{ or }\lim_{n\to\infty}\sqrt[n]{\left|a_n\right|}=\infty,\\
+& \text{ then the series is divergent} \\ \\
+
+\text{(iii)} & If \lim_{n\to\infty}\sqrt[n]{\left|a_n\right|}=1,
+\text{ the Ratio Test is inconclusive}.
+\end{array}
+```
+"""
+
+# ╔═╡ 81881f3c-c074-44c9-8246-d5825dee9069
+md"""
+**_Examples_**
+Test for convergence 
+```math
+\begin{array}{lrl}
+    \text{(1)} & \text{     } & \sum_{n=1}^\infty \frac{\cos n}{n^3}\\ \\
+    \text{(2)} & \text{     } & \sum_{n=1}^\infty (-1)^n\frac{n^3}{3^n}\\ \\ 
+    \text{(3)} & \text{     } & \sum_{n=1}^\infty  \left(\frac{2n+5}{5n+2}\right)^n \\
+\end{array}
+```
+
+"""
+
+# ╔═╡ 8141bdca-0127-4d3a-b277-2da3779aead5
+md"""
+# 9.7: Taylor Polynomials and Approximations
+> __Objectives__
+> - Find polynomial approximations of elementary functions and compare them with the elementary functions.
+> - Find Taylor and Maclaurin polynomial approximations of elementary functions.
+> - Use the remainder of a Taylor polynomial.
+
+"""
+
+# ╔═╡ b317f1f5-0b07-4257-82d1-fa9cb313b901
+begin
+	p962 = md"""
+For the function ``f(x)=e^x``, find a first-degree polynomial function ``P_1(x)=a_0+a_1x``  whose value and slope agree with the value and slope of  at  ``x=0``.
+"""
+
+cm"""
+## Polynomial Approximations of Elementary Functions
+
+$p962
+
+"""
+
+end
+
+# ╔═╡ af7bdbca-ab63-4823-a2f3-efe1af56b7f4
+begin 
+	showSn = @bind showsn Radio(["show"=>"Show", "hide"=>"Hide"], default="show")
+	nStart = @bind nstart NumberField(-1:1, default=0) 
+	nTerms = @bind nterms NumberField(nstart:100) 
+	# n starts from   $nStart
+	md"""
+	$showSn
+	
+	
+	
+	n = $nTerms
+	"""
+end
+
+# ╔═╡ 3f16a586-692d-495b-9cc7-63c5cc635ebd
+begin
+	an(x,n)=x^n/factorial(n)
+	fn(x)=exp(x)
+	# an1(x,n)=factorial(big(n))*x^n
+	
+	intrvl = -4.1:0.01:4.1
+	plus_or_empty(n,last) = (n<last) ? " + " : ""
+	term_reps(n,last) = join(
+			[
+			  n==0 ? "1" : (n==1) ? "x" : "x^{$n}/{$n}!"
+			, plus_or_empty(n,last)
+			])
+	
+	ps1(x,s,e) = sum([an(x,i) for i in s:e])
+	plt=plot()
+	if (showsn=="show")
+	plt = plot!(plt,
+				 intrvl
+			   , ps1.(intrvl,nstart,nterms)
+			   , label=(nterms>=10) ? latexstring("P_{$(nterms)}(x)=\\sum_{n=0}^{$(nterms)}\\frac{x^n}{n!}") : latexstring("P_{$(nterms)}(x)="*
+						join([term_reps(i,nterms) for i in nstart:nterms])
+								  )
+			  )
+	end
+	plot!(plt,intrvl,fn.(intrvl),label=L"f(x)=e^x",c=:green)
+	plot!(plt;
+			  frame_style=:origin
+			, ylims=(-0.5,3)
+			, legend=:topleft
+	)
+	# plt =plot(plts)
+	md"""
+	$plt
+	"""
+end
+
+# ╔═╡ 7392677a-a151-484d-ba48-6ac841c9a98a
+md"""
+## Taylor and Maclaurin Polynomials
+
+"""
+
+# ╔═╡ 588305e1-3818-4007-b1c0-267e96a7fe7a
+cm"""
+$(bbl("Definitions","of th Taylor Polynomial and th Maclaurin Polynomial"))
+If ``f`` has ``n`` derivatives at ``c``, then the polynomial
+```math
+P_n(x)=f(c)+f'(c)(x-c)+\frac{f''(c)}{2!}(x-c)^2
++\cdots +\frac{f^{(n)}(c)}{n!}(x-c)^n
+```
+is called the ``n``th __Taylor polynomial__ for ``f`` at ``c``. If ``c``, then
+```math
+P_n(x)=f(0)+f'(0)x+\frac{f''(0)}{2!}x^2
++\cdots +\frac{f^{(n)}(0)}{n!}x^n
+```
+is also called ``n``th th __Maclaurin polynomial__ for ``f``.
+$(ebl())
+"""
+
+# ╔═╡ 828f4175-0f55-45af-85d2-6c396325462e
+cm"""
+$(ex(3,s="A Maclaurin Polynomial for e^x"))
+
+$(ex(4,s="Finding Taylor Polynomials for lnx"))
+Find the Taylor polynomials ``P_0, P_1, P_2, P_3``, and ``P_4`` for
+```math
+f(x)=\ln x
+```
+centered at ``c=1``.
+
+$(ex(5,s="Finding Maclaurin Polynomials for cosx"))
+Find the Taylor polynomials ``P_0, P_2, P_4``, and ``P_6`` to approximate ``\cos(0.1)``.
+
+$(ex(6,s="Finding Taylor Polynomials for sin x"))
+Find the Taylor polynomial ``P_3``for
+```math
+f(x)=\sin x
+```
+centered at ``c=\pi/6``.
+
+$(ex(7,s="Approximation Using Maclaurin Polynomials"))
+Use a fourth Maclaurin polynomial to approximate the value of ``\ln(1.1)``.
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -4034,7 +4364,7 @@ SymPy = "~1.1.12"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.2"
+julia_version = "1.9.3"
 manifest_format = "2.0"
 project_hash = "0dfc044350e3544ed06633bd47b08a9a26f92a3d"
 
@@ -5688,6 +6018,25 @@ version = "1.4.1+0"
 # ╟─dd22655b-c111-4b7f-95f2-eb32c60908fc
 # ╟─2845f715-b032-493f-a979-782fb70b700e
 # ╟─d0af669e-bce0-4aa8-a897-9f887bd27d1c
+# ╟─704cc640-acc1-4c21-9673-3092a45d1377
+# ╟─ccef397a-98e7-4d27-82e2-228e5154d63a
+# ╟─959825de-2ae7-4212-893d-f8a66f91b39c
+# ╟─cc66678d-7ddc-47db-86e0-5ee50bb58af6
+# ╟─5abe72af-e1d9-4002-84ef-954329dc23c6
+# ╟─efadc950-2f26-4e5e-bc8b-36862bd8cca8
+# ╟─35e833fa-4ec5-4c95-9e50-1fc99ea1e09f
+# ╟─f154ffb1-c488-4fca-9631-b5e56f286f3a
+# ╟─9a6aad50-069e-4264-90d0-2fa508769e70
+# ╟─df5b6e45-37cb-4a2d-9427-946a57794960
+# ╟─c9c85ae9-2b27-4f54-a470-49a8bf28a82d
+# ╟─81881f3c-c074-44c9-8246-d5825dee9069
+# ╟─8141bdca-0127-4d3a-b277-2da3779aead5
+# ╟─b317f1f5-0b07-4257-82d1-fa9cb313b901
+# ╟─af7bdbca-ab63-4823-a2f3-efe1af56b7f4
+# ╟─3f16a586-692d-495b-9cc7-63c5cc635ebd
+# ╟─7392677a-a151-484d-ba48-6ac841c9a98a
+# ╟─588305e1-3818-4007-b1c0-267e96a7fe7a
+# ╟─828f4175-0f55-45af-85d2-6c396325462e
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
