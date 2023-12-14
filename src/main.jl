@@ -4203,6 +4203,9 @@ Test for convergence
 
 """
 
+# ╔═╡ 2a079f3f-d9e2-424c-b88a-408d352be5c6
+[cos(π*n) for n in 1:10]
+
 # ╔═╡ 8141bdca-0127-4d3a-b277-2da3779aead5
 md"""
 # 9.7: Taylor Polynomials and Approximations
@@ -4328,6 +4331,401 @@ $(ex(7,s="Approximation Using Maclaurin Polynomials"))
 Use a fourth Maclaurin polynomial to approximate the value of ``\ln(1.1)``.
 """
 
+# ╔═╡ eda03c6d-6d83-4bc0-964d-8091ffc8f777
+md"""
+# 9.8: Power Series
+> __Objectives__
+> -Understand the definition of a power series.
+> - Find the radius and interval of convergence of a power series.
+> - Determine the endpoint convergence of a power series.
+> - Differentiate and integrate a power series.
+
+A series of the form 
+```math
+\sum_{n=0}^{\infty} a_n(x-c)^n = a_0 + a_1(x-c) +a_2(x-c)^2 +a_3(x-c)^3 + \cdots
+```
+is called a __power series in ``(x-c)``__ or a __power series centered at ``c``__ or a __power series about ``c``__
+
+We are interested in __finding the values of ``x`` for which this series is convergent.__
+"""
+
+# ╔═╡ a276e779-9072-4634-bb7a-f7190b275c95
+md"## Radius and Interval of Convergence"
+
+# ╔═╡ 312270b2-40e1-44b9-a87c-a0602f3c6633
+md"""
+----
+
+__*Theorem*__
+For a power series ``\sum_{n=0}^{\infty}a_n(x-c)^n``, there are only three possibilities:
+
+(i) The series converges only when ``x=c``.
+
+(ii)The series converges for all ``x``.
+
+(iii) There is a positive number ``R`` such that the series converges if 
+``|x-c|<R`` and diverges if ``|x-c|>R``.
+
+__Remarks__
+
+- The number ``R`` is called the __radius of convergence__ of the power series.
+   - The radius of convergence is ``R=0`` in case (i) 
+   - ``R=\infty`` in case (ii). 
+- The __interval of convergence__ of a power series is the interval that consists of all values of  for which the series converges. 
+   - In case (i) the interval consists of just a single point ``a``. 
+   - In case (ii) the interval is ``(-\infty,\infty)``.
+"""
+
+# ╔═╡ cc8e6d6c-d756-4401-abf3-e268763b8bea
+cm"""
+$(example("Examples",""))
+
+```math
+\begin{array}{l@{\,\,\,\,}l}
+(1) & \displaystyle\sum_{n=0}^\infty n! x^n\\ \\
+(2) & \displaystyle\sum_{n=1}^\infty \frac{(x-3)^n}{n}\\ \\
+(3) & \displaystyle\sum_{n=0}^\infty \frac{(-1)^nx^{2n}}{(2n)!}
+\end{array}
+```
+
+"""
+
+# ╔═╡ 7ab9ae32-2ea1-451c-8fe9-77f6fe628f8d
+md"""
+## Endpoint Convergence
+"""
+
+# ╔═╡ 54bf8db4-d8a6-40ba-ba9d-c14dad31e70a
+md"""
+#### Examples
+Find the radius of convergence and interval of convergence of the series
+```math
+\begin{array}{l@{\,\,\,\,}l}
+(4) & \sum_{n=0}^\infty \frac{(-1)^nx^n}{\sqrt{n+1}}\\
+(5) & \sum_{n=0}^\infty \frac{n(x+2)^n}{3^{n+1}}\\
+\end{array}
+```
+
+"""
+
+# ╔═╡ b08d4a39-32ec-4323-b3d6-4aed3a08e7d6
+md"""
+## Differentiation and Integration of Power Series
+**(term-by-term differentiation and integration)**
+
+__*Theorem*__
+
+If the power series ``\sum a_n(x-c)^n``  has radius of convergence ``R>0``, then the function ``f`` defined by
+```math
+f(x) = a_0+a_1(x-c)+a_2(x-c)^2+\cdots = \sum_{n=0}^{\infty}a_n(x-c)^n
+```
+is differentiable (and therefore continuous) on the interval ``(a-R,a+R)`` and
+```math
+\begin{array}{lllll}
+\text{(i)} &\text{}& f'(x) &=& 
+a_1+2a_2(x-c)+3a_2(x-c)^2+\cdots \\
+&&&=& \sum_{n=1}^{\infty}na_n(x-c)^{n-1} \\ \\
+\text{(ii)} &\text{}& \int f(x) dx &=& 
+C + a_0(x-c)+a_1\frac{(x-c)^2}{2}+a_2\frac{(x-c)^3}{3}+\cdots \\
+&&&=&C+\sum_{n=0}^{\infty}a_n\frac{(x-c)^{n+1}}{n+1} \\ \\
+
+\end{array}
+```
+
+The radii of convergence of the power series in Equations (i) and (ii) are both ``R``.
+
+"""
+
+# ╔═╡ d5e4d679-8871-496d-88d8-a7ac7891058e
+cm"""
+$(ex(8,s="Intervals of Convergence"))
+Consider the function
+```math
+f(x)= \sum_{n=1}^{\infty}\frac{x^n}{n}
+```
+Find the interval of convergence for each of the following.
+1. ``\displaystyle f(x)``
+1. ``\displaystyle f'(x)``
+1. ``\displaystyle \int f(x) dx``
+
+"""
+
+# ╔═╡ 9fe9a0ee-ba90-44fa-ba59-cb8c145f0f26
+md"""
+# 9.9: Representation of Functions by Power Series
+> **Objectives**
+> - Find a geometric power series that represents a function.
+> - Construct a power series using series operations.
+
+## Geometric Power Series
+```math
+\frac{1}{1-x} = 1 + x + x^2 +x^3 +\cdots =\sum_{n=0}^{\infty}x^n, \quad |x|<1.
+```
+"""
+
+# ╔═╡ 07333593-857d-4f0b-a245-253d50505a46
+md"""
+#### Examples
+1. Express as the sum of a power series and find the interval of convergence.
+```math
+f(x)=\frac{1}{1+x^2}
+```
+2. Find a power series representation for 
+```math
+f(x)=\frac{1}{x+2}
+```
+3. Find a power series representation for 
+```math
+f(x)=\frac{x^3}{x+2}
+```
+
+4. Find a power series representation around ``1`` for 
+```math
+f(x)=\frac{1}{x}
+```
+__SOLUTION IN CLASS__
+
+"""
+
+# ╔═╡ a20dcc68-ebc7-4e3c-8bec-aaa01b84ae89
+cm"""
+$(bbl("Operations with Power Series",""))
+Let ``f(x)=\displaystyle \sum_{n=0}^{\infty}a_n x^n`` and ``g(x)=\displaystyle \sum_{n=0}^{\infty}b_n x^n``.
+1. ``f(kx) = \displaystyle  \sum_{n=0}^{\infty}a_n k^nx^n``.
+1. ``f(x^N) = \displaystyle  \sum_{n=0}^{\infty}a_n x^{Nn}``.
+1. ``f(x)\pm g(x) = \displaystyle  \sum_{n=0}^{\infty}(a_n\pm b_n) x^n``.
+$(ebl())
+"""
+
+# ╔═╡ 333af7ee-6593-4edf-bd00-aade7de8f743
+md"""
+#### Examples
+4. Express as a power series 
+```math
+f(x) = \frac{3x-1}{x^2-1}
+```
+4. Express as a power series 
+```math
+f(x) = \frac{1}{(1-x)^2}
+```
+5. Express as a power series 
+```math
+f(x) = \ln(1+x)
+```
+6. Express as a power series 
+```math
+f(x) = \tan^{-1}x
+```
+
+7. Evaluate
+```math
+\int \frac{dx}{1+x^7}
+```
+
+8. Approximate ``\pi``
+```math
+4\tan^{-1}\frac{1}{5}-\tan^{-1}\frac{1}{239} = \frac{\pi}{4} \quad \text{(see ex. 44)}
+```
+
+__SOLUTION IN CLASS__
+
+"""
+
+# ╔═╡ cfdba930-c066-401d-99e5-b90b0e667469
+md"""# 9.10: Taylor and Maclaurin Series [^⭐]
+[^⭐]:  Students have to memorize the power series representations of the functions
+``f(x) =\frac{1}{1+x}, e^x, \sin x , \cos x , \arctan x , (1 + 𝑥)^𝑘`` in page 674. 
+> **Objectives**
+> - Find a Taylor or Maclaurin series for a function.
+> - Find a binomial series.
+> - Use a basic list of Taylor series to find other Taylor series.
+
+* By the end of this section we will be able to write the following power series representations of certain functions
+
+```math
+{\small
+\begin{array}{llcllllr}
+{\small \text{(1)}} & \frac{1}{1-x} &=&
+	\sum_{n=0}^{\infty} x^n &=& 
+	1+x+x^2+x^3+\cdots,&R=1 \\
+
+{\small \text{(2)}} & \ln(1+x) &=&
+	\sum_{n=0}^{\infty} (-1)^{n} \frac{x^{n+1}}{n+1} &=& 
+	x-\frac{x^2}{2}+\frac{x^3}{3}-\frac{x^4}{4}+\cdots,&R=1 \\
+
+{\small \text{(3)}} & \tan^{-1}x &=&
+	\sum_{n=0}^{\infty} (-1)^n \frac{x^{2n+1}}{2n+1} &=& 
+	x-\frac{x^3}{3}+\frac{x^5}{5}-\frac{x^7}{7}+\cdots,&R=1 \\
+
+{\small \text{(4)}} & e^x &=&
+	\sum_{n=0}^{\infty} \frac{x^n}{n!} &=& 
+	1+\frac{x}{1!}+\frac{x^2}{2!}+\frac{x^3}{3!}+\cdots,&R=\infty \\
+
+
+{\small \text{(5)}} & \sin x &=&
+	\sum_{n=0}^{\infty} (-1)^n\frac{x^{2n+1}}{(2n+1)!} &=& 
+	x-\frac{x^3}{3!}+\frac{x^5}{5!}-\frac{x^7}{7!}+\cdots,&R=\infty \\
+
+{\small \text{(6)}} & \cos x &=&
+	\sum_{n=0}^{\infty} (-1)^n\frac{x^{2n}}{(2n)!} &=& 
+	1-\frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}+\cdots,&R=\infty \\
+
+
+{\small \text{(7)}} & (1+x)^k &=&
+\sum_{n=0}^{\infty} \left(\begin{array}{c}k\\n\end{array}\right)x^n &=& 
+	1+kx+\frac{k(k-1)}{2!}x^2+\frac{k(k-1)(k-2)}{3!}x^3+\cdots,&R=1 \\
+
+
+
+\end{array}
+}
+```
+
+"""
+
+# ╔═╡ 77657ac7-e6a5-409c-9166-03a85c2c5041
+cm"""
+$(bth("Taylor Theorem"))
+If ``f`` has a power series representation (expansion) at ``a`` , that is, if
+
+```math
+f(x) = \sum_{n=0}^{\infty}c_n (x-a)^n, \quad |x-c| < R
+```
+
+then its coefficients are given by the formula
+```math
+c_n = \frac{f^{(n)}(a)}{n!}
+```
+
+**_Remarks_** 
+- The series is called the __Taylor series of the function ``f`` at ``a`` (or about ``a`` or centered at ``a``)__.
+- (__Maclaurin Series__) If ``a=0``, Taylor series becomes
+```math
+{\small
+f(x) = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!} x^n=f(0)+\frac{f'(0)}{1!}x
++\frac{f''(0)}{2!}x^2+\frac{f'''(0)}{3!}x^3+\cdots
+}
+```
+$(eth())
+"""
+
+# ╔═╡ 3b6124f6-fbf5-4b17-9329-be9f9bb75d43
+md"""
+#### Examples (important)
+- Find __*Maclaurin*__ series for 
+
+```math
+
+\begin{array}{lll}
+{\small \text{(1)}} & f(x)=e^x \\
+{\small \text{(2)}} & f(x)=\sin x \\
+{\small \text{(3)}} & f(x)=\cos x \\
+\end{array}
+```
+- Find Taylor Series of ``f(x)=\sin x\quad ``   about  ``\quad {\pi \over 3}``.
+
+
+"""
+
+# ╔═╡ 25b5bcc3-a325-4999-8a5e-89c5103b4649
+md"""
+### The Binomial Series
+**Example**: 
+Find the Maclaurin series for ``f(x)=(1+x)^k``, where ``k`` is any real number.
+
+__*Solution: In Class*__
+
+"""
+
+# ╔═╡ 94c3cb66-7cc7-493e-b21b-319d573c74ec
+md"""
+__*The Binomial Series (Theorem)*__
+
+If ``k`` is any real number and ``|x|<1``, then
+```math
+(1+x)^k=\sum_{n=0}^{\infty}\begin{pmatrix}
+k \\ n
+\end{pmatrix}x^n = 1 + k x + \frac{k(k-1)}{2!}x^2 +
+\frac{k(k-1)(k-2)}{3!}x^3 +\cdots
+
+```
+where 
+```math
+\left(\begin{array}{c} k \\ n\end{array}\right) = \frac{k(k-1)(k-2)\cdots (k-n+1)}{n!}
+```
+__*Remarks*__
+
+* This is called __binomial coefficients__. Note that 
+```math
+\left(\begin{array}{c} k \\ n\end{array}\right) =0 \qquad \text{if} \quad k \text{ is integer and } k<n
+```
+
+```math
+\left(\begin{array}{c} k \\ 0\end{array}\right) =1, \quad  \left(\begin{array}{c} k \\ 1\end{array}\right) =k
+```
+* If ``-1<k\leq 0``, it converges at ``x=1``.
+* If ``k\geq 0`` it converges at ``x=\pm 1``.
+
+"""
+
+# ╔═╡ 7785276c-89f5-42f0-8598-61043f9fe035
+md"""
+#### Example
+Find the Maclaurin series for the function 
+```math
+f(x)=\frac{1}{\sqrt{4-x}}
+```
+and its radius of convergence.
+
+"""
+
+# ╔═╡ 1797a33c-54c8-4471-b632-4f3b311502d2
+md"""
+## Deriving Taylor Series from a Basic List
+__Check the table__
+#### Examples
+- Find the Maclaurin series for
+```math
+\begin{array}{lll}
+{\small \text{(a)}} & f(x)=x\cos x \\
+{\small \text{(b)}} & f(x)=\ln (1+3x^2)\\
+\end{array}
+```
+
+- Find the function represented by the power series 
+```math
+\sum_{n=0}^{\infty}(-1)^n\frac{2^nx^n}{n!}
+```
+
+- Find the sum of the series 
+```math
+\frac{1}{1\cdot 2}-\frac{1}{2\cdot 2^2}+\frac{1}{3\cdot 2^3}-
+\frac{1}{4\cdot 2^4}+ \cdots
+```
+
+"""
+
+# ╔═╡ a34a788e-5824-4a58-b3fb-2e650ca96b8a
+md"""
+#### More Examples
+- Evaluate
+```math
+\int e^{-x^2} dx
+```
+- Evaluate 
+```math
+\lim_{x\to 0}\frac{e^x-1-x}{x^2}
+```
+- Find the first 3 nonzero terms of Maclaurin series for 
+```math
+(a) \quad e^x\sin x \qquad (b)\quad \tan x 
+```
+- Find the sum of
+```math
+(a) \quad \sum_{n=0}^\infty \frac{x^{4n}}{n!}\qquad (b)\quad \sum_{n=0}^\infty (-1)^n\frac{\pi^{2n+1}}{4^{2n+1}(2n+1)!}
+```
+"""
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -4364,7 +4762,7 @@ SymPy = "~1.1.12"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.2"
 manifest_format = "2.0"
 project_hash = "0dfc044350e3544ed06633bd47b08a9a26f92a3d"
 
@@ -6030,6 +6428,7 @@ version = "1.4.1+0"
 # ╟─df5b6e45-37cb-4a2d-9427-946a57794960
 # ╟─c9c85ae9-2b27-4f54-a470-49a8bf28a82d
 # ╟─81881f3c-c074-44c9-8246-d5825dee9069
+# ╠═2a079f3f-d9e2-424c-b88a-408d352be5c6
 # ╟─8141bdca-0127-4d3a-b277-2da3779aead5
 # ╟─b317f1f5-0b07-4257-82d1-fa9cb313b901
 # ╟─af7bdbca-ab63-4823-a2f3-efe1af56b7f4
@@ -6037,6 +6436,26 @@ version = "1.4.1+0"
 # ╟─7392677a-a151-484d-ba48-6ac841c9a98a
 # ╟─588305e1-3818-4007-b1c0-267e96a7fe7a
 # ╟─828f4175-0f55-45af-85d2-6c396325462e
+# ╟─eda03c6d-6d83-4bc0-964d-8091ffc8f777
+# ╟─a276e779-9072-4634-bb7a-f7190b275c95
+# ╟─312270b2-40e1-44b9-a87c-a0602f3c6633
+# ╟─cc8e6d6c-d756-4401-abf3-e268763b8bea
+# ╟─7ab9ae32-2ea1-451c-8fe9-77f6fe628f8d
+# ╟─54bf8db4-d8a6-40ba-ba9d-c14dad31e70a
+# ╟─b08d4a39-32ec-4323-b3d6-4aed3a08e7d6
+# ╟─d5e4d679-8871-496d-88d8-a7ac7891058e
+# ╟─9fe9a0ee-ba90-44fa-ba59-cb8c145f0f26
+# ╟─07333593-857d-4f0b-a245-253d50505a46
+# ╟─a20dcc68-ebc7-4e3c-8bec-aaa01b84ae89
+# ╟─333af7ee-6593-4edf-bd00-aade7de8f743
+# ╟─cfdba930-c066-401d-99e5-b90b0e667469
+# ╟─77657ac7-e6a5-409c-9166-03a85c2c5041
+# ╟─3b6124f6-fbf5-4b17-9329-be9f9bb75d43
+# ╟─25b5bcc3-a325-4999-8a5e-89c5103b4649
+# ╟─94c3cb66-7cc7-493e-b21b-319d573c74ec
+# ╟─7785276c-89f5-42f0-8598-61043f9fe035
+# ╟─1797a33c-54c8-4471-b632-4f3b311502d2
+# ╟─a34a788e-5824-4a58-b3fb-2e650ca96b8a
 # ╠═196f8120-431b-11ee-0ec5-2b6391383266
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
