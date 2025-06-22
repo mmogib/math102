@@ -77,3 +77,48 @@ blockquote > ol ol li::before {
   padding: 5px;
   border: 2px solid blue;
 }
+
+.p40 {
+	padding-left: 40px;
+}
+    example-box {
+      max-width: 600px;           /* Limits the box width */
+      margin: 2rem auto;          /* Centers the box and adds vertical spacing */
+      border: 1px solid #ccc;     /* Light border */
+      border-radius: 4px;         /* Slightly rounded corners */
+      overflow: hidden;           /* Ensures the box boundary clips its children */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      font-family: Arial, sans-serif;
+    }
+
+    /* Header area for "EXAMPLE 1" */
+    .example-header {
+      background: linear-gradient(90deg, #cc0000, #990000);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #990000;
+    }
+
+    /* Sub-header area for the title or subtitle */
+    .example-title {
+      background-color: #f9f9f9;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      margin: 0;                  /* Remove default heading margins */
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Main content area for the mathematical statement or instructions */
+    .example-content {
+      padding: 1rem;
+      line-height: 1.5;
+    }
+
+    /* Optional styling for inline math or emphasis */
+    em {
+      font-style: italic;
+      color: #333;
+    }
